@@ -3,6 +3,7 @@ package com.mazebert.usecases;
 import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
+import com.mazebert.error.UniqueConstraintViolationException;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.PlayerKeyGenerator;
 import org.jusecase.Usecase;
@@ -30,7 +31,7 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
     public Response execute(Request request) {
         validateRequest(request);
 
-        Player player = playerGateway.addPlayer(createNewPlayer(request));
+        Player player = createNewUniquePlayer(request);
         return success(player);
     }
 
@@ -39,6 +40,18 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
         response.id = player.id;
         response.key = player.key;
         return response;
+    }
+
+    private Player createNewUniquePlayer(Request request) {
+        Player player = null;
+        while (player == null) {
+            try {
+                player = playerGateway.addPlayer(createNewPlayer(request));
+            } catch (UniqueConstraintViolationException e) {
+                player = null;
+            }
+        }
+        return player;
     }
 
     private Player createNewPlayer(Request request) {
