@@ -1,4 +1,4 @@
-package com.mazebert.plugins;
+package com.mazebert.plugins.random;
 
 public interface RandomNumberGenerator {
     /**

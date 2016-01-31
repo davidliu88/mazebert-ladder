@@ -1,9 +1,4 @@
-package com.mazebert.plugins;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+package com.mazebert.plugins.random;
 
 public class SecureRandomNumberGeneratorTest extends RandomNumberGeneratorTest {
     @Override

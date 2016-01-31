@@ -1,5 +1,7 @@
-package com.mazebert.plugins;
+package com.mazebert.plugins.random;
 
+import com.mazebert.plugins.random.RandomNumberGenerator;
+import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import org.junit.Before;
 import org.junit.Test;
 

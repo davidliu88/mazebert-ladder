@@ -5,7 +5,7 @@ import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.error.UniqueConstraintViolationException;
 import com.mazebert.gateways.PlayerGatewayCoach;
-import com.mazebert.plugins.PlayerKeyGeneratorCoach;
+import com.mazebert.plugins.random.PlayerKeyGeneratorCoach;
 import com.mazebert.usecases.CreateAccount.Request;
 import com.mazebert.usecases.CreateAccount.Response;
 import org.junit.Before;

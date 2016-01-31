@@ -1,4 +1,6 @@
-package com.mazebert.plugins;
+package com.mazebert.plugins.random;
+
+import com.mazebert.plugins.random.RandomNumberGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;

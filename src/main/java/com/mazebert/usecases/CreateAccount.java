@@ -5,7 +5,7 @@ import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.error.UniqueConstraintViolationException;
 import com.mazebert.gateways.PlayerGateway;
-import com.mazebert.plugins.PlayerKeyGenerator;
+import com.mazebert.plugins.random.PlayerKeyGenerator;
 import org.jusecase.Usecase;
 
 public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccount.Response> {

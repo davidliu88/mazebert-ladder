@@ -1,4 +1,4 @@
-package com.mazebert.plugins;
+package com.mazebert.plugins.random;
 
 import org.junit.Before;
 import org.junit.Test;
