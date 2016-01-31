@@ -8,6 +8,8 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.random.PlayerKeyGenerator;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
+
 public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccount.Response> {
     public static class Request {
         public String name;
@@ -23,6 +25,7 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
     private final PlayerGateway playerGateway;
     private final PlayerKeyGenerator keyGenerator;
 
+    @Inject
     public CreateAccount(PlayerGateway playerGateway, PlayerKeyGenerator keyGenerator) {
         this.playerGateway = playerGateway;
         this.keyGenerator = keyGenerator;

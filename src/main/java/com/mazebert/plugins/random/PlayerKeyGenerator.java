@@ -1,8 +1,9 @@
 package com.mazebert.plugins.random;
 
+import javax.inject.Inject;
+
 public class PlayerKeyGenerator {
     private final RandomNumberGenerator randomNumberGenerator;
-    private final int length = 6;
     private final char[] characterTable = {
             'a', 'b', 'c', 'd', 'e',
             'f', 'g', 'h', 'i', 'j',
@@ -13,6 +14,7 @@ public class PlayerKeyGenerator {
             '5', '6', '7', '8', '9'
     };
 
+    @Inject
     public PlayerKeyGenerator(RandomNumberGenerator randomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator;
     }
@@ -20,7 +22,7 @@ public class PlayerKeyGenerator {
     public String createPlayerKey() {
         String key = "";
         int lastCharacterIndex = characterTable.length - 1;
-        for (int i = 0; i < length; ++i) {
+        for (int i = 0; i < 6; ++i) {
             key += characterTable[randomNumberGenerator.randomInteger(0, lastCharacterIndex)];
         }
 
