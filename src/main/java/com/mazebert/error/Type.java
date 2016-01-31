@@ -1,5 +1,6 @@
 package com.mazebert.error;
 
 public enum Type {
-    BAD_REQUEST
+    BAD_REQUEST,
+    UNAUTHORIZED
 }
