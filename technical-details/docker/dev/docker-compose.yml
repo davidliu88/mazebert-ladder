@@ -1,0 +1,10 @@
+mazebert-ladder:
+  container_name: mazebert-ladder
+  image: tomcat:8.0.30-jre8
+  environment:
+    - JPDA_ADDRESS=8000
+    - JPDA_TRANSPORT=dt_socket
+  command: catalina.sh jpda run
+  ports:
+    - "8080:8080"
+    - "8000:8000"
