@@ -80,9 +80,9 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         Player addedPlayer = playerGateway.getAddedPlayer();
-        assertEquals("Herul", addedPlayer.name);
-        assertEquals(99, addedPlayer.level);
-        assertEquals(10000000, addedPlayer.experience);
+        assertEquals("Herul", addedPlayer.getName());
+        assertEquals(99, addedPlayer.getLevel());
+        assertEquals(10000000, addedPlayer.getExperience());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        assertEquals("abcdef", playerGateway.getAddedPlayer().key);
+        assertEquals("abcdef", playerGateway.getAddedPlayer().getKey());
         assertEquals("abcdef", response.key);
     }
 

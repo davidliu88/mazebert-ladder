@@ -16,7 +16,7 @@ public class PlayerGatewayCoach implements PlayerGateway {
             throw exceptions.remove(0);
         }
 
-        player.id = nextPlayerId;
+        player.setId(nextPlayerId);
         addedPlayer = player;
         return player;
     }

@@ -41,8 +41,8 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
 
     private Response success(Player player) {
         Response response = new Response();
-        response.id = player.id;
-        response.key = player.key;
+        response.id = player.getId();
+        response.key = player.getKey();
         return response;
     }
 
@@ -60,10 +60,10 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
 
     private Player createNewPlayer(Request request) {
         Player player = new Player();
-        player.name = request.name;
-        player.level = request.level;
-        player.experience = request.experience;
-        player.key = keyGenerator.createPlayerKey();
+        player.setName(request.name);
+        player.setLevel(request.level);
+        player.setExperience(request.experience);
+        player.setKey(keyGenerator.createPlayerKey());
         return player;
     }
 
