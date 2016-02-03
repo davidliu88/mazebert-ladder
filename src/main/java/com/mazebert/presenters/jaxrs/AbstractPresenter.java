@@ -2,7 +2,7 @@ package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.Logic;
 import com.mazebert.usecases.SecureRequest;
-import com.mazebert.usecases.VerifyRequest;
+import com.mazebert.usecases.VerifyGameSignature;
 import org.jusecase.UsecaseExecutor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,26 +12,29 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class AbstractPresenter implements UsecaseExecutor {
-    @Context
-    private HttpServletRequest servletRequest;
+
+    UsecaseExecutor usecaseExecutor = Logic.instance;
 
     @Context
-    private UriInfo uriInfo;
+    HttpServletRequest servletRequest;
+
+    @Context
+    UriInfo uriInfo;
 
     public <Request, Response> Response execute(Request request) {
         if (request instanceof SecureRequest) {
             verifyRequest();
         }
 
-        return Logic.instance.execute(request);
+        return usecaseExecutor.execute(request);
     }
 
     private void verifyRequest() {
-        VerifyRequest.Request request = new VerifyRequest.Request();
+        VerifyGameSignature.Request request = new VerifyGameSignature.Request();
         request.body = getRequestBodyStream();
         request.signature = getRequestSignature();
 
-        Logic.instance.execute(request);
+        usecaseExecutor.execute(request);
     }
 
     private InputStream getRequestBodyStream() {

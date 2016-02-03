@@ -4,10 +4,9 @@ import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import org.jusecase.Usecase;
 
-import javax.crypto.Cipher;
 import java.io.InputStream;
 
-public class VerifyRequest implements Usecase<VerifyRequest.Request, Void> {
+public class VerifyGameSignature implements Usecase<VerifyGameSignature.Request, Void> {
     public static class Request {
         public InputStream body;
         public String signature;

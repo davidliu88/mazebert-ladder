@@ -6,18 +6,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
-import com.mazebert.usecases.VerifyRequest.Request;
+import com.mazebert.usecases.VerifyGameSignature.Request;
 
 import java.io.InputStream;
 
 import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.inputStream;
 
-public class VerifyRequestTest extends UsecaseTest<Request, Void> {
+public class VerifyGameSignatureTest extends UsecaseTest<Request, Void> {
 
     @Before
     public void setUp() {
-        usecase = new VerifyRequest();
+        usecase = new VerifyGameSignature();
     }
 
     @Test
