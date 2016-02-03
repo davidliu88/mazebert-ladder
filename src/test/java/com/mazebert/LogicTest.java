@@ -1,6 +1,7 @@
 package com.mazebert;
 
 import com.mazebert.usecases.CreateAccount;
+import com.mazebert.usecases.GetPlayers;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.security.SecureRequest;
 import org.junit.Test;
@@ -17,6 +18,7 @@ public class LogicTest extends UsecaseExecutorTest {
 
         thenUsecaseCanBeExecuted(GetVersion.class);
         thenUsecaseCanBeExecuted(CreateAccount.class);
+        thenUsecaseCanBeExecuted(GetPlayers.class);
     }
 
     @Test

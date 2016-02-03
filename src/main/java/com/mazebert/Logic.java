@@ -7,6 +7,7 @@ import com.mazebert.gateways.mysql.MySqlPlayerGateway;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.usecases.CreateAccount;
+import com.mazebert.usecases.GetPlayers;
 import com.mazebert.usecases.GetVersion;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
@@ -35,5 +36,6 @@ public class Logic extends GuiceUsecaseExecutor {
 
         addUsecase(GetVersion.class);
         addUsecase(CreateAccount.class);
+        addUsecase(GetPlayers.class);
     }
 }

@@ -6,6 +6,7 @@ import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGateway;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class GetPlayers implements Usecase<GetPlayers.Request, GetPlayers.Response> {
@@ -20,6 +21,7 @@ public class GetPlayers implements Usecase<GetPlayers.Request, GetPlayers.Respon
         public List<Player> players;
     }
 
+    @Inject
     public GetPlayers(PlayerGateway playerGateway) {
         this.playerGateway = playerGateway;
     }
