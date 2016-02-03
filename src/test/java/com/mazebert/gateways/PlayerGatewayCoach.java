@@ -7,9 +7,11 @@ import java.util.*;
 public class PlayerGatewayCoach implements PlayerGateway {
     private int nextPlayerId;
     private Player addedPlayer;
+    private Player updatedPlayer;
     private List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
 
-    private Map<String, List<Player>> players = new HashMap<String, List<Player>>();
+    private Map<String, List<Player>> playersInRange = new HashMap<String, List<Player>>();
+    private Map<String, Player> playerByKey = new HashMap<String, Player>();
 
     public Player addPlayer(Player player) {
         if (exceptions.size() > 0) {
@@ -22,7 +24,15 @@ public class PlayerGatewayCoach implements PlayerGateway {
     }
 
     public List<Player> findPlayers(int start, int limit) {
-        return players.get(start + "" + limit);
+        return playersInRange.get(start + "" + limit);
+    }
+
+    public Player findPlayer(String key) {
+        return playerByKey.get(key);
+    }
+
+    public void updatePlayer(Player player) {
+        updatedPlayer = player;
     }
 
     public void givenNextPlayerId(int id) {
@@ -30,14 +40,22 @@ public class PlayerGatewayCoach implements PlayerGateway {
     }
 
     public void givenPlayers(int start, int limit, List<Player> players) {
-        this.players.put(start + "" + limit, players);
+        this.playersInRange.put(start + "" + limit, players);
     }
 
     public Player getAddedPlayer() {
         return addedPlayer;
     }
 
+    public Player getUpdatedPlayer() {
+        return updatedPlayer;
+    }
+
     public void givenOperationFailsWithException(RuntimeException ... exceptions) {
         this.exceptions.addAll(Arrays.asList(exceptions));
+    }
+
+    public void givenPlayer(Player player) {
+        playerByKey.put(player.getKey(), player);
     }
 }

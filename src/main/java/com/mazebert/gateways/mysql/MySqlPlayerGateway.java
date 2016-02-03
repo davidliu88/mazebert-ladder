@@ -14,4 +14,12 @@ public class MySqlPlayerGateway implements PlayerGateway {
     public List<Player> findPlayers(int start, int limit) {
         return null;
     }
+
+    public Player findPlayer(String key) {
+        return null;
+    }
+
+    public void updatePlayer(Player player) {
+
+    }
 }
