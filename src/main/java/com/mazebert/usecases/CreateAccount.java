@@ -3,7 +3,7 @@ package com.mazebert.usecases;
 import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.error.UniqueConstraintViolationException;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.random.PlayerKeyGenerator;
 import org.jusecase.Usecase;
@@ -50,7 +50,7 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
         while (player == null) {
             try {
                 player = playerGateway.addPlayer(createNewPlayer(request));
-            } catch (UniqueConstraintViolationException e) {
+            } catch (KeyAlreadyExists e) {
                 player = null;
             }
         }

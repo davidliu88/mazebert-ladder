@@ -14,4 +14,13 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(GetVersion.class);
         thenUsecaseCanBeExecuted(CreateAccount.class);
     }
+
+    @Test
+    public void secureUsecases() {
+
+    }
+
+    private void thenUsecaseIsSecure() {
+
+    }
 }

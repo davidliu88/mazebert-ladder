@@ -3,7 +3,7 @@ package com.mazebert.usecases;
 import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.error.UniqueConstraintViolationException;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.gateways.PlayerGatewayCoach;
 import com.mazebert.plugins.random.PlayerKeyGeneratorCoach;
 import com.mazebert.usecases.CreateAccount.Request;
@@ -110,8 +110,8 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
     public void keyIsGeneratedUntilPlayerIsUnique() {
         givenRequest(a(request()));
         playerGateway.givenOperationFailsWithException(
-                new UniqueConstraintViolationException(),
-                new UniqueConstraintViolationException()
+                new KeyAlreadyExists(),
+                new KeyAlreadyExists()
         );
         keyGenerator.givenPlayerKeysWillBeGenerated("abcdef", "123456", "9gagtv");
 
