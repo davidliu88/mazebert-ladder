@@ -9,6 +9,7 @@ import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.usecases.CreateAccount;
 import com.mazebert.usecases.GetPlayers;
 import com.mazebert.usecases.GetVersion;
+import com.mazebert.usecases.UpdatePlayer;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 public class Logic extends GuiceUsecaseExecutor {
@@ -37,5 +38,6 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(GetVersion.class);
         addUsecase(CreateAccount.class);
         addUsecase(GetPlayers.class);
+        addUsecase(UpdatePlayer.class);
     }
 }

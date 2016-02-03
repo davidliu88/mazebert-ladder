@@ -4,11 +4,15 @@ import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGateway;
+import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
+
+import javax.inject.Inject;
 
 public class UpdatePlayer implements Usecase<UpdatePlayer.Request, UpdatePlayer.Response> {
     private final PlayerGateway playerGateway;
 
+    @SecureRequest
     public static class Request {
         public String key;
         public int level;
@@ -18,6 +22,7 @@ public class UpdatePlayer implements Usecase<UpdatePlayer.Request, UpdatePlayer.
     public static class Response {
     }
 
+    @Inject
     public UpdatePlayer(PlayerGateway playerGateway) {
         this.playerGateway = playerGateway;
     }

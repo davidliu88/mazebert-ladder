@@ -2,6 +2,7 @@ package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.usecases.CreateAccount;
 import com.mazebert.usecases.GetPlayers;
+import com.mazebert.usecases.UpdatePlayer;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +24,12 @@ public class PlayersPresenter extends AbstractPresenter {
         GetPlayers.Request request = new GetPlayers.Request();
         request.start = start;
         request.limit = limit;
+        return execute(request);
+    }
+
+    @POST
+    @Path("/update")
+    public UpdatePlayer.Response createAccount(UpdatePlayer.Request request) {
         return execute(request);
     }
 }
