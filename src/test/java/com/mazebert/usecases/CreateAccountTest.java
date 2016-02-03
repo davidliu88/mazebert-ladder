@@ -45,7 +45,6 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
     public void zeroLevel() {
         givenRequest(a(request().withLevel(0)));
         whenRequestIsExecuted();
-        thenErrorMessageIs("Player level must be greater than 0");
         thenErrorIs(new Error(Type.BAD_REQUEST, "Player level must be greater than 0"));
     }
 
