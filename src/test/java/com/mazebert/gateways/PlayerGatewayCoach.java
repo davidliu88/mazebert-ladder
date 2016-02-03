@@ -12,6 +12,9 @@ public class PlayerGatewayCoach implements PlayerGateway {
 
     private Map<String, List<Player>> playersInRange = new HashMap<String, List<Player>>();
     private Map<String, Player> playerByKey = new HashMap<String, Player>();
+    private Map<String, List<Player>> playersNowPlaying = new HashMap<String, List<Player>>();
+
+    private int totalPlayerCount;
 
     public Player addPlayer(Player player) {
         if (exceptions.size() > 0) {
@@ -27,12 +30,20 @@ public class PlayerGatewayCoach implements PlayerGateway {
         return playersInRange.get(start + "" + limit);
     }
 
+    public List<Player> findPlayersNowPlaying(int toleranceInMinutes) {
+        return playersNowPlaying.get("" + toleranceInMinutes);
+    }
+
     public Player findPlayer(String key) {
         return playerByKey.get(key);
     }
 
     public void updatePlayer(Player player) {
         updatedPlayer = player;
+    }
+
+    public int getTotalPlayerCount() {
+        return totalPlayerCount;
     }
 
     public void givenNextPlayerId(int id) {
@@ -57,5 +68,13 @@ public class PlayerGatewayCoach implements PlayerGateway {
 
     public void givenPlayer(Player player) {
         playerByKey.put(player.getKey(), player);
+    }
+
+    public void givenTotalPlayerCount(int count) {
+        totalPlayerCount = count;
+    }
+
+    public void givenPlayersNowPlaying(int toleranceInMinutes, List<Player> players) {
+        playersNowPlaying.put("" + toleranceInMinutes,  players);
     }
 }

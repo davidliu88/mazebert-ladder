@@ -15,11 +15,19 @@ public class MySqlPlayerGateway implements PlayerGateway {
         return null;
     }
 
+    public List<Player> findPlayersNowPlaying(int toleranceInMinutes) {
+        return null;
+    }
+
     public Player findPlayer(String key) {
         return null;
     }
 
     public void updatePlayer(Player player) {
 
+    }
+
+    public int getTotalPlayerCount() {
+        return 0;
     }
 }
