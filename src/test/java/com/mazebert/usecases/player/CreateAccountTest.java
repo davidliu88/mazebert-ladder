@@ -1,12 +1,11 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.gateways.PlayerGatewayCoach;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.plugins.random.PlayerKeyGeneratorCoach;
-import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.CreateAccount.Request;
 import com.mazebert.usecases.player.CreateAccount.Response;
 import org.junit.Before;

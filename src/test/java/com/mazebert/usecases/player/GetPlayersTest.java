@@ -1,10 +1,9 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGatewayCoach;
-import com.mazebert.usecases.player.GetPlayers;
 import com.mazebert.usecases.player.GetPlayers.Request;
 import com.mazebert.usecases.player.GetPlayers.Response;
 import org.junit.Before;
