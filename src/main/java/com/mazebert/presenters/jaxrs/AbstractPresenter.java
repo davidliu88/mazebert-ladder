@@ -1,8 +1,8 @@
 package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.Logic;
-import com.mazebert.usecases.SecureRequest;
-import com.mazebert.usecases.VerifyGameSignature;
+import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.VerifyGameSignature;
 import org.jusecase.UsecaseExecutor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +22,15 @@ public abstract class AbstractPresenter implements UsecaseExecutor {
     UriInfo uriInfo;
 
     public <Request, Response> Response execute(Request request) {
-        if (request instanceof SecureRequest) {
+        if (isVerificationRequired(request)) {
             verifyRequest();
         }
 
         return usecaseExecutor.execute(request);
+    }
+
+    private <Request> boolean isVerificationRequired(Request request) {
+        return request.getClass().isAnnotationPresent(SecureRequest.class);
     }
 
     private void verifyRequest() {

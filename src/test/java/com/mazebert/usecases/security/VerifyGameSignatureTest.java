@@ -1,12 +1,12 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.security;
 
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
+import com.mazebert.usecases.security.VerifyGameSignature.Request;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
-import com.mazebert.usecases.VerifyGameSignature.Request;
 
 import java.io.InputStream;
 

@@ -2,8 +2,8 @@ package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.usecases.SecureRequest;
-import com.mazebert.usecases.VerifyGameSignature;
+import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.VerifyGameSignature;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +35,8 @@ public class AbstractPresenterTest {
 
     private List<Object> sentRequests = new ArrayList<Object>();
 
-    private class DummySecureRequest implements SecureRequest {
+    @SecureRequest
+    private class DummySecureRequest {
     }
 
     @Before
