@@ -6,12 +6,13 @@ import com.mazebert.error.Type;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.random.PlayerKeyGenerator;
+import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
 
 public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccount.Response> {
-    public static class Request {
+    @SecureRequest public static class Request {
         public String name;
         public int level;
         public long experience;
