@@ -4,6 +4,7 @@ import com.mazebert.entities.Player;
 import com.mazebert.gateways.PlayerGateway;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class GetStatus implements Usecase<GetStatus.Request, GetStatus.Response> {
@@ -18,6 +19,7 @@ public class GetStatus implements Usecase<GetStatus.Request, GetStatus.Response>
     private final PlayerGateway playerGateway;
     private static final int minutesTolerance = 10;
 
+    @Inject
     public GetStatus(PlayerGateway playerGateway) {
         this.playerGateway = playerGateway;
     }

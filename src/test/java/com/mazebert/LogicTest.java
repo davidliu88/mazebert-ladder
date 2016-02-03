@@ -1,5 +1,6 @@
 package com.mazebert;
 
+import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayers;
 import com.mazebert.usecases.GetVersion;
@@ -18,9 +19,11 @@ public class LogicTest extends UsecaseExecutorTest {
         givenExecutor(Logic.instance);
 
         thenUsecaseCanBeExecuted(GetVersion.class);
+        thenUsecaseCanBeExecuted(GetStatus.class);
+
         thenUsecaseCanBeExecuted(CreateAccount.class);
-        thenUsecaseCanBeExecuted(GetPlayers.class);
         thenUsecaseCanBeExecuted(UpdateProgress.class);
+        thenUsecaseCanBeExecuted(GetPlayers.class);
     }
 
     @Test
