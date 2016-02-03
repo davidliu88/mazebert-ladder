@@ -1,4 +1,4 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
@@ -9,7 +9,7 @@ import org.jusecase.Usecase;
 
 import javax.inject.Inject;
 
-public class UpdatePlayer implements Usecase<UpdatePlayer.Request, UpdatePlayer.Response> {
+public class UpdateProgress implements Usecase<UpdateProgress.Request, UpdateProgress.Response> {
     private final PlayerGateway playerGateway;
 
     @SecureRequest
@@ -23,7 +23,7 @@ public class UpdatePlayer implements Usecase<UpdatePlayer.Request, UpdatePlayer.
     }
 
     @Inject
-    public UpdatePlayer(PlayerGateway playerGateway) {
+    public UpdateProgress(PlayerGateway playerGateway) {
         this.playerGateway = playerGateway;
     }
 

@@ -4,8 +4,9 @@ import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGatewayCoach;
-import com.mazebert.usecases.UpdatePlayer.Request;
-import com.mazebert.usecases.UpdatePlayer.Response;
+import com.mazebert.usecases.player.UpdateProgress;
+import com.mazebert.usecases.player.UpdateProgress.Request;
+import com.mazebert.usecases.player.UpdateProgress.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -15,14 +16,14 @@ import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
 
-public class UpdatePlayerTest extends UsecaseTest<Request, Response> {
+public class UpdateProgressTest extends UsecaseTest<Request, Response> {
 
     private PlayerGatewayCoach playerGateway;
 
     @Before
     public void setUp() {
         playerGateway = new PlayerGatewayCoach();
-        usecase = new UpdatePlayer(playerGateway);
+        usecase = new UpdateProgress(playerGateway);
     }
 
     @Test

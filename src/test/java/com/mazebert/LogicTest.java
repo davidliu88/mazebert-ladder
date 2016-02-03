@@ -1,9 +1,9 @@
 package com.mazebert;
 
-import com.mazebert.usecases.CreateAccount;
-import com.mazebert.usecases.GetPlayers;
+import com.mazebert.usecases.player.CreateAccount;
+import com.mazebert.usecases.player.GetPlayers;
 import com.mazebert.usecases.GetVersion;
-import com.mazebert.usecases.UpdatePlayer;
+import com.mazebert.usecases.player.UpdateProgress;
 import com.mazebert.usecases.security.SecureRequest;
 import org.junit.Test;
 import org.jusecase.Usecase;
@@ -20,13 +20,13 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(GetVersion.class);
         thenUsecaseCanBeExecuted(CreateAccount.class);
         thenUsecaseCanBeExecuted(GetPlayers.class);
-        thenUsecaseCanBeExecuted(UpdatePlayer.class);
+        thenUsecaseCanBeExecuted(UpdateProgress.class);
     }
 
     @Test
     public void secureUsecases() {
         thenUsecaseIsSecured(CreateAccount.class);
-        thenUsecaseIsSecured(UpdatePlayer.class);
+        thenUsecaseIsSecured(UpdateProgress.class);
     }
 
     private void thenUsecaseIsSecured(Class<? extends Usecase> usecaseClass) {

@@ -1,4 +1,4 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
 import com.mazebert.error.Error;

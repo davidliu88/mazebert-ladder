@@ -1,8 +1,8 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.usecases.CreateAccount;
-import com.mazebert.usecases.GetPlayers;
-import com.mazebert.usecases.UpdatePlayer;
+import com.mazebert.usecases.player.CreateAccount;
+import com.mazebert.usecases.player.GetPlayers;
+import com.mazebert.usecases.player.UpdateProgress;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -29,7 +29,7 @@ public class PlayersPresenter extends AbstractPresenter {
 
     @POST
     @Path("/update")
-    public UpdatePlayer.Response createAccount(UpdatePlayer.Request request) {
+    public UpdateProgress.Response createAccount(UpdateProgress.Request request) {
         return execute(request);
     }
 }
