@@ -4,4 +4,8 @@ public class BuilderFactory {
     public static PlayerBuilder player() {
         return new PlayerBuilder();
     }
+
+    public static PlayerRowBuilder playerRow() {
+        return new PlayerRowBuilder();
+    }
 }

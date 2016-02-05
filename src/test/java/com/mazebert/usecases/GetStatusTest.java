@@ -1,7 +1,7 @@
 package com.mazebert.usecases;
 
-import com.mazebert.entities.Player;
-import com.mazebert.gateways.PlayerGatewayCoach;
+import com.mazebert.entities.PlayerRow;
+import com.mazebert.gateways.PlayerRowGatewayCoach;
 import com.mazebert.usecases.GetStatus.Request;
 import com.mazebert.usecases.GetStatus.Response;
 import org.junit.Before;
@@ -11,37 +11,37 @@ import org.jusecase.builders.Builder;
 
 import java.util.List;
 
-import static com.mazebert.builders.BuilderFactory.player;
+import static com.mazebert.builders.BuilderFactory.playerRow;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.listWith;
 
 public class GetStatusTest extends UsecaseTest<Request, Response> {
-    private PlayerGatewayCoach playerGateway;
+    private PlayerRowGatewayCoach playerRowGateway;
 
     @Before
     public void setUp() {
-        playerGateway = new PlayerGatewayCoach();
-        usecase = new GetStatus(playerGateway);
+        playerRowGateway = new PlayerRowGatewayCoach();
+        usecase = new GetStatus(playerRowGateway);
 
         givenRequest(a(request()));
     }
 
     @Test
     public void totalPlayerCountIsReturned() {
-        playerGateway.givenTotalPlayerCount(100);
+        playerRowGateway.givenTotalPlayerCount(100);
         whenRequestIsExecuted();
         assertEquals(100, response.totalPlayers);
     }
 
     @Test
     public void nowPlayingPlayersAreReturned() {
-        List<Player> players = a(listWith(
-                a(player().withName("Player 1")),
-                a(player().withName("Player 2")),
-                a(player().withName("Player 3"))
+        List<PlayerRow> players = a(listWith(
+                a(playerRow()),
+                a(playerRow()),
+                a(playerRow())
         ));
-        playerGateway.givenPlayersNowPlaying(10, players);
+        playerRowGateway.givenPlayersNowPlaying(10, players);
 
         whenRequestIsExecuted();
 

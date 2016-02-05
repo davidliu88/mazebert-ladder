@@ -7,12 +7,7 @@ import java.util.List;
 public interface PlayerGateway {
     Player addPlayer(Player player);
 
-    List<Player> findPlayers(int start, int limit);
-    List<Player> findPlayersNowPlaying(int toleranceInMinutes);
-
     Player findPlayer(String key);
 
     void updatePlayer(Player player);
-
-    int getTotalPlayerCount();
 }

@@ -9,17 +9,19 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.List;
 
 public class MySqlPlayerGateway implements PlayerGateway {
     private final DataSource dataSource;
 
+    @Inject
     public MySqlPlayerGateway(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    @Override
     public Player addPlayer(Player player) {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
@@ -35,14 +37,6 @@ public class MySqlPlayerGateway implements PlayerGateway {
         }
     }
 
-    public List<Player> findPlayers(int start, int limit) {
-        return null;
-    }
-
-    public List<Player> findPlayersNowPlaying(int toleranceInMinutes) {
-        return null;
-    }
-
     public Player findPlayer(String key) {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
@@ -55,9 +49,5 @@ public class MySqlPlayerGateway implements PlayerGateway {
 
     public void updatePlayer(Player player) {
 
-    }
-
-    public int getTotalPlayerCount() {
-        return 0;
     }
 }

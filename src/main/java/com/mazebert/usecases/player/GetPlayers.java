@@ -1,32 +1,28 @@
 package com.mazebert.usecases.player;
 
-import com.mazebert.entities.Player;
+import com.mazebert.entities.PlayerRow;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.gateways.PlayerGateway;
+import com.mazebert.gateways.PlayerRowGateway;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
 import java.util.List;
 
-public class GetPlayers implements Usecase<GetPlayers.Request, GetPlayers.Response> {
-    private final PlayerGateway playerGateway;
+public class GetPlayers implements Usecase<GetPlayers.Request, List<PlayerRow>> {
+    private final PlayerRowGateway playerRowGateway;
 
     public static class Request {
         public int start;
         public int limit;
     }
 
-    public static class Response {
-        public List<Player> players;
-    }
-
     @Inject
-    public GetPlayers(PlayerGateway playerGateway) {
-        this.playerGateway = playerGateway;
+    public GetPlayers(PlayerRowGateway playerRowGateway) {
+        this.playerRowGateway = playerRowGateway;
     }
 
-    public Response execute(Request request) {
+    public List<PlayerRow> execute(Request request) {
         if (request.start < 0) {
             throw new Error(Type.BAD_REQUEST, "Start parameter must be greater than or equal to 0.");
         }
@@ -35,9 +31,6 @@ public class GetPlayers implements Usecase<GetPlayers.Request, GetPlayers.Respon
             throw new Error(Type.BAD_REQUEST, "Limit must be greater than 0.");
         }
 
-        Response response = new Response();
-        response.players = playerGateway.findPlayers(request.start, request.limit);
-
-        return response;
+        return playerRowGateway.findPlayers(request.start, request.limit);
     }
 }

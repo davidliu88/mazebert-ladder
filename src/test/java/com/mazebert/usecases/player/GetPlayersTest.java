@@ -1,11 +1,10 @@
 package com.mazebert.usecases.player;
 
-import com.mazebert.entities.Player;
+import com.mazebert.entities.PlayerRow;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.gateways.PlayerGatewayCoach;
+import com.mazebert.gateways.PlayerRowGatewayCoach;
 import com.mazebert.usecases.player.GetPlayers.Request;
-import com.mazebert.usecases.player.GetPlayers.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -13,18 +12,18 @@ import org.jusecase.builders.Builder;
 
 import java.util.List;
 
-import static com.mazebert.builders.BuilderFactory.player;
+import static com.mazebert.builders.BuilderFactory.playerRow;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.listWith;
 
-public class GetPlayersTest extends UsecaseTest<Request, Response> {
+public class GetPlayersTest extends UsecaseTest<Request, List<PlayerRow>> {
 
-    private PlayerGatewayCoach playerGateway;
+    private PlayerRowGatewayCoach playerGateway;
 
     @Before
     public void setUp() {
-        playerGateway = new PlayerGatewayCoach();
+        playerGateway = new PlayerRowGatewayCoach();
 
         usecase = new GetPlayers(playerGateway);
     }
@@ -55,16 +54,16 @@ public class GetPlayersTest extends UsecaseTest<Request, Response> {
         givenRequest(a(request()
                 .withStart(1000)
                 .withLimit(500)));
-        List<Player> expectedPlayers = a(listWith(
-                a(player()),
-                a(player()),
-                a(player())
+        List<PlayerRow> expectedPlayers = a(listWith(
+                a(playerRow()),
+                a(playerRow()),
+                a(playerRow())
         ));
         playerGateway.givenPlayers(1000, 500, expectedPlayers);
 
         whenRequestIsExecuted();
 
-        assertEquals(expectedPlayers, response.players);
+        assertEquals(expectedPlayers, response);
     }
 
     private RequestBuilder request() {
