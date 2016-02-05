@@ -1,17 +1,17 @@
 package com.mazebert.entities;
 
 public class Player {
-    private int id;
+    private long id;
     private String key;
     private String name;
     private int level;
     private long experience;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

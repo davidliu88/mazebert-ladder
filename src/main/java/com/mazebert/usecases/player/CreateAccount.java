@@ -19,7 +19,7 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
     }
 
     public static class Response {
-        public int id;
+        public long id;
         public String key;
     }
 
