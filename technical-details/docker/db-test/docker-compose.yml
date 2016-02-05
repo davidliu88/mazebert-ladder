@@ -1,0 +1,7 @@
+mazebert-ladder-test-db:
+  container_name: mazebert-ladder-test-db
+  image: ladder-db:latest
+  environment:
+    - MYSQL_ROOT_PASSWORD=integrationtest
+  ports:
+    - "3306:3306"
