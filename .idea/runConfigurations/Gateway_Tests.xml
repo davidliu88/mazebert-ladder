@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Unit Tests" type="JUnit" factoryName="JUnit">
+  <configuration default="false" name="Gateway Tests" type="JUnit" factoryName="JUnit">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <module name="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -18,7 +18,7 @@
     </option>
     <envs />
     <patterns>
-      <pattern testClass="^(?!.*GatewayTest$).*$" />
+      <pattern testClass="(.*?)GatewayTest(.*?)" />
     </patterns>
     <method />
   </configuration>

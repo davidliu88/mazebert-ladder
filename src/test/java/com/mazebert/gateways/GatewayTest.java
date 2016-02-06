@@ -4,7 +4,6 @@ import com.mazebert.gateways.error.GatewayError;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class GatewayTest<Gateway> {
     protected Gateway gateway;
