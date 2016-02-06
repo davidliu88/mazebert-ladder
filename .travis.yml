@@ -1,4 +1,12 @@
+sudo: required
+
 language: java
+
+services:
+  - docker
+
+before_install:
+  - cd technical-details/docker/db-test && docker-compose up -d
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
