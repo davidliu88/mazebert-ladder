@@ -95,4 +95,4 @@ $RECYCLE.BIN/
 
 
 ### Project specific ###
-src/test/resources/_integrationtest-database.properties
+src/test/resources/integrationtest-database.properties
