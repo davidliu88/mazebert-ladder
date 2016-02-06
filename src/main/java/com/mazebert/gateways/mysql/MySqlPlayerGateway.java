@@ -3,6 +3,7 @@ package com.mazebert.gateways.mysql;
 import com.mazebert.entities.Player;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.error.GatewayError;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -33,7 +34,11 @@ public class MySqlPlayerGateway implements PlayerGateway {
             player.setId(id);
             return player;
         } catch (SQLException e) {
-            throw new GatewayError("Failed to insert player into database.", e);
+            if (e.getErrorCode() == 1062) { // Caution: Vendor specific behavior (MySQL)!
+                throw new KeyAlreadyExists();
+            } else {
+                throw new GatewayError("Failed to insert player into database.", e);
+            }
         }
     }
 

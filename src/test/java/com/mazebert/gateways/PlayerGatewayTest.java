@@ -1,10 +1,12 @@
 package com.mazebert.gateways;
 
 import com.mazebert.entities.Player;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import org.junit.Test;
 
 import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.jusecase.builders.BuilderFactory.a;
 
@@ -43,6 +45,19 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getExperience(), actual.getExperience());
         assertEquals(expected.getLevel(), actual.getLevel());
+    }
+
+    @Test
+    public void addPlayer_playerKeyAlreadyExists() {
+        gateway.addPlayer(a(player().casid()));
+
+        try {
+            gateway.addPlayer(a(player().casid()));
+        } catch (KeyAlreadyExists error) {
+            this.error = error;
+        }
+
+        assertNotNull(error);
     }
 
     @Test

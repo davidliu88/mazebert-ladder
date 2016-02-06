@@ -113,12 +113,12 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
 
     @Test
     public void findPlayersUpdatedSince_matchingPlayersSortedByName() {
-        givenPlayerExists(a(player().casid().withName("Homer").withLastUpdate(a(date().with("2016-02-06 17:00:00")))));
-        givenPlayerExists(a(player().casid().withName("Marge").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
-        givenPlayerExists(a(player().casid().withName("Maggy").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
-        givenPlayerExists(a(player().casid().withName("casid").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
-        givenPlayerExists(a(player().casid().withName("Bart" ).withLastUpdate(a(date().with("2016-02-06 16:49:59")))));
-        givenPlayerExists(a(player().casid().withName("Lisa" ).withLastUpdate(a(date().with("2015-01-01 00:00:00")))));
+        givenPlayerExists(a(player().withKey("a").withName("Homer").withLastUpdate(a(date().with("2016-02-06 17:00:00")))));
+        givenPlayerExists(a(player().withKey("b").withName("Marge").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
+        givenPlayerExists(a(player().withKey("c").withName("Maggy").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
+        givenPlayerExists(a(player().withKey("d").withName("casid").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
+        givenPlayerExists(a(player().withKey("e").withName("Bart" ).withLastUpdate(a(date().with("2016-02-06 16:49:59")))));
+        givenPlayerExists(a(player().withKey("f").withName("Lisa" ).withLastUpdate(a(date().with("2015-01-01 00:00:00")))));
 
         updatedSince = a(date().with("2016-02-06 16:50:00"));
 
@@ -153,12 +153,12 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
     }
 
     private void givenDefaultPlayersExist() {
-        givenPlayerExists(a(player().casid().withName("Garfield").withExperience(100)));
-        givenPlayerExists(a(player().casid().withName("Nap").withExperience(10)));
-        givenPlayerExists(a(player().casid().withName("Gibby").withExperience(20)));
-        givenPlayerExists(a(player().casid().withName("SubZero").withExperience(5)));
-        givenPlayerExists(a(player().casid().withName("casid").withExperience(100)));
-        givenPlayerExists(a(player().casid().withName("Blofeld").withExperience(100)));
+        givenPlayerExists(a(player().withKey("a").withName("Garfield").withExperience(100)));
+        givenPlayerExists(a(player().withKey("b").withName("Nap").withExperience(10)));
+        givenPlayerExists(a(player().withKey("c").withName("Gibby").withExperience(20)));
+        givenPlayerExists(a(player().withKey("d").withName("SubZero").withExperience(5)));
+        givenPlayerExists(a(player().withKey("e").withName("casid").withExperience(100)));
+        givenPlayerExists(a(player().withKey("f").withName("Blofeld").withExperience(100)));
     }
 
     private void whenFindPlayers() {
