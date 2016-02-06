@@ -17,7 +17,7 @@ public class PlayerBuilder implements Builder<Player> {
                 .withExperience(99999);
     }
 
-    public PlayerBuilder withId(int value) {
+    public PlayerBuilder withId(long value) {
         player.setId(value);
         return this;
     }

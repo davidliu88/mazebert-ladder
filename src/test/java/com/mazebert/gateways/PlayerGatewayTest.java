@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.jusecase.builders.BuilderFactory.a;
+import static org.jusecase.builders.BuilderFactory.date;
 
 public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
 
@@ -64,5 +65,28 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
     public void findPlayer_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.findPlayer("?"));
         thenGatewayErrorIs("Failed to find player by key in database");
+    }
+
+    @Test
+    public void updatePlayer_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.updatePlayer(a(player())));
+        thenGatewayErrorIs("Failed to update player in database");
+    }
+
+    @Test
+    public void updatePlayer_valuesAreUpdated() {
+        Player existing = gateway.addPlayer(a(player().casid()));
+
+        gateway.updatePlayer(a(player().casid()
+                .withId(existing.getId())
+                .withLevel(200)
+                .withExperience(100000000)
+                .withLastUpdate(a(date().with("2016-02-02 23:00:11")))
+        ));
+
+        Player updated = gateway.findPlayer(existing.getKey());
+        assertEquals(200, updated.getLevel());
+        assertEquals(100000000, updated.getExperience());
+        assertEquals(a(date().with("2016-02-02 23:00:11")), updated.getLastUpdate());
     }
 }

@@ -46,13 +46,23 @@ public class MySqlPlayerGateway implements PlayerGateway {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
             ResultSetHandler<Player> handler = new BeanHandler<>(Player.class);
-            return runner.query("SELECT id, name, level, experience FROM Player WHERE savekey=?;", handler, key);
+            return runner.query("SELECT id, name, level, experience, lastUpdate FROM Player WHERE savekey=?;", handler, key);
         } catch (SQLException e) {
             throw new GatewayError("Failed to find player by key in database", e);
         }
     }
 
     public void updatePlayer(Player player) {
-
+        QueryRunner runner = new QueryRunner(dataSource);
+        try {
+            runner.update("UPDATE Player SET level=?, experience=?, lastUpdate=? WHERE id=?",
+                    player.getLevel(),
+                    player.getExperience(),
+                    player.getLastUpdate(),
+                    player.getId()
+            );
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to update player in database", e);
+        }
     }
 }
