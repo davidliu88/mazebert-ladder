@@ -7,7 +7,7 @@ services:
 
 before_install:
   - docker build -t ladder-db:latest technical-details/docker/db/.
-  - cd technical-details/docker/db-test && docker-compose up -d
+  - cd technical-details/docker/db-test && docker-compose up -d && cd ../../..
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
