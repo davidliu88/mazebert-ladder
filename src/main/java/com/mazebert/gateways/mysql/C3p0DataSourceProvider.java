@@ -4,6 +4,7 @@ import com.google.inject.Provider;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.flywaydb.core.Flyway;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -30,6 +31,7 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
     public synchronized DataSource getDataSource() {
         if (dataSource == null) {
             createDataSource();
+            prepareDatabase();
         }
 
         return dataSource;
@@ -45,5 +47,11 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         } catch (Throwable e) {
             throw new Error(Type.INTERNAL_SERVER_ERROR, "Database connection pool could not be initialized", e);
         }
+    }
+
+    private void prepareDatabase() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(dataSource);
+        flyway.migrate();
     }
 }

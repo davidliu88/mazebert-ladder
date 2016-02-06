@@ -3,10 +3,11 @@ package com.mazebert;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.error.GatewayError;
+import com.mazebert.gateways.mysql.FakeDataSourceProvider;
 import com.mazebert.usecases.GetStatus;
+import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayers;
-import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.player.UpdateProgress;
 import com.mazebert.usecases.security.SecureRequest;
 import org.junit.Test;
@@ -15,15 +16,14 @@ import org.jusecase.UsecaseExecutorTest;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LogicTest extends UsecaseExecutorTest {
+    private Error error;
 
     @Test
     public void usecasesCanBeExecuted() {
-        givenExecutor(Logic.instance);
+        givenTestLogic();
 
         thenUsecaseCanBeExecuted(GetVersion.class);
         thenUsecaseCanBeExecuted(GetStatus.class);
@@ -41,12 +41,11 @@ public class LogicTest extends UsecaseExecutorTest {
 
     @Test
     public void gatewayErrorInUsecase() {
-        Error error = null;
-        Logic logic = new Logic();
-        logic.addUsecase(ThrowingUsecase.class);
+        givenTestLogic();
+        logic().addUsecase(ThrowingUsecase.class);
 
         try {
-            logic.execute(new ThrowingUsecase.Request());
+            logic().execute(new ThrowingUsecase.Request());
         } catch (Error e) {
             error = e;
         }
@@ -59,10 +58,18 @@ public class LogicTest extends UsecaseExecutorTest {
 
     @Test
     public void noErrorInUsecase() {
-        Logic logic = new Logic();
-        logic.addUsecase(GoodUsecase.class);
+        givenTestLogic();
+        logic().addUsecase(GoodUsecase.class);
 
-        assertEquals("ok", logic.execute(new GoodUsecase.Request()));
+        assertEquals("ok", logic().execute(new GoodUsecase.Request()));
+    }
+
+    private void givenTestLogic() {
+        givenExecutor(new Logic(FakeDataSourceProvider.class));
+    }
+
+    private Logic logic() {
+        return (Logic)executor;
     }
 
     private void thenUsecaseIsSecured(Class<? extends Usecase> usecaseClass) {

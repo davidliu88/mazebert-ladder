@@ -16,6 +16,7 @@
     </properties>
 
     <dependencies>
+        <!-- JUsecase -->
         <dependency>
             <groupId>org.jusecase</groupId>
             <artifactId>jusecase</artifactId>
@@ -28,20 +29,19 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jusecase</groupId>
             <artifactId>jusecase-guice</artifactId>
             <version>0.2.0</version>
         </dependency>
 
+        <!-- Servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
@@ -63,6 +63,7 @@
             <version>2.22.1</version>
         </dependency>
 
+        <!-- Database -->
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
@@ -78,8 +79,11 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>3.2.1</version>
+        </dependency>
 
         <!-- Tests -->
         <dependency>

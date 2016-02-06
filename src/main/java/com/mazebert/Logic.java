@@ -2,6 +2,7 @@ package com.mazebert;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.google.inject.Provider;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGateway;
@@ -22,12 +23,18 @@ import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 import javax.sql.DataSource;
 
 public class Logic extends GuiceUsecaseExecutor {
-    public static Logic instance = new Logic();
+    public static Logic instance = new Logic(C3p0DataSourceProvider.class);
 
     private static class GatewayModule extends AbstractModule {
+        private final Class<? extends Provider<DataSource>> dataSourceProvider;
+
+        public GatewayModule(Class<? extends Provider<DataSource>> dataSourceProvider) {
+            this.dataSourceProvider = dataSourceProvider;
+        }
+
         @Override
         protected void configure() {
-            bind(DataSource.class).toProvider(C3p0DataSourceProvider.class);
+            bind(DataSource.class).toProvider(dataSourceProvider);
 
             bind(PlayerGateway.class).to(MySqlPlayerGateway.class);
             bind(PlayerRowGateway.class).to(MySqlPlayerRowGateway.class);
@@ -41,9 +48,9 @@ public class Logic extends GuiceUsecaseExecutor {
         }
     }
 
-    public Logic() {
+    public Logic(Class<? extends Provider<DataSource>> dataSourceProvider) {
         super(Guice.createInjector(
-                new GatewayModule(),
+                new GatewayModule(dataSourceProvider),
                 new PluginModule()
         ));
 
