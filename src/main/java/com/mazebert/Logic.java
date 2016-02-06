@@ -2,8 +2,11 @@ package com.mazebert;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.mazebert.error.Error;
+import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.PlayerRowGateway;
+import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.C3p0DataSourceProvider;
 import com.mazebert.gateways.mysql.MySqlPlayerGateway;
 import com.mazebert.gateways.mysql.MySqlPlayerRowGateway;
@@ -50,5 +53,14 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(CreateAccount.class);
         addUsecase(UpdateProgress.class);
         addUsecase(GetPlayers.class);
+    }
+
+    @Override
+    public <Request, Response> Response execute(Request request) {
+        try {
+            return super.execute(request);
+        } catch (GatewayError gatewayError) {
+            throw new Error(Type.INTERNAL_SERVER_ERROR, gatewayError.getMessage(), gatewayError.getCause());
+        }
     }
 }
