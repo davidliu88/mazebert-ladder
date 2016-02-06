@@ -92,3 +92,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+
+### Project specific ###
+src/test/resources/_integrationtest-database.properties
