@@ -7,6 +7,8 @@ public class MySqlPlayerRowGatewayTest extends PlayerRowGatewayTest {
     @Before
     public void setUp() throws Exception {
         gateway = new MySqlPlayerRowGateway(TestDataSourceProvider.instance.getDataSource());
+        errorGateway = new MySqlPlayerRowGateway(TestErrorDataSourceProvider.instance.getDataSource());
+
         playerGateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.getDataSource());
     }
 }

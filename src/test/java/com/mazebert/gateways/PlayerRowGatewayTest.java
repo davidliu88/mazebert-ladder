@@ -23,6 +23,12 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
     private List<PlayerRow> playerRows;
 
     @Test
+    public void findPlayers_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findPlayers(start, limit));
+        thenGatewayErrorIs("Failed to select player rows from database");
+    }
+
+    @Test
     public void findPlayers_noPlayers() {
         whenFindPlayers();
         assertEquals(0, playerRows.size());
@@ -94,13 +100,19 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
     }
 
     @Test
-    public void findPlayersNowPlaying_noPlayers() {
-        whenFindPlayersNowPlaying();
+    public void findPlayersUpdatedSince_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findPlayersUpdatedSince(a(date())));
+        thenGatewayErrorIs("Failed to select players updated since from database");
+    }
+
+    @Test
+    public void findPlayersUpdatedSince_noPlayers() {
+        whenFindPlayersUpdatedSince();
         assertEquals(0, playerRows.size());
     }
 
     @Test
-    public void findPlayersNowPlaying_matchingPlayersSortedByName() {
+    public void findPlayersUpdatedSince_matchingPlayersSortedByName() {
         givenPlayerExists(a(player().casid().withName("Homer").withLastUpdate(a(date().with("2016-02-06 17:00:00")))));
         givenPlayerExists(a(player().casid().withName("Marge").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
         givenPlayerExists(a(player().casid().withName("Maggy").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
@@ -110,13 +122,19 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
 
         updatedSince = a(date().with("2016-02-06 16:50:00"));
 
-        whenFindPlayersNowPlaying();
+        whenFindPlayersUpdatedSince();
 
         assertEquals(4, playerRows.size());
         assertEquals("casid", playerRows.get(0).getName());
         assertEquals("Homer", playerRows.get(1).getName());
         assertEquals("Maggy", playerRows.get(2).getName());
         assertEquals("Marge", playerRows.get(3).getName());
+    }
+
+    @Test
+    public void playerCount_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.getTotalPlayerCount());
+        thenGatewayErrorIs("Failed to select amount of players from database");
     }
 
     @Test
@@ -147,7 +165,7 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
         playerRows = gateway.findPlayers(start, limit);
     }
 
-    private void whenFindPlayersNowPlaying() {
+    private void whenFindPlayersUpdatedSince() {
         playerRows = gateway.findPlayersUpdatedSince(updatedSince);
     }
 }

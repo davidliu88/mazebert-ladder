@@ -11,6 +11,12 @@ import static org.jusecase.builders.BuilderFactory.a;
 public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
 
     @Test
+    public void addPlayer_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.addPlayer(a(player())));
+        thenGatewayErrorIs("Failed to insert player into database.");
+    }
+
+    @Test
     public void addPlayer_idIsReturned() {
         Player player = gateway.addPlayer(a(player()
                 .withName("Ontrose")

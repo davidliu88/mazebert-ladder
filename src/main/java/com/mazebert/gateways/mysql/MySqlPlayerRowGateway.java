@@ -4,6 +4,7 @@ import com.mazebert.entities.PlayerRow;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerRowGateway;
+import com.mazebert.gateways.error.GatewayError;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
@@ -34,7 +35,7 @@ public class MySqlPlayerRowGateway implements PlayerRowGateway {
                     "LIMIT ?, ?;",
                     new BeanListHandler<>(PlayerRow.class), start, limit);
         } catch (SQLException e) {
-            throw new Error(Type.INTERNAL_SERVER_ERROR, "Failed to select player rows from database", e);
+            throw new GatewayError("Failed to select player rows from database", e);
         }
     }
 
@@ -46,7 +47,7 @@ public class MySqlPlayerRowGateway implements PlayerRowGateway {
                     new BeanListHandler<>(PlayerRow.class),
                     updatedSince);
         } catch (SQLException e) {
-            throw new Error(Type.INTERNAL_SERVER_ERROR, "Failed to select players currently playing from database", e);
+            throw new GatewayError("Failed to select players updated since from database", e);
         }
     }
 
@@ -57,7 +58,7 @@ public class MySqlPlayerRowGateway implements PlayerRowGateway {
             Long count = runner.query("SELECT COUNT(*) FROM Player;", new ScalarHandler<>());
             return count == null ? 0 : count.intValue();
         } catch (SQLException e) {
-            throw new Error(Type.INTERNAL_SERVER_ERROR, "Failed to select amount of players from database", e);
+            throw new GatewayError("Failed to select amount of players from database", e);
         }
     }
 }
