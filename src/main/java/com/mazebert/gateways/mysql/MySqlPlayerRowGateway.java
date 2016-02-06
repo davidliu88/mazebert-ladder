@@ -1,8 +1,6 @@
 package com.mazebert.gateways.mysql;
 
 import com.mazebert.entities.PlayerRow;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerRowGateway;
 import com.mazebert.gateways.error.GatewayError;
 import org.apache.commons.dbutils.QueryRunner;
@@ -30,7 +28,7 @@ public class MySqlPlayerRowGateway implements PlayerRowGateway {
         try(Connection connection = dataSource.getConnection()) {
             runner.update(connection, "SET @rownum := ?;", start);
             return runner.query(connection,
-                    "SELECT @rownum := @rownum + 1 AS rank, id, name, level, experience FROM Player " +
+                    "SELECT @rownum := @rownum + 1 AS rank, id, name, level, experience FROM Player WHERE isCheater=0 " +
                     "ORDER BY experience DESC, LOWER(name) ASC " +
                     "LIMIT ?, ?;",
                     new BeanListHandler<>(PlayerRow.class), start, limit);

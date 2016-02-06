@@ -159,6 +159,7 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
         givenPlayerExists(a(player().withKey("d").withName("SubZero").withExperience(5)));
         givenPlayerExists(a(player().withKey("e").withName("casid").withExperience(100)));
         givenPlayerExists(a(player().withKey("f").withName("Blofeld").withExperience(100)));
+        givenPlayerExists(a(player().cheater())); // Cheater must be ignored!
     }
 
     private void whenFindPlayers() {

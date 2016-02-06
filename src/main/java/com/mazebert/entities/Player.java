@@ -13,6 +13,7 @@ public class Player {
     private String email;
     private int supporterLevel;
     private int relics;
+    private boolean isCheater;
 
     public long getId() {
         return id;
@@ -92,5 +93,13 @@ public class Player {
 
     public int getRelics() {
         return relics;
+    }
+
+    public void setIsCheater(boolean isCheater) {
+        this.isCheater = isCheater;
+    }
+
+    public boolean isCheater() {
+        return isCheater;
     }
 }

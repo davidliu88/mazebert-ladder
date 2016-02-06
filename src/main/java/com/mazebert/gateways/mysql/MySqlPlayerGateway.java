@@ -26,7 +26,7 @@ public class MySqlPlayerGateway implements PlayerGateway {
     public Player addPlayer(Player player) {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
-            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate, email, supporterLevel, relics) VALUES(?, ?, ?, ?, ?, ?, ?, ?);", new ScalarHandler<>(),
+            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate, email, supporterLevel, relics, isCheater) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);", new ScalarHandler<>(),
                     player.getKey(),
                     player.getName(),
                     player.getLevel(),
@@ -34,7 +34,8 @@ public class MySqlPlayerGateway implements PlayerGateway {
                     player.getLastUpdate(),
                     player.getEmail(),
                     player.getSupporterLevel(),
-                    player.getRelics());
+                    player.getRelics(),
+                    player.isCheater());
             player.setId(id);
             return player;
         } catch (SQLException e) {
@@ -63,7 +64,7 @@ public class MySqlPlayerGateway implements PlayerGateway {
             runner.update(connection, "SET @rownum := 0;");
             Long rank = runner.query(connection,
                     "SELECT rank FROM (" +
-                        "SELECT @rownum := @rownum + 1 AS rank, id FROM Player ORDER BY experience DESC, LOWER(name)" +
+                        "SELECT @rownum := @rownum + 1 AS rank, id FROM Player WHERE isCheater=0 ORDER BY experience DESC, LOWER(name)" +
                     ") as result WHERE id=?;",
                     new ScalarHandler<>(), id);
             return rank == null ? 0 : rank.intValue();

@@ -121,6 +121,12 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
     }
 
     @Test
+    public void findPlayerRank_cheater() {
+        Player player = gateway.addPlayer(a(player().cheater()));
+        assertEquals(0, gateway.findPlayerRank(player.getId()));
+    }
+
+    @Test
     public void updatePlayer_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.updatePlayer(a(player())));
         thenGatewayErrorIs("Failed to update player in database");

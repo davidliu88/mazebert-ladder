@@ -24,6 +24,20 @@ public class PlayerBuilder implements Builder<Player> {
                 .withLastUpdate(a(date().with("2016-02-10 22:22:22")));
     }
 
+    public PlayerBuilder cheater() {
+        return this
+                .withId(11111)
+                .withKey("cheatr")
+                .withName("cheat0r")
+                .withLevel(999)
+                .withExperience(99999999)
+                .withEmail("cheater@gmail.com")
+                .withSupporterLevel(0)
+                .withRelics(30000)
+                .withLastUpdate(a(date().with("2016-07-13 11:11:11")))
+                .withIsCheater(true);
+    }
+
     public PlayerBuilder withId(long value) {
         player.setId(value);
         return this;
@@ -66,6 +80,11 @@ public class PlayerBuilder implements Builder<Player> {
 
     public PlayerBuilder withRelics(int value) {
         player.setRelics(value);
+        return this;
+    }
+
+    private PlayerBuilder withIsCheater(boolean value) {
+        player.setIsCheater(value);
         return this;
     }
 
