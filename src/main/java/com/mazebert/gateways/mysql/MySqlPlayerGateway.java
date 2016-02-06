@@ -11,6 +11,7 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class MySqlPlayerGateway implements PlayerGateway {
@@ -25,12 +26,15 @@ public class MySqlPlayerGateway implements PlayerGateway {
     public Player addPlayer(Player player) {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
-            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate) VALUES(?, ?, ?, ?, ?);", new ScalarHandler<>(),
+            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate, email, supporterLevel, relics) VALUES(?, ?, ?, ?, ?, ?, ?, ?);", new ScalarHandler<>(),
                     player.getKey(),
                     player.getName(),
                     player.getLevel(),
                     player.getExperience(),
-                    player.getLastUpdate());
+                    player.getLastUpdate(),
+                    player.getEmail(),
+                    player.getSupporterLevel(),
+                    player.getRelics());
             player.setId(id);
             return player;
         } catch (SQLException e) {
@@ -46,9 +50,25 @@ public class MySqlPlayerGateway implements PlayerGateway {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
             ResultSetHandler<Player> handler = new BeanHandler<>(Player.class);
-            return runner.query("SELECT id, name, level, experience, lastUpdate FROM Player WHERE savekey=?;", handler, key);
+            return runner.query("SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics FROM Player WHERE savekey=?;", handler, key);
         } catch (SQLException e) {
             throw new GatewayError("Failed to find player by key in database", e);
+        }
+    }
+
+    @Override
+    public int findPlayerRank(long id) {
+        QueryRunner runner = new QueryRunner(dataSource);
+        try(Connection connection = dataSource.getConnection()) {
+            runner.update(connection, "SET @rownum := 0;");
+            Long rank = runner.query(connection,
+                    "SELECT rank FROM (" +
+                        "SELECT @rownum := @rownum + 1 AS rank, id FROM Player ORDER BY experience DESC, LOWER(name)" +
+                    ") as result WHERE id=?;",
+                    new ScalarHandler<>(), id);
+            return rank == null ? 0 : rank.intValue();
+        } catch (SQLException e) {
+            return 0;
         }
     }
 

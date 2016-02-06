@@ -11,6 +11,7 @@ public class PlayerGatewayCoach implements PlayerGateway {
     private List<RuntimeException> exceptions = new ArrayList<>();
 
     private Map<String, Player> playerByKey = new HashMap<>();
+    private Map<Long, Integer> playerRankById = new HashMap<>();
 
     public Player addPlayer(Player player) {
         if (exceptions.size() > 0) {
@@ -24,6 +25,12 @@ public class PlayerGatewayCoach implements PlayerGateway {
 
     public Player findPlayer(String key) {
         return playerByKey.get(key);
+    }
+
+    @Override
+    public int findPlayerRank(long id) {
+        Integer result = playerRankById.get(id);
+        return result == null ? 0 : result;
     }
 
     public void updatePlayer(Player player) {
@@ -48,5 +55,9 @@ public class PlayerGatewayCoach implements PlayerGateway {
 
     public void givenPlayer(Player player) {
         playerByKey.put(player.getKey(), player);
+    }
+
+    public void givenPlayerRank(int rank, Player player) {
+        playerRankById.put(player.getId(), rank);
     }
 }

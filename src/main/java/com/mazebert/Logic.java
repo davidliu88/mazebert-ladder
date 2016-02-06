@@ -15,6 +15,7 @@ import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.player.CreateAccount;
+import com.mazebert.usecases.player.GetPlayer;
 import com.mazebert.usecases.player.GetPlayers;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.player.UpdateProgress;
@@ -60,6 +61,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(CreateAccount.class);
         addUsecase(UpdateProgress.class);
         addUsecase(GetPlayers.class);
+        addUsecase(GetPlayer.class);
     }
 
     @Override

@@ -9,6 +9,10 @@ public class Player {
     private int level;
     private long experience;
     private Date lastUpdate;
+    private int rank;
+    private String email;
+    private int supporterLevel;
+    private int relics;
 
     public long getId() {
         return id;
@@ -56,5 +60,37 @@ public class Player {
 
     public Date getLastUpdate() {
         return lastUpdate;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setSupporterLevel(int supporterLevel) {
+        this.supporterLevel = supporterLevel;
+    }
+
+    public int getSupporterLevel() {
+        return supporterLevel;
+    }
+
+    public void setRelics(int relics) {
+        this.relics = relics;
+    }
+
+    public int getRelics() {
+        return relics;
     }
 }

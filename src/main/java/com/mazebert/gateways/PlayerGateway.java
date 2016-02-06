@@ -7,5 +7,7 @@ public interface PlayerGateway {
 
     Player findPlayer(String key);
 
+    int findPlayerRank(long id);
+
     void updatePlayer(Player player);
 }

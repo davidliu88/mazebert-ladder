@@ -68,6 +68,59 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
     }
 
     @Test
+    public void findPlayer_valuesAreReturned() {
+        Player expected = gateway.addPlayer(a(player().casid()));
+        Player actual = gateway.findPlayer("abcdef");
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getLevel(), actual.getLevel());
+        assertEquals(expected.getExperience(), actual.getExperience());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getSupporterLevel(), actual.getSupporterLevel());
+        assertEquals(expected.getRelics(), actual.getRelics());
+        assertEquals(expected.getLastUpdate(), actual.getLastUpdate());
+    }
+
+    @Test
+    public void findPlayerRank_gatewayError() {
+        assertEquals(0 , errorGateway.findPlayerRank(16));
+    }
+
+    @Test
+    public void findPlayerRank_playerDoesNotExist() {
+        assertEquals(0 , gateway.findPlayerRank(1234));
+    }
+
+    @Test
+    public void findPlayerRank_sortedByExperience() {
+        Player p1 = gateway.addPlayer(a(player().casid().withKey("a").withExperience(100)));
+        Player p2 = gateway.addPlayer(a(player().casid().withKey("b").withExperience(1213)));
+        Player p3 = gateway.addPlayer(a(player().casid().withKey("c").withExperience(12)));
+        Player p4 = gateway.addPlayer(a(player().casid().withKey("d").withExperience(223)));
+
+        assertEquals(1, gateway.findPlayerRank(p2.getId()));
+        assertEquals(2, gateway.findPlayerRank(p4.getId()));
+        assertEquals(3, gateway.findPlayerRank(p1.getId()));
+        assertEquals(4, gateway.findPlayerRank(p3.getId()));
+    }
+
+    @Test
+    public void findPlayerRank_equalExperience_sortedByName() {
+        Player p1 = gateway.addPlayer(a(player().casid().withName("Homer").withKey("a")));
+        Player p2 = gateway.addPlayer(a(player().casid().withName("Marge").withKey("b")));
+        Player p3 = gateway.addPlayer(a(player().casid().withName("Bart").withKey("c")));
+        Player p4 = gateway.addPlayer(a(player().casid().withName("Lisa").withKey("d")));
+        Player p5 = gateway.addPlayer(a(player().casid().withName("casid").withKey("e")));
+
+        assertEquals(1, gateway.findPlayerRank(p3.getId()));
+        assertEquals(2, gateway.findPlayerRank(p5.getId()));
+        assertEquals(3, gateway.findPlayerRank(p1.getId()));
+        assertEquals(4, gateway.findPlayerRank(p4.getId()));
+        assertEquals(5, gateway.findPlayerRank(p2.getId()));
+    }
+
+    @Test
     public void updatePlayer_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.updatePlayer(a(player())));
         thenGatewayErrorIs("Failed to update player in database");

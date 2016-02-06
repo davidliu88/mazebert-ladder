@@ -1,9 +1,12 @@
 package com.mazebert.builders;
 
 import com.mazebert.entities.Player;
-import org.jusecase.builders.Builder;
+import org.jusecase.builders.*;
 
 import java.util.Date;
+
+import static org.jusecase.builders.BuilderFactory.a;
+import static org.jusecase.builders.BuilderFactory.date;
 
 public class PlayerBuilder implements Builder<Player> {
     private Player player = new Player();
@@ -14,7 +17,11 @@ public class PlayerBuilder implements Builder<Player> {
                 .withKey("abcdef")
                 .withName("casid")
                 .withLevel(99)
-                .withExperience(99999);
+                .withExperience(99999)
+                .withEmail("andy@mazebert.com")
+                .withSupporterLevel(7)
+                .withRelics(300)
+                .withLastUpdate(a(date().with("2016-02-10 22:22:22")));
     }
 
     public PlayerBuilder withId(long value) {
@@ -44,6 +51,21 @@ public class PlayerBuilder implements Builder<Player> {
 
     public PlayerBuilder withLastUpdate(Date value) {
         player.setLastUpdate(value);
+        return this;
+    }
+
+    public PlayerBuilder withEmail(String value) {
+        player.setEmail(value);
+        return this;
+    }
+
+    public PlayerBuilder withSupporterLevel(int value) {
+        player.setSupporterLevel(value);
+        return this;
+    }
+
+    public PlayerBuilder withRelics(int value) {
+        player.setRelics(value);
         return this;
     }
 
