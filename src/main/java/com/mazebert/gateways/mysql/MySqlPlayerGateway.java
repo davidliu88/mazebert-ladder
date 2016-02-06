@@ -34,7 +34,7 @@ public class MySqlPlayerGateway implements PlayerGateway {
             player.setId(id);
             return player;
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) { // Caution: Vendor specific behavior (MySQL)!
+            if (e.getErrorCode() == MySqlErrorCode.DUPLICATE_ENTRY) {
                 throw new KeyAlreadyExists();
             } else {
                 throw new GatewayError("Failed to insert player into database.", e);
