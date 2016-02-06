@@ -19,12 +19,12 @@
         <dependency>
             <groupId>org.jusecase</groupId>
             <artifactId>jusecase</artifactId>
-            <version>0.2.0</version>
+            <version>0.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.jusecase</groupId>
             <artifactId>jusecase</artifactId>
-            <version>0.2.0</version>
+            <version>0.3.0</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
