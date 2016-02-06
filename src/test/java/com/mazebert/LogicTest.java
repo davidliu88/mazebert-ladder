@@ -57,6 +57,14 @@ public class LogicTest extends UsecaseExecutorTest {
         assertEquals(SQLException.class, error.getCause().getClass());
     }
 
+    @Test
+    public void noErrorInUsecase() {
+        Logic logic = new Logic();
+        logic.addUsecase(GoodUsecase.class);
+
+        assertEquals("ok", logic.execute(new GoodUsecase.Request()));
+    }
+
     private void thenUsecaseIsSecured(Class<? extends Usecase> usecaseClass) {
         Class<?> requestClass = requestResolver.getRequestClass(usecaseClass);
         assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @SecureRequest", requestClass.isAnnotationPresent(SecureRequest.class));
@@ -68,6 +76,15 @@ public class LogicTest extends UsecaseExecutorTest {
         @Override
         public Void execute(Request request) {
             throw new GatewayError("Something went wrong down here in the gateway.", new SQLException());
+        }
+    }
+
+    private static class GoodUsecase implements Usecase<GoodUsecase.Request, String> {
+        public static class Request {}
+
+        @Override
+        public String execute(Request request) {
+            return "ok";
         }
     }
 }
