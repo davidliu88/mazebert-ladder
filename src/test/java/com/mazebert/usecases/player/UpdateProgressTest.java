@@ -4,6 +4,7 @@ import com.mazebert.entities.Player;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGatewayCoach;
+import com.mazebert.plugins.time.CurrentDatePluginCoach;
 import com.mazebert.usecases.player.UpdateProgress.Request;
 import com.mazebert.usecases.player.UpdateProgress.Response;
 import org.junit.Before;
@@ -14,15 +15,17 @@ import org.jusecase.builders.Builder;
 import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
+import static org.jusecase.builders.BuilderFactory.date;
 
 public class UpdateProgressTest extends UsecaseTest<Request, Response> {
-
     private PlayerGatewayCoach playerGateway;
+    private CurrentDatePluginCoach currentDatePlugin;
 
     @Before
     public void setUp() {
         playerGateway = new PlayerGatewayCoach();
-        usecase = new UpdateProgress(playerGateway);
+        currentDatePlugin = new CurrentDatePluginCoach();
+        usecase = new UpdateProgress(playerGateway, currentDatePlugin);
     }
 
     @Test
@@ -51,6 +54,17 @@ public class UpdateProgressTest extends UsecaseTest<Request, Response> {
         Player player = playerGateway.getUpdatedPlayer();
         assertEquals(100, player.getLevel());
         assertEquals(100000, player.getExperience());
+    }
+
+    @Test
+    public void lastUpdateIsAdjusted() {
+        givenRequest(a(request()));
+        playerGateway.givenPlayer(a(player().casid()));
+        currentDatePlugin.givenCurrentDate(a(date().with("2018-10-10 22:00:00")));
+
+        whenRequestIsExecuted();
+
+        assertEquals(a(date().with("2018-10-10 22:00:00")), playerGateway.getUpdatedPlayer().getLastUpdate());
     }
 
     @Test
