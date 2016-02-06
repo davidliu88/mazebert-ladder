@@ -3,6 +3,8 @@ package com.mazebert.builders;
 import com.mazebert.entities.Player;
 import org.jusecase.builders.Builder;
 
+import java.util.Date;
+
 public class PlayerBuilder implements Builder<Player> {
     private Player player = new Player();
 
@@ -37,6 +39,11 @@ public class PlayerBuilder implements Builder<Player> {
 
     public PlayerBuilder withExperience(long value) {
         player.setExperience(value);
+        return this;
+    }
+
+    public PlayerBuilder withLastUpdate(Date value) {
+        player.setLastUpdate(value);
         return this;
     }
 

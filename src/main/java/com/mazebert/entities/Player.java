@@ -1,11 +1,14 @@
 package com.mazebert.entities;
 
+import java.util.Date;
+
 public class Player {
     private long id;
     private String key;
     private String name;
     private int level;
     private long experience;
+    private Date lastUpdate;
 
     public long getId() {
         return id;
@@ -45,5 +48,13 @@ public class Player {
 
     public void setExperience(long experience) {
         this.experience = experience;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
 }

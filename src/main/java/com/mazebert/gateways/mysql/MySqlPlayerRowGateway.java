@@ -8,16 +8,18 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public class MySqlPlayerRowGateway implements PlayerRowGateway {
     private final DataSource dataSource;
 
+    @Inject
     public MySqlPlayerRowGateway(DataSource dataSource) {
-
         this.dataSource = dataSource;
     }
 
@@ -37,16 +39,23 @@ public class MySqlPlayerRowGateway implements PlayerRowGateway {
     }
 
     @Override
-    public List<PlayerRow> findPlayersNowPlaying(int toleranceInMinutes) {
-        return null;
+    public List<PlayerRow> findPlayersUpdatedSince(Date updatedSince) {
+        QueryRunner runner = new QueryRunner(dataSource);
+        try {
+            return runner.query("SELECT id, name FROM Player WHERE lastUpdate >= ? ORDER BY LOWER(name) ASC;",
+                    new BeanListHandler<>(PlayerRow.class),
+                    updatedSince);
+        } catch (SQLException e) {
+            throw new Error(Type.INTERNAL_SERVER_ERROR, "Failed to select players currently playing from database", e);
+        }
     }
 
     @Override
     public int getTotalPlayerCount() {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
-            Integer count = runner.query("SELECT * FROM Player;", new ScalarHandler<>());
-            return count == null ? 0 : count;
+            Long count = runner.query("SELECT COUNT(*) FROM Player;", new ScalarHandler<>());
+            return count == null ? 0 : count.intValue();
         } catch (SQLException e) {
             throw new Error(Type.INTERNAL_SERVER_ERROR, "Failed to select amount of players from database", e);
         }

@@ -25,11 +25,12 @@ public class MySqlPlayerGateway implements PlayerGateway {
     public Player addPlayer(Player player) {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
-            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience) VALUES(?, ?, ?, ?);", new ScalarHandler<>(),
+            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate) VALUES(?, ?, ?, ?, ?);", new ScalarHandler<>(),
                     player.getKey(),
                     player.getName(),
                     player.getLevel(),
-                    player.getExperience());
+                    player.getExperience(),
+                    player.getLastUpdate());
             player.setId(id);
             return player;
         } catch (SQLException e) {

@@ -4,18 +4,21 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.PlayerRow;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.jusecase.builders.BuilderFactory.a;
+import static org.jusecase.builders.BuilderFactory.date;
 
 public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway> {
     protected PlayerGateway playerGateway;
 
     private int start = 0;
     private int limit = 500;
+    private Date updatedSince;
 
     private List<PlayerRow> playerRows;
 
@@ -91,6 +94,32 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
     }
 
     @Test
+    public void findPlayersNowPlaying_noPlayers() {
+        whenFindPlayersNowPlaying();
+        assertEquals(0, playerRows.size());
+    }
+
+    @Test
+    public void findPlayersNowPlaying_matchingPlayersSortedByName() {
+        givenPlayerExists(a(player().casid().withName("Homer").withLastUpdate(a(date().with("2016-02-06 17:00:00")))));
+        givenPlayerExists(a(player().casid().withName("Marge").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
+        givenPlayerExists(a(player().casid().withName("Maggy").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
+        givenPlayerExists(a(player().casid().withName("casid").withLastUpdate(a(date().with("2016-02-06 16:50:00")))));
+        givenPlayerExists(a(player().casid().withName("Bart" ).withLastUpdate(a(date().with("2016-02-06 16:49:59")))));
+        givenPlayerExists(a(player().casid().withName("Lisa" ).withLastUpdate(a(date().with("2015-01-01 00:00:00")))));
+
+        updatedSince = a(date().with("2016-02-06 16:50:00"));
+
+        whenFindPlayersNowPlaying();
+
+        assertEquals(4, playerRows.size());
+        assertEquals("casid", playerRows.get(0).getName());
+        assertEquals("Homer", playerRows.get(1).getName());
+        assertEquals("Maggy", playerRows.get(2).getName());
+        assertEquals("Marge", playerRows.get(3).getName());
+    }
+
+    @Test
     public void playerCount_noPlayers() {
         assertEquals(0, gateway.getTotalPlayerCount());
     }
@@ -116,5 +145,9 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
 
     private void whenFindPlayers() {
         playerRows = gateway.findPlayers(start, limit);
+    }
+
+    private void whenFindPlayersNowPlaying() {
+        playerRows = gateway.findPlayersUpdatedSince(updatedSince);
     }
 }

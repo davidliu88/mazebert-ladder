@@ -2,6 +2,7 @@ package com.mazebert.gateways;
 
 import com.mazebert.entities.PlayerRow;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ public class PlayerRowGatewayCoach implements PlayerRowGateway {
     }
 
     @Override
-    public List<PlayerRow> findPlayersNowPlaying(int toleranceInMinutes) {
-        return playersNowPlaying.get("" + toleranceInMinutes);
+    public List<PlayerRow> findPlayersUpdatedSince(Date date) {
+        return playersNowPlaying.get("" + date);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class PlayerRowGatewayCoach implements PlayerRowGateway {
         totalPlayerCount = count;
     }
 
-    public void givenPlayersNowPlaying(int toleranceInMinutes, List<PlayerRow> players) {
-        playersNowPlaying.put("" + toleranceInMinutes,  players);
+    public void givenPlayerUpdatedSince(Date date, List<PlayerRow> players) {
+        playersNowPlaying.put("" + date,  players);
     }
 }
