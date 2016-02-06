@@ -44,4 +44,10 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals(expected.getExperience(), actual.getExperience());
         assertEquals(expected.getLevel(), actual.getLevel());
     }
+
+    @Test
+    public void findPlayer_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findPlayer("?"));
+        thenGatewayErrorIs("Failed to find player by key in database");
+    }
 }

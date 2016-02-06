@@ -1,8 +1,6 @@
 package com.mazebert.gateways.mysql;
 
 import com.mazebert.entities.Player;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.error.GatewayError;
 import org.apache.commons.dbutils.QueryRunner;
@@ -45,7 +43,7 @@ public class MySqlPlayerGateway implements PlayerGateway {
             ResultSetHandler<Player> handler = new BeanHandler<>(Player.class);
             return runner.query("SELECT id, name, level, experience FROM Player WHERE savekey=?;", handler, key);
         } catch (SQLException e) {
-            throw new Error(Type.INTERNAL_SERVER_ERROR, "Failed to read player from database.", e);
+            throw new GatewayError("Failed to find player by key in database", e);
         }
     }
 
