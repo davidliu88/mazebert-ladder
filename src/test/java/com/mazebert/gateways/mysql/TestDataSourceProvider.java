@@ -28,7 +28,7 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
     private void clearTable(String table) {
         QueryRunner runner = new QueryRunner(super.getDataSource());
         try {
-            runner.update("DELETE FROM " + table + ";");
+            runner.update("TRUNCATE TABLE " + table + ";");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to clear table '" + table + "'", e);
         }

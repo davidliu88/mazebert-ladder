@@ -5,6 +5,7 @@ public class PlayerRow {
     private String name;
     private int level;
     private long experience;
+    private int rank;
 
     public long getId() {
         return id;
@@ -36,5 +37,13 @@ public class PlayerRow {
 
     public void setExperience(long experience) {
         this.experience = experience;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }
