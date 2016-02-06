@@ -33,7 +33,7 @@ public class AbstractPresenterTest {
     @Mock private HttpServletRequest servletRequest;
     @Mock private UriInfo uriInfo;
 
-    private List<Object> sentRequests = new ArrayList<Object>();
+    private List<Object> sentRequests = new ArrayList<>();
 
     @SecureRequest
     private class DummySecureRequest {
@@ -73,7 +73,7 @@ public class AbstractPresenterTest {
 
     @Test
     public void secureRequest_missingSignature() throws Exception {
-        when(uriInfo.getQueryParameters(anyBoolean())).thenReturn(new MultivaluedHashMap<String, String>());
+        when(uriInfo.getQueryParameters(anyBoolean())).thenReturn(new MultivaluedHashMap<>());
 
         whenSecureRequestIsExecuted();
 
@@ -82,7 +82,7 @@ public class AbstractPresenterTest {
 
     @Test
     public void secureRequest_signatureIsPassedForClientVerification() throws Exception {
-        MultivaluedHashMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+        MultivaluedHashMap<String, String> parameters = new MultivaluedHashMap<>();
         parameters.put("signature", a(listWith("hash")));
         when(uriInfo.getQueryParameters(anyBoolean())).thenReturn(parameters);
 

@@ -9,8 +9,8 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class RandomNumberGeneratorCoach implements RandomNumberGenerator {
-    private List<Integer> randomIntegers = new ArrayList<Integer>();
-    private List<String> randomIntegerCalls = new ArrayList<String>();
+    private List<Integer> randomIntegers = new ArrayList<>();
+    private List<String> randomIntegerCalls = new ArrayList<>();
 
     public int randomInteger(int min, int max) {
         randomIntegerCalls.add("min: " + min + ", max: " + max);

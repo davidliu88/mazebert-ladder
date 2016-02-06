@@ -8,9 +8,9 @@ public class PlayerGatewayCoach implements PlayerGateway {
     private int nextPlayerId;
     private Player addedPlayer;
     private Player updatedPlayer;
-    private List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
+    private List<RuntimeException> exceptions = new ArrayList<>();
 
-    private Map<String, Player> playerByKey = new HashMap<String, Player>();
+    private Map<String, Player> playerByKey = new HashMap<>();
 
     public Player addPlayer(Player player) {
         if (exceptions.size() > 0) {

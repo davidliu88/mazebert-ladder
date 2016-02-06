@@ -23,7 +23,7 @@ public abstract class RandomNumberGeneratorTest {
     public void randomIntegerInRange() {
         int min = -2;
         int max = +2;
-        Set<Integer> generated = new HashSet<Integer>();
+        Set<Integer> generated = new HashSet<>();
 
         while (generated.size() < 5) {
             generated.add(generator.randomInteger(min, max));

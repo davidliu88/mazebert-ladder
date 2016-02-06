@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PlayerKeyGeneratorCoach extends PlayerKeyGenerator {
-    private List<String> keysToGenerate = new ArrayList<String>();
+    private List<String> keysToGenerate = new ArrayList<>();
 
     public PlayerKeyGeneratorCoach() {
         super(null);
