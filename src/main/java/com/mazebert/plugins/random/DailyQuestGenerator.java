@@ -14,11 +14,16 @@ public class DailyQuestGenerator {
     private final QuestGateway questGateway;
     private final FoilCardGateway foilCardGateway;
     private final CurrentDatePlugin currentDatePlugin;
+    private final RandomNumberGenerator randomNumberGenerator;
 
-    public DailyQuestGenerator(QuestGateway questGateway, FoilCardGateway foilCardGateway, CurrentDatePlugin currentDatePlugin) {
+    public DailyQuestGenerator(QuestGateway questGateway,
+                               FoilCardGateway foilCardGateway,
+                               CurrentDatePlugin currentDatePlugin,
+                               RandomNumberGenerator randomNumberGenerator) {
         this.questGateway = questGateway;
         this.foilCardGateway = foilCardGateway;
         this.currentDatePlugin = currentDatePlugin;
+        this.randomNumberGenerator = randomNumberGenerator;
     }
 
     public Quest tryToGenerateDailyQuest(Player player, Version appVersion, TimeZone timeZone) {
@@ -68,11 +73,16 @@ public class DailyQuestGenerator {
 
     private Quest findNewRandomDailyQuest(Player player, Set<Long> dailyQuestIds, Version appVersion) {
         List<Quest> allQuests = questGateway.findAllQuests();
+        List<Quest> potentialQuests = new ArrayList<>();
 
         for (Quest quest : allQuests) {
             if (isQuestPossibleForDaily(quest, player, dailyQuestIds, appVersion)) {
-                return quest;
+                potentialQuests.add(quest);
             }
+        }
+
+        if (potentialQuests.size() > 0) {
+            return potentialQuests.get(randomNumberGenerator.randomInteger(0, potentialQuests.size()));
         }
 
         return null;

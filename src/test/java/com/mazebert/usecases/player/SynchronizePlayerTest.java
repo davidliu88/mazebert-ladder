@@ -7,6 +7,7 @@ import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGatewayCoach;
 import com.mazebert.gateways.PlayerGatewayCoach;
 import com.mazebert.gateways.QuestGatewayCoach;
+import com.mazebert.plugins.random.RandomNumberGeneratorCoach;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.CurrentDatePluginCoach;
 import org.junit.Before;
@@ -31,6 +32,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private FoilCardGatewayCoach foilCardGateway;
     private QuestGatewayCoach questGateway;
     private CurrentDatePluginCoach currentDatePlugin;
+    private RandomNumberGeneratorCoach randomNumberGenerator;
 
     @Before
     public void setUp() {
@@ -38,7 +40,9 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         foilCardGateway = new FoilCardGatewayCoach();
         questGateway = new QuestGatewayCoach();
         currentDatePlugin = new CurrentDatePluginCoach();
-        usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway, currentDatePlugin);
+        randomNumberGenerator = new RandomNumberGeneratorCoach();
+        usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway,
+                currentDatePlugin, randomNumberGenerator);
 
         givenRequest(a(request()));
         playerGateway.givenPlayer(a(player().casid()));

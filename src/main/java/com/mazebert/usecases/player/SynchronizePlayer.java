@@ -7,6 +7,7 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
 import com.mazebert.plugins.random.DailyQuestGenerator;
+import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeZoneParser;
 import org.jusecase.Usecase;
@@ -25,11 +26,12 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     public SynchronizePlayer(PlayerGateway playerGateway,
                              FoilCardGateway foilCardGateway,
                              QuestGateway questGateway,
-                             CurrentDatePlugin currentDatePlugin) {
+                             CurrentDatePlugin currentDatePlugin,
+                             RandomNumberGenerator randomNumberGenerator) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.questGateway = questGateway;
-        this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin);
+        this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
     }
 

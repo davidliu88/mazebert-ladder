@@ -14,7 +14,11 @@ public class RandomNumberGeneratorCoach implements RandomNumberGenerator {
 
     public int randomInteger(int min, int max) {
         randomIntegerCalls.add("min: " + min + ", max: " + max);
-        return randomIntegers.remove(0);
+        if (randomIntegers.size() > 0) {
+            return randomIntegers.remove(0);
+        }
+
+        return min;
     }
 
     public void givenRandomIntegers(Integer ... values) {

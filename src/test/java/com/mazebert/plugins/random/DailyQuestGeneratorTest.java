@@ -25,6 +25,7 @@ public class DailyQuestGeneratorTest {
     private QuestGatewayCoach questGateway;
     private FoilCardGatewayCoach foilCardGateway;
     private CurrentDatePluginCoach currentDatePlugin;
+    private RandomNumberGeneratorCoach randomNumberGenerator;
 
     private Player player;
     private Version version;
@@ -37,7 +38,8 @@ public class DailyQuestGeneratorTest {
         questGateway = new QuestGatewayCoach();
         foilCardGateway = new FoilCardGatewayCoach();
         currentDatePlugin = new CurrentDatePluginCoach();
-        questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin);
+        randomNumberGenerator = new RandomNumberGeneratorCoach();
+        questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
 
         player = a(player().casid());
         version = new Version("2.0.0");
@@ -120,6 +122,20 @@ public class DailyQuestGeneratorTest {
         currentDatePlugin.givenCurrentDate(a(date().with("2016-02-03 00:00:01")));
         whenTryToGenerateDailyQuest();
         thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void randomQuestIsGenerated() {
+        questGateway.givenQuests(a(listWith(
+                a(goldenQuest().withId(200)),
+                a(goldenQuest().withId(201)),
+                a(goldenQuest().withId(203))
+        )));
+        randomNumberGenerator.givenRandomIntegers(2);
+
+        whenTryToGenerateDailyQuest();
+
+        assertEquals(203, quest.getId());
     }
 
     @Test
