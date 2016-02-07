@@ -80,6 +80,7 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals(expected.getSupporterLevel(), actual.getSupporterLevel());
         assertEquals(expected.getRelics(), actual.getRelics());
         assertEquals(expected.getLastUpdate(), actual.getLastUpdate());
+        assertEquals(expected.getLastQuestCreation(), actual.getLastQuestCreation());
     }
 
     @Test

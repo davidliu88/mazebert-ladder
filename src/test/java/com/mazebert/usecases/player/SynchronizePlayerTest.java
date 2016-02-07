@@ -7,6 +7,8 @@ import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGatewayCoach;
 import com.mazebert.gateways.PlayerGatewayCoach;
 import com.mazebert.gateways.QuestGatewayCoach;
+import com.mazebert.plugins.time.CurrentDatePlugin;
+import com.mazebert.plugins.time.CurrentDatePluginCoach;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -21,19 +23,22 @@ import static com.mazebert.builders.BuilderFactory.player;
 import static com.mazebert.builders.BuilderFactory.quest;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
+import static org.jusecase.builders.BuilderFactory.date;
 import static org.jusecase.builders.BuilderFactory.listWith;
 
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayCoach playerGateway;
     private FoilCardGatewayCoach foilCardGateway;
     private QuestGatewayCoach questGateway;
+    private CurrentDatePluginCoach currentDatePlugin;
 
     @Before
     public void setUp() {
         playerGateway = new PlayerGatewayCoach();
         foilCardGateway = new FoilCardGatewayCoach();
         questGateway = new QuestGatewayCoach();
-        usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway);
+        currentDatePlugin = new CurrentDatePluginCoach();
+        usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway, currentDatePlugin);
 
         givenRequest(a(request()));
         playerGateway.givenPlayer(a(player().casid()));
@@ -160,6 +165,42 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         assertEquals(expected, response.dailyQuests);
     }
 
+    @Test
+    public void dailyQuestIsGenerated() {
+        questGateway.givenQuests(a(listWith(
+                a(quest().withId(10))
+        )));
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+                a(quest().withId(1)),
+                a(quest().withId(2))
+        )));
+
+        whenRequestIsExecuted();
+
+        assertEquals(3, response.dailyQuests.size());
+        assertEquals(10, response.dailyQuests.get(2).getId());
+    }
+
+    @Test
+    public void timeZoneIsRespectedForDailyQuestCreation() {
+        questGateway.givenQuests(a(listWith(
+                a(quest().withId(10))
+        )));
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+                a(quest().withId(1)),
+                a(quest().withId(2))
+        )));
+        playerGateway.givenPlayer(a(player().casid()
+                .withLastQuestCreation(a(date().with("2016-02-02 15:00:00"))))
+        );
+        givenRequest(a(request().golden().withTimeZoneOffset(+1))); // Actually -1: Adobe AIR App sends inverted Timezone.
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-03 00:00:01")));
+
+        whenRequestIsExecuted();
+
+        assertEquals(2, response.dailyQuests.size());
+    }
+
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
         assertEquals(expected.size(), actual.size());
 
@@ -195,6 +236,11 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
         public RequestBuilder withKey(String value) {
             request.key = value;
+            return this;
+        }
+
+        public RequestBuilder withTimeZoneOffset(int value) {
+            request.timeZoneOffset = value;
             return this;
         }
     }

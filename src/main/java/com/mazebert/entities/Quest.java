@@ -1,11 +1,11 @@
 package com.mazebert.entities;
 
 public class Quest {
-    public long id;
-    public int reward;
-    public boolean isHidden;
-    public String sinceVersion;
-    public int requiredAmount;
+    private long id;
+    private int reward;
+    private boolean isHidden;
+    private String sinceVersion;
+    private int requiredAmount;
 
     public long getId() {
         return id;

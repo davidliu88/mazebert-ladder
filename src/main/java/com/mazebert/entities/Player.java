@@ -14,6 +14,7 @@ public class Player {
     private int supporterLevel;
     private int relics;
     private boolean isCheater;
+    private Date lastQuestCreation;
 
     public long getId() {
         return id;
@@ -101,5 +102,13 @@ public class Player {
 
     public boolean isCheater() {
         return isCheater;
+    }
+
+    public void setLastQuestCreation(Date lastQuestCreation) {
+        this.lastQuestCreation = lastQuestCreation;
+    }
+
+    public Date getLastQuestCreation() {
+        return lastQuestCreation;
     }
 }

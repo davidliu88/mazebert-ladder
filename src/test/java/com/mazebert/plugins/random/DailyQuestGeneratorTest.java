@@ -1,0 +1,167 @@
+package com.mazebert.plugins.random;
+
+import com.mazebert.builders.QuestBuilder;
+import com.mazebert.entities.Player;
+import com.mazebert.entities.Quest;
+import com.mazebert.entities.Version;
+import com.mazebert.gateways.FoilCardGatewayCoach;
+import com.mazebert.gateways.QuestGatewayCoach;
+import com.mazebert.plugins.time.CurrentDatePluginCoach;
+import com.mazebert.plugins.time.TimeZoneParser;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.TimeZone;
+
+import static com.mazebert.builders.BuilderFactory.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.jusecase.builders.BuilderFactory.*;
+
+public class DailyQuestGeneratorTest {
+    private DailyQuestGenerator questGenerator;
+
+    private QuestGatewayCoach questGateway;
+    private FoilCardGatewayCoach foilCardGateway;
+    private CurrentDatePluginCoach currentDatePlugin;
+
+    private Player player;
+    private Version version;
+    private int timeZoneOffset;
+
+    private Quest quest;
+
+    @Before
+    public void setUp() throws Exception {
+        questGateway = new QuestGatewayCoach();
+        foilCardGateway = new FoilCardGatewayCoach();
+        currentDatePlugin = new CurrentDatePluginCoach();
+        questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin);
+
+        player = a(player().casid());
+        version = new Version("2.0.0");
+
+        questGateway.givenQuests(a(listWith(
+                a(goldenQuest()))
+        ));
+    }
+
+    @Test
+    public void hiddenQuest() {
+        questGateway.givenQuests(a(listWith(
+                a(goldenQuest().hidden()))
+        ));
+        whenTryToGenerateDailyQuest();
+        thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void incompatibleQuestVersion() {
+        version = new Version("1.0.0");
+        questGateway.givenQuests(a(listWith(
+                a(goldenQuest().withSinceVersion("1.0.1")))
+        ));
+        whenTryToGenerateDailyQuest();
+        thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void questAlreadyOwnedByPlayer() {
+        questGateway.givenQuests(a(listWith(
+                a(goldenQuest().withId(200)))
+        ));
+        questGateway.givenDailyQuestsForPlayer(player, a(listWith(
+                a(goldenQuest().withId(200))
+        )));
+        whenTryToGenerateDailyQuest();
+        thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void playerAlreadyHasMaximumAmountOfQuests() {
+        questGateway.givenDailyQuestsForPlayer(player, a(listWith(
+                a(goldenQuest().withId(1)),
+                a(goldenQuest().withId(2)),
+                a(goldenQuest().withId(3))
+        )));
+        whenTryToGenerateDailyQuest();
+        thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void playerAlreadyCreatedOneQuestToday() {
+        player = a(player().casid().withLastQuestCreation(a(date().with("2016-02-02 15:00:00"))));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-02 19:00:00")));
+        whenTryToGenerateDailyQuest();
+        thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void playerCreatedOneQuestYesterday() {
+        player = a(player().casid().withLastQuestCreation(a(date().with("2016-02-02 15:00:00"))));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-03 00:00:01")));
+        whenTryToGenerateDailyQuest();
+        thenOneQuestIsGenerated();
+    }
+
+    @Test
+    public void playerCreatedOneQuestOneWeekBefore() {
+        player = a(player().casid().withLastQuestCreation(a(date().with("2016-01-26 15:00:00"))));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-02 19:00:00")));
+        whenTryToGenerateDailyQuest();
+        thenOneQuestIsGenerated();
+    }
+
+    @Test
+    public void timeZoneIsRespectedForTodayCalculation() {
+        timeZoneOffset = -1;
+        player = a(player().casid().withLastQuestCreation(a(date().with("2016-02-02 15:00:00"))));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-03 00:00:01")));
+        whenTryToGenerateDailyQuest();
+        thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void playerHasNoBowlingBall() {
+        questGateway.givenQuests(a(listWith(
+                a(quest().rollStrikesWithBowlingBall()))
+        ));
+        whenTryToGenerateDailyQuest();
+        thenNoQuestIsGenerated();
+    }
+
+    @Test
+    public void playerHasBowlingBall() {
+        Quest expected = a(quest().rollStrikesWithBowlingBall());
+        questGateway.givenQuests(a(listWith(expected)));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(listWith(
+                a(foilCard().bowlingBall())
+        )));
+        whenTryToGenerateDailyQuest();
+        thenQuestIsGenerated(expected);
+    }
+
+    private QuestBuilder goldenQuest() {
+        return new QuestBuilder()
+                .withIsHidden(false)
+                .withSinceVersion("0.9.0");
+    }
+
+    private void thenNoQuestIsGenerated() {
+        assertNull(quest);
+    }
+
+    private void thenOneQuestIsGenerated() {
+        assertNotNull(quest);
+    }
+
+    private void thenQuestIsGenerated(Quest expected) {
+        assertEquals(expected, quest);
+    }
+
+    private void whenTryToGenerateDailyQuest() {
+        TimeZone timeZone = new TimeZoneParser().parseOffset(timeZoneOffset);
+        quest = questGenerator.tryToGenerateDailyQuest(player, version, timeZone);
+    }
+}

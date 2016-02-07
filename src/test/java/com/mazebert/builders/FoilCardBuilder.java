@@ -7,20 +7,31 @@ import org.jusecase.builders.Builder;
 public class FoilCardBuilder implements Builder<FoilCard> {
     private FoilCard foilCard = new FoilCard();
 
+    public FoilCardBuilder one() {
+        return this.withAmount(1);
+    }
+
     public FoilCardBuilder tower() {
-        return this.withCardType(CardType.TOWER);
+        return this.one().withCardType(CardType.TOWER);
     }
 
     public FoilCardBuilder potion() {
-        return this.withCardType(CardType.POTION);
+        return this.one().withCardType(CardType.POTION);
     }
 
     public FoilCardBuilder item() {
-        return this.withCardType(CardType.ITEM);
+        return this.one().withCardType(CardType.ITEM);
     }
 
     public FoilCardBuilder hero() {
-        return this.withCardType(CardType.HERO);
+        return this.one().withCardType(CardType.HERO);
+    }
+
+    public FoilCardBuilder bowlingBall() {
+        return this
+                .item()
+                .withCardId(58)
+                .withCardType(CardType.ITEM);
     }
 
     @Override

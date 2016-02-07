@@ -26,7 +26,7 @@ public class MySqlPlayerGateway implements PlayerGateway {
     public Player addPlayer(Player player) {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
-            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate, email, supporterLevel, relics, isCheater) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);", new ScalarHandler<>(),
+            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate, email, supporterLevel, relics, isCheater, lastQuestCreation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", new ScalarHandler<>(),
                     player.getKey(),
                     player.getName(),
                     player.getLevel(),
@@ -35,7 +35,8 @@ public class MySqlPlayerGateway implements PlayerGateway {
                     player.getEmail(),
                     player.getSupporterLevel(),
                     player.getRelics(),
-                    player.isCheater());
+                    player.isCheater(),
+                    player.getLastQuestCreation());
             player.setId(id);
             return player;
         } catch (SQLException e) {
@@ -51,7 +52,7 @@ public class MySqlPlayerGateway implements PlayerGateway {
         QueryRunner runner = new QueryRunner(dataSource);
         try {
             ResultSetHandler<Player> handler = new BeanHandler<>(Player.class);
-            return runner.query("SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics FROM Player WHERE savekey=?;", handler, key);
+            return runner.query("SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player WHERE savekey=?;", handler, key);
         } catch (SQLException e) {
             throw new GatewayError("Failed to find player by key in database", e);
         }

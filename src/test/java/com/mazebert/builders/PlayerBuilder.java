@@ -21,7 +21,8 @@ public class PlayerBuilder implements Builder<Player> {
                 .withEmail("andy@mazebert.com")
                 .withSupporterLevel(7)
                 .withRelics(300)
-                .withLastUpdate(a(date().with("2016-02-10 22:22:22")));
+                .withLastUpdate(a(date().with("2016-02-10 22:22:22")))
+                .withLastQuestCreation(a(date().with("2016-02-05 17:00:00")));
     }
 
     public PlayerBuilder cheater() {
@@ -35,6 +36,7 @@ public class PlayerBuilder implements Builder<Player> {
                 .withSupporterLevel(0)
                 .withRelics(30000)
                 .withLastUpdate(a(date().with("2016-07-13 11:11:11")))
+                .withLastQuestCreation(a(date().with("2016-02-05 17:00:00")))
                 .withIsCheater(true);
     }
 
@@ -85,6 +87,11 @@ public class PlayerBuilder implements Builder<Player> {
 
     private PlayerBuilder withIsCheater(boolean value) {
         player.setIsCheater(value);
+        return this;
+    }
+
+    public PlayerBuilder withLastQuestCreation(Date value) {
+        player.setLastQuestCreation(value);
         return this;
     }
 

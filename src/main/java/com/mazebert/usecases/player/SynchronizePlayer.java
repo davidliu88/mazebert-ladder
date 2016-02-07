@@ -1,30 +1,36 @@
 package com.mazebert.usecases.player;
 
-import com.mazebert.entities.CardType;
-import com.mazebert.entities.FoilCard;
-import com.mazebert.entities.Player;
-import com.mazebert.entities.Quest;
+import com.mazebert.entities.*;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
+import com.mazebert.plugins.random.DailyQuestGenerator;
+import com.mazebert.plugins.time.CurrentDatePlugin;
+import com.mazebert.plugins.time.TimeZoneParser;
 import org.jusecase.Usecase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, SynchronizePlayer.Response> {
     private final PlayerGateway playerGateway;
     private final FoilCardGateway foilCardGateway;
     private final QuestGateway questGateway;
+    private final DailyQuestGenerator dailyQuestGenerator;
+    private final TimeZoneParser timeZoneParser;
 
     public SynchronizePlayer(PlayerGateway playerGateway,
                              FoilCardGateway foilCardGateway,
-                             QuestGateway questGateway) {
+                             QuestGateway questGateway,
+                             CurrentDatePlugin currentDatePlugin) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.questGateway = questGateway;
+        this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin);
+        timeZoneParser = new TimeZoneParser();
     }
 
     public Response execute(Request request) {
@@ -44,16 +50,21 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
             throw new Error(Type.NOT_FOUND, "Player does not exist");
         }
 
+        Version appVersion = new Version(request.appVersion);
+        TimeZone timeZone = timeZoneParser.parseAppOffset(request.timeZoneOffset);
+
         Response response = new Response();
         addPlayerToResponse(player, response);
         addFoilCardsToResponse(player, response);
-        addQuestsToResponse(player, response);
+        addQuestsToResponse(player, appVersion, timeZone, response);
 
         return response;
     }
 
-    private void addQuestsToResponse(Player player, Response response) {
+    private void addQuestsToResponse(Player player, Version appVersion, TimeZone timeZone, Response response) {
         response.completedHiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
+
+        dailyQuestGenerator.tryToGenerateDailyQuest(player, appVersion, timeZone);
         response.dailyQuests = questGateway.findDailyQuests(player.getId());
     }
 
@@ -99,6 +110,8 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
 
     public static class Request {
         public String key;
+        public String appVersion;
+        public int timeZoneOffset;
     }
 
     public static class Response {
