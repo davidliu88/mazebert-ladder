@@ -3,6 +3,7 @@ package com.mazebert.usecases.player;
 import com.mazebert.entities.CardType;
 import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
+import com.mazebert.entities.Quest;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGateway;
@@ -53,6 +54,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
 
     private void addQuestsToResponse(Player player, Response response) {
         response.completedHiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
+        response.dailyQuests = questGateway.findDailyQuests(player.getId());
     }
 
     private void addFoilCardsToResponse(Player player, Response response) {
@@ -110,6 +112,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public List<Card> foilPotions;
         public List<Card> foilHeroes;
         public List<Long> completedHiddenQuestIds;
+        public List<Quest> dailyQuests;
 
         public static class Card {
             public long id;

@@ -12,4 +12,8 @@ public class BuilderFactory {
     public static FoilCardBuilder foilCard() {
         return new FoilCardBuilder();
     }
+
+    public static QuestBuilder quest() {
+        return new QuestBuilder();
+    }
 }

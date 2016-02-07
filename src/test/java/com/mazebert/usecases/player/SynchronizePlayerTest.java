@@ -1,6 +1,7 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
+import com.mazebert.entities.Quest;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGatewayCoach;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.foilCard;
 import static com.mazebert.builders.BuilderFactory.player;
+import static com.mazebert.builders.BuilderFactory.quest;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.listWith;
@@ -134,6 +136,28 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         assertEquals(expected, response.completedHiddenQuestIds);
+    }
+
+    @Test
+    public void noDailyQuests() {
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith()));
+
+        whenRequestIsExecuted();
+
+        assertEquals(0, response.dailyQuests.size());
+    }
+
+    @Test
+    public void dailyQuests() {
+        List<Quest> expected = a(listWith(
+                a(quest()),
+                a(quest())
+        ));
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), expected);
+
+        whenRequestIsExecuted();
+
+        assertEquals(expected, response.dailyQuests);
     }
 
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
