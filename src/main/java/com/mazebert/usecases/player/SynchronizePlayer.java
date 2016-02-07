@@ -7,6 +7,7 @@ import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
+import com.mazebert.gateways.QuestGateway;
 import org.jusecase.Usecase;
 
 import java.util.ArrayList;
@@ -15,10 +16,14 @@ import java.util.List;
 public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, SynchronizePlayer.Response> {
     private final PlayerGateway playerGateway;
     private final FoilCardGateway foilCardGateway;
+    private final QuestGateway questGateway;
 
-    public SynchronizePlayer(PlayerGateway playerGateway, FoilCardGateway foilCardGateway) {
+    public SynchronizePlayer(PlayerGateway playerGateway,
+                             FoilCardGateway foilCardGateway,
+                             QuestGateway questGateway) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
+        this.questGateway = questGateway;
     }
 
     public Response execute(Request request) {
@@ -41,8 +46,13 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         Response response = new Response();
         addPlayerToResponse(player, response);
         addFoilCardsToResponse(player, response);
+        addQuestsToResponse(player, response);
 
         return response;
+    }
+
+    private void addQuestsToResponse(Player player, Response response) {
+        response.completedHiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
     }
 
     private void addFoilCardsToResponse(Player player, Response response) {
@@ -99,6 +109,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public List<Card> foilItems;
         public List<Card> foilPotions;
         public List<Card> foilHeroes;
+        public List<Long> completedHiddenQuestIds;
 
         public static class Card {
             public long id;

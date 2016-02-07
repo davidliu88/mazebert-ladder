@@ -5,6 +5,7 @@ import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGatewayCoach;
 import com.mazebert.gateways.PlayerGatewayCoach;
+import com.mazebert.gateways.QuestGatewayCoach;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -23,12 +24,14 @@ import static org.jusecase.builders.BuilderFactory.listWith;
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayCoach playerGateway;
     private FoilCardGatewayCoach foilCardGateway;
+    private QuestGatewayCoach questGateway;
 
     @Before
     public void setUp() {
         playerGateway = new PlayerGatewayCoach();
         foilCardGateway = new FoilCardGatewayCoach();
-        usecase = new SynchronizePlayer(playerGateway, foilCardGateway);
+        questGateway = new QuestGatewayCoach();
+        usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway);
 
         givenRequest(a(request()));
         playerGateway.givenPlayer(a(player().casid()));
@@ -121,6 +124,16 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
                 a(card().withId(7).withAmount(5)),
                 a(card().withId(100).withAmount(1))
         )), response.foilHeroes);
+    }
+
+    @Test
+    public void completedHiddenQuestIdsAreAdded() {
+        List<Long> expected = a(listWith(10L, 11L, 12L));
+        questGateway.givenCompletedHiddenQuestIdsForPlayer(a(player().casid()), expected);
+
+        whenRequestIsExecuted();
+
+        assertEquals(expected, response.completedHiddenQuestIds);
     }
 
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
