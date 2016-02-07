@@ -57,6 +57,10 @@ public class PlayerGatewayCoach implements PlayerGateway {
         playerByKey.put(player.getKey(), player);
     }
 
+    public void givenNoPlayerExists() {
+        playerByKey.clear();
+    }
+
     public void givenPlayerRank(int rank, Player player) {
         playerRankById.put(player.getId(), rank);
     }

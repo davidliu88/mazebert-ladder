@@ -8,4 +8,8 @@ public class BuilderFactory {
     public static PlayerRowBuilder playerRow() {
         return new PlayerRowBuilder();
     }
+
+    public static FoilCardBuilder foilCard() {
+        return new FoilCardBuilder();
+    }
 }
