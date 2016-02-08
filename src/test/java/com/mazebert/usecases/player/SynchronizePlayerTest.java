@@ -8,24 +8,19 @@ import com.mazebert.gateways.FoilCardGatewayCoach;
 import com.mazebert.gateways.PlayerGatewayCoach;
 import com.mazebert.gateways.QuestGatewayCoach;
 import com.mazebert.plugins.random.RandomNumberGeneratorCoach;
-import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.CurrentDatePluginCoach;
+import com.mazebert.usecases.player.SynchronizePlayer.Request;
+import com.mazebert.usecases.player.SynchronizePlayer.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
-import com.mazebert.usecases.player.SynchronizePlayer.Request;
-import com.mazebert.usecases.player.SynchronizePlayer.Response;
 
 import java.util.List;
 
-import static com.mazebert.builders.BuilderFactory.foilCard;
-import static com.mazebert.builders.BuilderFactory.player;
-import static com.mazebert.builders.BuilderFactory.quest;
+import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.date;
-import static org.jusecase.builders.BuilderFactory.listWith;
+import static org.jusecase.builders.BuilderFactory.*;
 
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayCoach playerGateway;

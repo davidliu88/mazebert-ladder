@@ -16,6 +16,9 @@ public class DailyQuestGenerator {
     private final CurrentDatePlugin currentDatePlugin;
     private final RandomNumberGenerator randomNumberGenerator;
 
+    private static final int ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
+    private static final int MAX_QUESTS = 3;
+
     public DailyQuestGenerator(QuestGateway questGateway,
                                FoilCardGateway foilCardGateway,
                                CurrentDatePlugin currentDatePlugin,
@@ -35,17 +38,15 @@ public class DailyQuestGenerator {
         }
     }
 
-    private static final int ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
-
     private boolean isQuestGenerationPossible(Player player, Set<Long> dailyQuestIds, TimeZone timeZone) {
-        if (dailyQuestIds.size() >= 3) {
+        if (dailyQuestIds.size() >= MAX_QUESTS) {
             return false;
         }
 
         Date now = currentDatePlugin.getCurrentDate();
         Date lastQuestCreation = player.getLastQuestCreation();
         if (now.getTime() - lastQuestCreation.getTime() < ONE_DAY_MILLIS) {
-            return isQuestAlreadyGeneratedToday(now, lastQuestCreation, timeZone);
+            return !isQuestAlreadyGeneratedToday(now, lastQuestCreation, timeZone);
         }
 
         return true;
@@ -60,7 +61,7 @@ public class DailyQuestGenerator {
         calendar.setTime(lastQuestCreation);
         int questCreationDay = calendar.get(Calendar.DAY_OF_WEEK);
 
-        return today != questCreationDay;
+        return today == questCreationDay;
     }
 
     private Quest generateDailyQuest(Player player, Set<Long> dailyQuestIds, Version appVersion) {
