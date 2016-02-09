@@ -3,6 +3,7 @@ package com.mazebert;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.PlayerGateway;
@@ -35,7 +36,7 @@ public class Logic extends GuiceUsecaseExecutor {
 
         @Override
         protected void configure() {
-            bind(DataSource.class).toProvider(dataSourceProvider);
+            bind(DataSource.class).toProvider(dataSourceProvider).in(Singleton.class);
 
             bind(PlayerGateway.class).to(MySqlPlayerGateway.class);
             bind(PlayerRowGateway.class).to(MySqlPlayerRowGateway.class);
