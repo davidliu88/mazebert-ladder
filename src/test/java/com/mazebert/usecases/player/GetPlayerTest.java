@@ -15,11 +15,10 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
 
 public class GetPlayerTest extends UsecaseTest<Request, Player> {
-    private PlayerGatewayCoach playerGateway;
+    private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
 
     @Before
     public void setUp() {
-        playerGateway = new PlayerGatewayCoach();
         usecase = new GetPlayer(playerGateway);
     }
 

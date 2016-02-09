@@ -18,13 +18,10 @@ import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.listWith;
 
 public class GetPlayersTest extends UsecaseTest<Request, List<PlayerRow>> {
-
-    private PlayerRowGatewayCoach playerGateway;
+    private PlayerRowGatewayCoach playerGateway = new PlayerRowGatewayCoach();
 
     @Before
     public void setUp() {
-        playerGateway = new PlayerRowGatewayCoach();
-
         usecase = new GetPlayers(playerGateway);
     }
 

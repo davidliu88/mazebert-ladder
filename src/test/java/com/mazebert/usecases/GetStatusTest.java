@@ -17,13 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.*;
 
 public class GetStatusTest extends UsecaseTest<Request, Response> {
-    private PlayerRowGatewayCoach playerRowGateway;
-    private CurrentDatePluginCoach currentDatePlugin;
+    private PlayerRowGatewayCoach playerRowGateway = new PlayerRowGatewayCoach();
+    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
 
     @Before
     public void setUp() {
-        playerRowGateway = new PlayerRowGatewayCoach();
-        currentDatePlugin = new CurrentDatePluginCoach();
         usecase = new GetStatus(playerRowGateway, currentDatePlugin);
 
         givenRequest(a(request()));

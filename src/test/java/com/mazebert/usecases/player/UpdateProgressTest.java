@@ -18,13 +18,11 @@ import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.date;
 
 public class UpdateProgressTest extends UsecaseTest<Request, Response> {
-    private PlayerGatewayCoach playerGateway;
-    private CurrentDatePluginCoach currentDatePlugin;
+    private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
+    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
 
     @Before
     public void setUp() {
-        playerGateway = new PlayerGatewayCoach();
-        currentDatePlugin = new CurrentDatePluginCoach();
         usecase = new UpdateProgress(playerGateway, currentDatePlugin);
     }
 

@@ -6,14 +6,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class PlayerKeyGeneratorTest {
+    private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
     private PlayerKeyGenerator generator;
-    private RandomNumberGeneratorCoach randomNumberGenerator;
 
     private String playerKey;
 
     @Before
     public void setUp() throws Exception {
-        randomNumberGenerator = new RandomNumberGeneratorCoach();
         generator = new PlayerKeyGenerator(randomNumberGenerator);
     }
 

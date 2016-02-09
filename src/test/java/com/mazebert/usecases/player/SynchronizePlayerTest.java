@@ -23,19 +23,14 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.*;
 
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
-    private PlayerGatewayCoach playerGateway;
-    private FoilCardGatewayCoach foilCardGateway;
-    private QuestGatewayCoach questGateway;
-    private CurrentDatePluginCoach currentDatePlugin;
-    private RandomNumberGeneratorCoach randomNumberGenerator;
+    private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
+    private FoilCardGatewayCoach foilCardGateway = new FoilCardGatewayCoach();
+    private QuestGatewayCoach questGateway = new QuestGatewayCoach();
+    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
+    private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
 
     @Before
     public void setUp() {
-        playerGateway = new PlayerGatewayCoach();
-        foilCardGateway = new FoilCardGatewayCoach();
-        questGateway = new QuestGatewayCoach();
-        currentDatePlugin = new CurrentDatePluginCoach();
-        randomNumberGenerator = new RandomNumberGeneratorCoach();
         usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway,
                 currentDatePlugin, randomNumberGenerator);
 

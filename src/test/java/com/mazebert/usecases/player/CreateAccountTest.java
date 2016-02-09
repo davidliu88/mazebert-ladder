@@ -17,13 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
 
 public class CreateAccountTest extends UsecaseTest<Request, Response> {
-    private PlayerGatewayCoach playerGateway;
-    private PlayerKeyGeneratorCoach keyGenerator;
+    private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
+    private PlayerKeyGeneratorCoach keyGenerator = new PlayerKeyGeneratorCoach();
 
     @Before
     public void setUp() {
-        playerGateway = new PlayerGatewayCoach();
-        keyGenerator = new PlayerKeyGeneratorCoach();
         usecase = new CreateAccount(playerGateway, keyGenerator);
     }
 

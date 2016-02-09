@@ -22,10 +22,10 @@ import static org.jusecase.builders.BuilderFactory.*;
 public class DailyQuestGeneratorTest {
     private DailyQuestGenerator questGenerator;
 
-    private QuestGatewayCoach questGateway;
-    private FoilCardGatewayCoach foilCardGateway;
-    private CurrentDatePluginCoach currentDatePlugin;
-    private RandomNumberGeneratorCoach randomNumberGenerator;
+    private QuestGatewayCoach questGateway = new QuestGatewayCoach();
+    private FoilCardGatewayCoach foilCardGateway = new FoilCardGatewayCoach();
+    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
+    private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
 
     private Player player;
     private Version version;
@@ -35,10 +35,6 @@ public class DailyQuestGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        questGateway = new QuestGatewayCoach();
-        foilCardGateway = new FoilCardGatewayCoach();
-        currentDatePlugin = new CurrentDatePluginCoach();
-        randomNumberGenerator = new RandomNumberGeneratorCoach();
         questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
 
         player = a(player().casid());
