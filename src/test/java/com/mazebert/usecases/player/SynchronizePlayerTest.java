@@ -243,6 +243,13 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         assertEquals(expected, response.purchasedProductIds);
     }
 
+    @Test
+    public void blackMarketAvailabilityIsAdded() {
+        // TODO
+    }
+
+
+
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
         assertEquals(expected.size(), actual.size());
 
