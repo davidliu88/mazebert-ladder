@@ -4,9 +4,7 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.gateways.FoilCardGatewayCoach;
-import com.mazebert.gateways.PlayerGatewayCoach;
-import com.mazebert.gateways.QuestGatewayCoach;
+import com.mazebert.gateways.*;
 import com.mazebert.plugins.random.RandomNumberGeneratorCoach;
 import com.mazebert.plugins.time.CurrentDatePluginCoach;
 import com.mazebert.usecases.player.SynchronizePlayer.Request;
@@ -29,13 +27,14 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
     private FoilCardGatewayCoach foilCardGateway = new FoilCardGatewayCoach();
     private QuestGatewayCoach questGateway = new QuestGatewayCoach();
+    private ProductGatewayCoach productGateway = new ProductGatewayCoach();
     private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
     private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
 
     @Before
     public void setUp() {
         usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway,
-                currentDatePlugin, randomNumberGenerator);
+                productGateway, currentDatePlugin, randomNumberGenerator);
 
         givenRequest(a(request()));
         playerGateway.givenPlayer(a(player().casid()));
@@ -232,6 +231,16 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         assertFalse(response.canReplaceDailyQuest);
+    }
+
+    @Test
+    public void purchasedProductsAreAdded() {
+        List<String> expected = a(listWith("com.mazebert.Cookie", "com.mazebert.Beer"));
+        productGateway.givenPurchasedProductIds(a(player().casid()), expected);
+
+        whenRequestIsExecuted();
+
+        assertEquals(expected, response.purchasedProductIds);
     }
 
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
