@@ -27,7 +27,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
     private FoilCardGatewayCoach foilCardGateway = new FoilCardGatewayCoach();
     private QuestGatewayCoach questGateway = new QuestGatewayCoach();
-    private ProductGatewayCoach productGateway = new ProductGatewayCoach();
+    private PurchaseGatewayCoach productGateway = new PurchaseGatewayCoach();
     private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
     private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
 

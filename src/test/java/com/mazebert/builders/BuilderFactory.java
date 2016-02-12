@@ -16,4 +16,8 @@ public class BuilderFactory {
     public static QuestBuilder quest() {
         return new QuestBuilder();
     }
+
+    public static PurchaseBuilder purchase() {
+        return new PurchaseBuilder();
+    }
 }

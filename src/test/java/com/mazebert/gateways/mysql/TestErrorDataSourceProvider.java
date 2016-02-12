@@ -8,7 +8,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 public class TestErrorDataSourceProvider implements DataSourceProvider {
-    public static TestErrorDataSourceProvider instance = new TestErrorDataSourceProvider();
+    public static final TestErrorDataSourceProvider instance = new TestErrorDataSourceProvider();
 
     @Override
     public DataSource getDataSource() {

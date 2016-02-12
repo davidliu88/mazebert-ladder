@@ -5,7 +5,7 @@ import com.mazebert.error.Error;
 import com.mazebert.error.Type;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
-import com.mazebert.gateways.ProductGateway;
+import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.gateways.QuestGateway;
 import com.mazebert.plugins.random.DailyQuestGenerator;
 import com.mazebert.plugins.random.RandomNumberGenerator;
@@ -21,20 +21,20 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     private final PlayerGateway playerGateway;
     private final FoilCardGateway foilCardGateway;
     private final QuestGateway questGateway;
-    private final ProductGateway productGateway;
+    private final PurchaseGateway purchaseGateway;
     private final DailyQuestGenerator dailyQuestGenerator;
     private final TimeZoneParser timeZoneParser;
 
     public SynchronizePlayer(PlayerGateway playerGateway,
                              FoilCardGateway foilCardGateway,
                              QuestGateway questGateway,
-                             ProductGateway productGateway,
+                             PurchaseGateway purchaseGateway,
                              CurrentDatePlugin currentDatePlugin,
                              RandomNumberGenerator randomNumberGenerator) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.questGateway = questGateway;
-        this.productGateway = productGateway;
+        this.purchaseGateway = purchaseGateway;
         this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
     }
@@ -69,7 +69,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     }
 
     private void addProductsToResponse(Player player, Response response) {
-        response.purchasedProductIds = productGateway.findPurchasedProductIds(player.getId());
+        response.purchasedProductIds = purchaseGateway.findPurchasedProductIds(player.getId());
     }
 
     private void addQuestsToResponse(Player player, Version appVersion, TimeZone timeZone, Response response) {
