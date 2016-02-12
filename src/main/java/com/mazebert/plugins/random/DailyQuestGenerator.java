@@ -38,11 +38,24 @@ public class DailyQuestGenerator {
         }
     }
 
+    public boolean isQuestReplacementPossible(Player player, TimeZone timeZone) {
+        Set<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
+        if (dailyQuestIds.size() < MAX_QUESTS ) {
+            return false;
+        }
+
+        return isQuestGenerationPossible(player, timeZone);
+    }
+
     private boolean isQuestGenerationPossible(Player player, Set<Long> dailyQuestIds, TimeZone timeZone) {
         if (dailyQuestIds.size() >= MAX_QUESTS) {
             return false;
         }
 
+        return isQuestGenerationPossible(player, timeZone);
+    }
+
+    private boolean isQuestGenerationPossible(Player player, TimeZone timeZone) {
         Date now = currentDatePlugin.getCurrentDate();
         Date lastQuestCreation = player.getLastQuestCreation();
         if (now.getTime() - lastQuestCreation.getTime() < ONE_DAY_MILLIS) {
@@ -51,6 +64,7 @@ public class DailyQuestGenerator {
 
         return true;
     }
+
 
     private boolean isQuestAlreadyGeneratedToday(Date now, Date lastQuestCreation, TimeZone timeZone) {
         Calendar calendar = Calendar.getInstance(timeZone);

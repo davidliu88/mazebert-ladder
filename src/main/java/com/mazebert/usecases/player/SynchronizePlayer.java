@@ -68,6 +68,8 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
 
         dailyQuestGenerator.tryToGenerateDailyQuest(player, appVersion, timeZone);
         response.dailyQuests = questGateway.findDailyQuests(player.getId());
+
+        response.canReplaceDailyQuest = dailyQuestGenerator.isQuestReplacementPossible(player, timeZone);
     }
 
     private void addFoilCardsToResponse(Player player, Response response) {
@@ -128,6 +130,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public List<Card> foilHeroes;
         public List<Long> completedHiddenQuestIds;
         public List<Quest> dailyQuests;
+        public boolean canReplaceDailyQuest;
 
         public static class Card {
             public long id;

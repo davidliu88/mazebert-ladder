@@ -16,10 +16,13 @@ import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.jusecase.builders.BuilderFactory.*;
 
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
@@ -195,6 +198,42 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         assertEquals(2, response.dailyQuests.size());
     }
 
+    @Test
+    public void questReplacementPossible() {
+        givenPlayerHasQuestsCreatedAt(a(date().with("2016-01-01 16:00:00")));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-01-03 16:00:00")));
+
+        whenRequestIsExecuted();
+
+        assertTrue(response.canReplaceDailyQuest);
+    }
+
+    @Test
+    public void questReplacementImpossible() {
+        givenPlayerHasQuestsCreatedAt(a(date().with("2016-01-01 16:00:00")));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-01-01 16:00:00")));
+
+        whenRequestIsExecuted();
+
+        assertFalse(response.canReplaceDailyQuest);
+    }
+
+    @Test
+    public void questReplacementImpossible_notEnoughQuests() {
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+                a(quest().withId(1)),
+                a(quest().withId(2))
+        )));
+        playerGateway.givenPlayer(a(player().casid()
+                .withLastQuestCreation(a(date().with("2016-01-01 16:00:00")))
+        ));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-01-03 16:00:00")));
+
+        whenRequestIsExecuted();
+
+        assertFalse(response.canReplaceDailyQuest);
+    }
+
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
         assertEquals(expected.size(), actual.size());
 
@@ -206,6 +245,17 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private void thenFoilCardsAreEqual(Response.Card expected, Response.Card actual) {
         assertEquals(expected.id, actual.id);
         assertEquals(expected.amount, actual.amount);
+    }
+
+    private void givenPlayerHasQuestsCreatedAt(Date date) {
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+                a(quest().withId(1)),
+                a(quest().withId(2)),
+                a(quest().withId(3))
+        )));
+        playerGateway.givenPlayer(a(player().casid()
+                .withLastQuestCreation(date)
+        ));
     }
 
     private RequestBuilder request() {
