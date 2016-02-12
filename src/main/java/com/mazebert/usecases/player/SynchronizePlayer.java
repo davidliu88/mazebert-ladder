@@ -13,6 +13,7 @@ import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeZoneParser;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -25,6 +26,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     private final DailyQuestGenerator dailyQuestGenerator;
     private final TimeZoneParser timeZoneParser;
 
+    @Inject
     public SynchronizePlayer(PlayerGateway playerGateway,
                              FoilCardGateway foilCardGateway,
                              QuestGateway questGateway,

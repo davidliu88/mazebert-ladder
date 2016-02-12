@@ -6,10 +6,7 @@ import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.FakeDataSourceProvider;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
-import com.mazebert.usecases.player.CreateAccount;
-import com.mazebert.usecases.player.GetPlayer;
-import com.mazebert.usecases.player.GetPlayers;
-import com.mazebert.usecases.player.UpdateProgress;
+import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.security.SecureRequest;
 import org.junit.Test;
 import org.jusecase.Usecase;
@@ -33,6 +30,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(UpdateProgress.class);
         thenUsecaseCanBeExecuted(GetPlayers.class);
         thenUsecaseCanBeExecuted(GetPlayer.class);
+        thenUsecaseCanBeExecuted(SynchronizePlayer.class);
     }
 
     @Test

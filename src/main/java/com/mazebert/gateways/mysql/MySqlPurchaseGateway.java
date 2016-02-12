@@ -7,6 +7,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 public class MySqlPurchaseGateway implements PurchaseGateway {
     private final DataSource dataSource;
 
+    @Inject
     public MySqlPurchaseGateway(DataSource dataSource) {
         this.dataSource = dataSource;
     }
