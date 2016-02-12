@@ -1,10 +1,8 @@
 package com.mazebert.gateways.mysql;
 
 import org.apache.commons.dbutils.QueryRunner;
-import org.jusecase.builders.BuilderFactory;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 

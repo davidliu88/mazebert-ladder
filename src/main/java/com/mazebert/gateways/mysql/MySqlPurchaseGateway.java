@@ -4,7 +4,6 @@ import com.mazebert.entities.Purchase;
 import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.gateways.error.GatewayError;
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
