@@ -40,6 +40,8 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
         clearTable("Player");
         clearTable("PlayerPurchasedProduct");
         clearTable("PlayerFoilCard");
+        clearTable("PlayerDailyQuest");
+        clearTable("PlayerHiddenQuest");
     }
 
     private void clearTable(String table) {

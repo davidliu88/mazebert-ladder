@@ -21,8 +21,8 @@ public class QuestGatewayCoach implements QuestGateway {
     }
 
     @Override
-    public Set<Long> findDailyQuestIds(long playerId) {
-        Set<Long> dailyQuestIds = new HashSet<>();
+    public List<Long> findDailyQuestIds(long playerId) {
+        List<Long> dailyQuestIds = new ArrayList<>();
         List<Quest> dailyQuests = findDailyQuests(playerId);
         if (dailyQuests != null) {
             for (Quest quest : dailyQuests) {
@@ -38,12 +38,17 @@ public class QuestGatewayCoach implements QuestGateway {
     }
 
     @Override
-    public void addDailyQuest(Player player, Quest quest) {
+    public void addDailyQuest(Player player, Quest quest, Date creationDate) {
         if (!dailyQuests.containsKey(player.getId())) {
             dailyQuests.put(player.getId(), new ArrayList<>());
         }
 
         dailyQuests.get(player.getId()).add(quest);
+    }
+
+    @Override
+    public void addCompletedHiddenQuestId(long playerId, long questId) {
+        // TODO
     }
 
     public void givenCompletedHiddenQuestIdsForPlayer(Player player, List<Long> questIds) {

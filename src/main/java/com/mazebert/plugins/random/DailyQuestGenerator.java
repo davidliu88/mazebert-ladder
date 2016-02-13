@@ -30,7 +30,7 @@ public class DailyQuestGenerator {
     }
 
     public Quest tryToGenerateDailyQuest(Player player, Version appVersion, TimeZone timeZone) {
-        Set<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
+        List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
         if (isQuestGenerationPossible(player, dailyQuestIds, timeZone)) {
             return generateDailyQuest(player, dailyQuestIds, appVersion);
         } else {
@@ -39,7 +39,7 @@ public class DailyQuestGenerator {
     }
 
     public boolean isQuestReplacementPossible(Player player, TimeZone timeZone) {
-        Set<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
+        List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
         if (dailyQuestIds.size() < MAX_QUESTS ) {
             return false;
         }
@@ -47,7 +47,7 @@ public class DailyQuestGenerator {
         return isQuestGenerationPossible(player, timeZone);
     }
 
-    private boolean isQuestGenerationPossible(Player player, Set<Long> dailyQuestIds, TimeZone timeZone) {
+    private boolean isQuestGenerationPossible(Player player, List<Long> dailyQuestIds, TimeZone timeZone) {
         if (dailyQuestIds.size() >= MAX_QUESTS) {
             return false;
         }
@@ -78,15 +78,15 @@ public class DailyQuestGenerator {
         return today == questCreationDay;
     }
 
-    private Quest generateDailyQuest(Player player, Set<Long> dailyQuestIds, Version appVersion) {
+    private Quest generateDailyQuest(Player player, List<Long> dailyQuestIds, Version appVersion) {
         Quest quest = findNewRandomDailyQuest(player, dailyQuestIds, appVersion);
         if (quest != null) {
-            questGateway.addDailyQuest(player, quest);
+            questGateway.addDailyQuest(player, quest, currentDatePlugin.getCurrentDate());
         }
         return quest;
     }
 
-    private Quest findNewRandomDailyQuest(Player player, Set<Long> dailyQuestIds, Version appVersion) {
+    private Quest findNewRandomDailyQuest(Player player, List<Long> dailyQuestIds, Version appVersion) {
         List<Quest> allQuests = questGateway.findAllQuests();
         List<Quest> potentialQuests = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class DailyQuestGenerator {
         return null;
     }
 
-    private boolean isQuestPossibleForDaily(Quest quest, Player player, Set<Long> dailyQuestIds, Version appVersion) {
+    private boolean isQuestPossibleForDaily(Quest quest, Player player, List<Long> dailyQuestIds, Version appVersion) {
         if (quest.isHidden()) {
             return false;
         }
