@@ -5,10 +5,6 @@ public class NotFound extends Error {
         super(message);
     }
 
-    public NotFound(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     @Override
     public int getStatusCode() {
         return 404;

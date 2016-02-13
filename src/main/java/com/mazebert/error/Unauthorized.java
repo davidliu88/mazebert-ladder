@@ -5,10 +5,6 @@ public class Unauthorized extends Error {
         super(message);
     }
 
-    public Unauthorized(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     @Override
     public int getStatusCode() {
         return 401;
