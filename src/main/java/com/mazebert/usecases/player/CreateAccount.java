@@ -1,8 +1,7 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.plugins.random.PlayerKeyGenerator;
@@ -69,17 +68,17 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
 
     private void validateRequest(Request request) {
         if (request.name == null) {
-            throw new Error(Type.BAD_REQUEST, "Player name must not be null");
+            throw new BadRequest("Player name must not be null");
         } else if (request.name.isEmpty()) {
-            throw new Error(Type.BAD_REQUEST, "Player name must not be empty");
+            throw new BadRequest("Player name must not be empty");
         }
 
         if (request.level <= 0) {
-            throw new Error(Type.BAD_REQUEST, "Player level must be greater than 0");
+            throw new BadRequest("Player level must be greater than 0");
         }
 
         if (request.experience <= 0) {
-            throw new Error(Type.BAD_REQUEST, "Player experience must be greater than 0");
+            throw new BadRequest("Player experience must be greater than 0");
         }
     }
 }

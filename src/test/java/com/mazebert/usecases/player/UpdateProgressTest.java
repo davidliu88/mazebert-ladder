@@ -1,8 +1,8 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
+import com.mazebert.error.NotFound;
 import com.mazebert.gateways.PlayerGatewayCoach;
 import com.mazebert.plugins.time.CurrentDatePluginCoach;
 import com.mazebert.usecases.player.UpdateProgress.Request;
@@ -30,14 +30,14 @@ public class UpdateProgressTest extends UsecaseTest<Request, Response> {
     public void nullKey() {
         givenRequest(a(request().withKey(null)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player key must not be null."));
+        thenErrorIs(new BadRequest("Player key must not be null."));
     }
 
     @Test
     public void playerDoesNotExist() {
         givenRequest(a(request().withKey("unknown")));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.NOT_FOUND, "A player with this key does not exist."));
+        thenErrorIs(new NotFound("A player with this key does not exist."));
     }
 
     @Test

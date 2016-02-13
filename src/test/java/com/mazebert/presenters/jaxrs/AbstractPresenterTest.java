@@ -1,7 +1,7 @@
 package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.Unauthorized;
 import com.mazebert.usecases.security.SecureRequest;
 import com.mazebert.usecases.security.VerifyGameSignature;
 import org.junit.Before;
@@ -102,14 +102,14 @@ public class AbstractPresenterTest {
     public void secureRequest_clientSignatureIncorrect_actualRequestIsNotCalled() throws Exception {
         presenter.usecaseExecutor = new UsecaseExecutor() {
             public <Request, Response> Response execute(Request request) {
-                throw new Error(Type.UNAUTHORIZED, "Invalid client signature.");
+                throw new Unauthorized("Invalid client signature.");
             }
         };
 
         try {
             whenSecureRequestIsExecuted();
         } catch (Error error) {
-            assertEquals(Type.UNAUTHORIZED, error.getType());
+            assertEquals(Unauthorized.class, error.getClass());
             assertEquals("Invalid client signature.", error.getMessage());
         }
     }

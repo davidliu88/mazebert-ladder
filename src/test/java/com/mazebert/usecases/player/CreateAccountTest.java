@@ -1,8 +1,7 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerGatewayCoach;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.plugins.random.PlayerKeyGeneratorCoach;
@@ -29,42 +28,42 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
     public void nullName() {
         givenRequest(a(request().withName(null)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player name must not be null"));
+        thenErrorIs(new BadRequest("Player name must not be null"));
     }
 
     @Test
     public void emptyName() {
         givenRequest(a(request().withName("")));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player name must not be empty"));
+        thenErrorIs(new BadRequest("Player name must not be empty"));
     }
 
     @Test
     public void zeroLevel() {
         givenRequest(a(request().withLevel(0)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player level must be greater than 0"));
+        thenErrorIs(new BadRequest("Player level must be greater than 0"));
     }
 
     @Test
     public void negativeLevel() {
         givenRequest(a(request().withLevel(-1)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player level must be greater than 0"));
+        thenErrorIs(new BadRequest("Player level must be greater than 0"));
     }
 
     @Test
     public void zeroExperience() {
         givenRequest(a(request().withExperience(0)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player experience must be greater than 0"));
+        thenErrorIs(new BadRequest("Player experience must be greater than 0"));
     }
 
     @Test
     public void negativeExperience() {
         givenRequest(a(request().withExperience(-1)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player experience must be greater than 0"));
+        thenErrorIs(new BadRequest("Player experience must be greater than 0"));
     }
 
     @Test

@@ -1,8 +1,8 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
+import com.mazebert.error.NotFound;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.usecases.security.SecureRequest;
@@ -32,12 +32,12 @@ public class UpdateProgress implements Usecase<UpdateProgress.Request, UpdatePro
 
     public Response execute(Request request) {
         if (request.key == null) {
-            throw new Error(Type.BAD_REQUEST, "Player key must not be null.");
+            throw new BadRequest("Player key must not be null.");
         }
 
         Player player = playerGateway.findPlayer(request.key);
         if (player == null) {
-            throw new Error(Type.NOT_FOUND, "A player with this key does not exist.");
+            throw new NotFound("A player with this key does not exist.");
         }
 
         player.setLevel(Math.max(player.getLevel(), request.level));

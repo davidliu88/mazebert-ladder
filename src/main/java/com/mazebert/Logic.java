@@ -4,8 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.*;
@@ -68,7 +67,7 @@ public class Logic extends GuiceUsecaseExecutor {
         try {
             return super.execute(request);
         } catch (GatewayError gatewayError) {
-            throw new Error(Type.INTERNAL_SERVER_ERROR, gatewayError.getMessage(), gatewayError.getCause());
+            throw new InternalServerError(gatewayError.getMessage(), gatewayError.getCause());
         }
     }
 }

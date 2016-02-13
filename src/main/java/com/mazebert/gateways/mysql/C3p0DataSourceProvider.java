@@ -1,8 +1,7 @@
 package com.mazebert.gateways.mysql;
 
 import com.google.inject.Provider;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.InternalServerError;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.flywaydb.core.Flyway;
 
@@ -45,7 +44,7 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
             dataSource.setUser(user);
             dataSource.setPassword(password);
         } catch (Throwable e) {
-            throw new Error(Type.INTERNAL_SERVER_ERROR, "Database connection pool could not be initialized", e);
+            throw new InternalServerError("Database connection pool could not be initialized", e);
         }
     }
 

@@ -1,8 +1,7 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.PlayerRow;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerRowGatewayCoach;
 import com.mazebert.usecases.player.GetPlayers.Request;
 import org.junit.Before;
@@ -29,21 +28,21 @@ public class GetPlayersTest extends UsecaseTest<Request, List<PlayerRow>> {
     public void negativeStart() {
         givenRequest(a(request().withStart(-1)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Start parameter must be greater than or equal to 0."));
+        thenErrorIs(new BadRequest("Start parameter must be greater than or equal to 0."));
     }
 
     @Test
     public void zeroLimit() {
         givenRequest(a(request().withLimit(0)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Limit must be greater than 0."));
+        thenErrorIs(new BadRequest("Limit must be greater than 0."));
     }
 
     @Test
     public void negativeLimit() {
         givenRequest(a(request().withLimit(-1)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Limit must be greater than 0."));
+        thenErrorIs(new BadRequest("Limit must be greater than 0."));
     }
 
     @Test

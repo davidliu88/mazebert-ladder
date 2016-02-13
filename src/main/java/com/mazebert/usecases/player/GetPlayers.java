@@ -1,8 +1,7 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.PlayerRow;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerRowGateway;
 import org.jusecase.Usecase;
 
@@ -24,11 +23,11 @@ public class GetPlayers implements Usecase<GetPlayers.Request, List<PlayerRow>> 
 
     public List<PlayerRow> execute(Request request) {
         if (request.start < 0) {
-            throw new Error(Type.BAD_REQUEST, "Start parameter must be greater than or equal to 0.");
+            throw new BadRequest("Start parameter must be greater than or equal to 0.");
         }
 
         if (request.limit <= 0) {
-            throw new Error(Type.BAD_REQUEST, "Limit must be greater than 0.");
+            throw new BadRequest("Limit must be greater than 0.");
         }
 
         return playerRowGateway.findPlayers(request.start, request.limit);

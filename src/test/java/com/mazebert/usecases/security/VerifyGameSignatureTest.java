@@ -1,7 +1,6 @@
 package com.mazebert.usecases.security;
 
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.Unauthorized;
 import com.mazebert.usecases.security.VerifyGameSignature.Request;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class VerifyGameSignatureTest extends UsecaseTest<Request, Void> {
     }
 
     private void thenAuthorizationFails(String message) {
-        thenErrorIs(new Error(Type.UNAUTHORIZED, "The given request was not sent by a valid game client. " + message));
+        thenErrorIs(new Unauthorized("The given request was not sent by a valid game client. " + message));
     }
 
     private RequestBuilder request() {

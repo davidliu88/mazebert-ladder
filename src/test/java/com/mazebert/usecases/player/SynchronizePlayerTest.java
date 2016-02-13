@@ -2,8 +2,8 @@ package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
+import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGatewayCoach;
 import com.mazebert.gateways.PlayerGatewayCoach;
 import com.mazebert.gateways.PurchaseGatewayCoach;
@@ -45,14 +45,14 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     public void nullKey() {
         givenRequest(a(request().withKey(null)));
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.BAD_REQUEST, "Player key must not be null"));
+        thenErrorIs(new BadRequest("Player key must not be null"));
     }
 
     @Test
     public void playerDoesNotExist() {
         playerGateway.givenNoPlayerExists();
         whenRequestIsExecuted();
-        thenErrorIs(new Error(Type.NOT_FOUND, "Player does not exist"));
+        thenErrorIs(new NotFound("Player does not exist"));
     }
 
     @Test

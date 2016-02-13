@@ -1,8 +1,8 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.*;
-import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.BadRequest;
+import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.PurchaseGateway;
@@ -48,14 +48,14 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
 
     private void validateRequest(Request request) {
         if (request.key == null) {
-            throw new Error(Type.BAD_REQUEST, "Player key must not be null");
+            throw new BadRequest("Player key must not be null");
         }
     }
 
     private Response createResponse(Request request) {
         Player player = playerGateway.findPlayer(request.key);
         if (player == null) {
-            throw new Error(Type.NOT_FOUND, "Player does not exist");
+            throw new NotFound("Player does not exist");
         }
 
         Version appVersion = new Version(request.appVersion);

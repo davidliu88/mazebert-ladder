@@ -1,7 +1,7 @@
 package com.mazebert.presenters.jaxrs;
 
+import com.mazebert.error.*;
 import com.mazebert.error.Error;
-import com.mazebert.error.Type;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -23,35 +23,35 @@ public class ErrorExceptionMapperTest {
 
     @Test
     public void statusCodeIsMappedCorrectly_badRequest() {
-        givenError(new Error(Type.BAD_REQUEST));
+        givenError(new BadRequest(""));
         whenErrorIsMapped();
         thenResponseStatusCodeIs(400);
     }
 
     @Test
     public void statusCodeIsMappedCorrectly_unauthorized() {
-        givenError(new Error(Type.UNAUTHORIZED));
+        givenError(new Unauthorized(""));
         whenErrorIsMapped();
         thenResponseStatusCodeIs(401);
     }
 
     @Test
     public void statusCodeIsMappedCorrectly_notFound() {
-        givenError(new Error(Type.NOT_FOUND));
+        givenError(new NotFound(""));
         whenErrorIsMapped();
         thenResponseStatusCodeIs(404);
     }
 
     @Test
     public void statusCodeIsMappedCorrectly_internalServerError() {
-        givenError(new Error(Type.INTERNAL_SERVER_ERROR));
+        givenError(new InternalServerError(""));
         whenErrorIsMapped();
         thenResponseStatusCodeIs(500);
     }
 
     @Test
     public void messageIsMappedCorrectly() {
-        givenError(new Error(Type.BAD_REQUEST, "Something bad happened!"));
+        givenError(new BadRequest("Something bad happened!"));
         whenErrorIsMapped();
         thenResponseMessageIs("Something bad happened!");
     }

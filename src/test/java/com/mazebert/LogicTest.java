@@ -1,7 +1,7 @@
 package com.mazebert;
 
 import com.mazebert.error.Error;
-import com.mazebert.error.Type;
+import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.FakeDataSourceProvider;
 import com.mazebert.usecases.GetStatus;
@@ -51,7 +51,7 @@ public class LogicTest extends UsecaseExecutorTest {
         }
 
         assertNotNull(error);
-        assertEquals(Type.INTERNAL_SERVER_ERROR, error.getType());
+        assertEquals(InternalServerError.class, error.getClass());
         assertEquals("Something went wrong down here in the gateway.", error.getMessage());
         assertEquals(SQLException.class, error.getCause().getClass());
     }
