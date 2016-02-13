@@ -1,4 +1,6 @@
-package com.mazebert.plugins.random;
+package com.mazebert.plugins.random.mocks;
+
+import com.mazebert.plugins.random.RandomNumberGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class RandomNumberGeneratorCoach implements RandomNumberGenerator {
+public class RandomNumberGeneratorMock implements RandomNumberGenerator {
     private List<Integer> randomIntegers = new ArrayList<>();
     private List<String> randomIntegerCalls = new ArrayList<>();
 

@@ -1,8 +1,10 @@
-package com.mazebert.plugins.time;
+package com.mazebert.plugins.time.mocks;
+
+import com.mazebert.plugins.time.CurrentDatePlugin;
 
 import java.util.Date;
 
-public class CurrentDatePluginCoach extends CurrentDatePlugin {
+public class CurrentDatePluginMock extends CurrentDatePlugin {
     private Date currentDate = new Date();
 
     @Override

@@ -2,9 +2,9 @@ package com.mazebert.usecases.player;
 
 import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
-import com.mazebert.gateways.PlayerGatewayCoach;
+import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.gateways.error.KeyAlreadyExists;
-import com.mazebert.plugins.random.PlayerKeyGeneratorCoach;
+import com.mazebert.plugins.random.mocks.PlayerKeyGeneratorMock;
 import com.mazebert.usecases.player.CreateAccount.Request;
 import com.mazebert.usecases.player.CreateAccount.Response;
 import org.junit.Before;
@@ -16,8 +16,8 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;
 
 public class CreateAccountTest extends UsecaseTest<Request, Response> {
-    private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
-    private PlayerKeyGeneratorCoach keyGenerator = new PlayerKeyGeneratorCoach();
+    private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
+    private PlayerKeyGeneratorMock keyGenerator = new PlayerKeyGeneratorMock();
 
     @Before
     public void setUp() {

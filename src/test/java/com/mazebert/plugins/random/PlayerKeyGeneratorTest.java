@@ -1,12 +1,13 @@
 package com.mazebert.plugins.random;
 
+import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class PlayerKeyGeneratorTest {
-    private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
+    private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
     private PlayerKeyGenerator generator;
 
     private String playerKey;

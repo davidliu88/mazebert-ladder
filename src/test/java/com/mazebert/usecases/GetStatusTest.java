@@ -1,8 +1,8 @@
 package com.mazebert.usecases;
 
 import com.mazebert.entities.PlayerRow;
-import com.mazebert.gateways.PlayerRowGatewayCoach;
-import com.mazebert.plugins.time.CurrentDatePluginCoach;
+import com.mazebert.gateways.mocks.PlayerRowGatewayMock;
+import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.GetStatus.Request;
 import com.mazebert.usecases.GetStatus.Response;
 import org.junit.Before;
@@ -17,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.*;
 
 public class GetStatusTest extends UsecaseTest<Request, Response> {
-    private PlayerRowGatewayCoach playerRowGateway = new PlayerRowGatewayCoach();
-    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
+    private PlayerRowGatewayMock playerRowGateway = new PlayerRowGatewayMock();
+    private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
 
     @Before
     public void setUp() {

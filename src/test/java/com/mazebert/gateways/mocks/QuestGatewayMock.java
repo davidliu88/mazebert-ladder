@@ -1,11 +1,12 @@
-package com.mazebert.gateways;
+package com.mazebert.gateways.mocks;
 
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
+import com.mazebert.gateways.QuestGateway;
 
 import java.util.*;
 
-public class QuestGatewayCoach implements QuestGateway {
+public class QuestGatewayMock implements QuestGateway {
     private Map<Long, List<Long>> completedHiddenQuestIds = new HashMap<>();
     private Map<Long, List<Quest>> dailyQuests = new HashMap<>();
     private List<Quest> allQuests = new ArrayList<>();

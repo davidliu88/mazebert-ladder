@@ -4,9 +4,10 @@ import com.mazebert.builders.QuestBuilder;
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.entities.Version;
-import com.mazebert.gateways.FoilCardGatewayCoach;
-import com.mazebert.gateways.QuestGatewayCoach;
-import com.mazebert.plugins.time.CurrentDatePluginCoach;
+import com.mazebert.gateways.mocks.FoilCardGatewayMock;
+import com.mazebert.gateways.mocks.QuestGatewayMock;
+import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
+import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.plugins.time.TimeZoneParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,10 +21,10 @@ import static org.jusecase.builders.BuilderFactory.*;
 public class DailyQuestGeneratorTest {
     private DailyQuestGenerator questGenerator;
 
-    private QuestGatewayCoach questGateway = new QuestGatewayCoach();
-    private FoilCardGatewayCoach foilCardGateway = new FoilCardGatewayCoach();
-    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
-    private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
+    private QuestGatewayMock questGateway = new QuestGatewayMock();
+    private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
+    private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
+    private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
 
     private Player player;
     private Version version;

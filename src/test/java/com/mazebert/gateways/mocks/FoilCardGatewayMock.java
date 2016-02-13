@@ -1,13 +1,14 @@
-package com.mazebert.gateways;
+package com.mazebert.gateways.mocks;
 
 import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
+import com.mazebert.gateways.FoilCardGateway;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FoilCardGatewayCoach implements FoilCardGateway {
+public class FoilCardGatewayMock implements FoilCardGateway {
     private Map<Long, List<FoilCard>> foilCardsForPlayer = new HashMap<>();
 
     @Override

@@ -3,8 +3,8 @@ package com.mazebert.usecases.player;
 import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
-import com.mazebert.gateways.PlayerGatewayCoach;
-import com.mazebert.plugins.time.CurrentDatePluginCoach;
+import com.mazebert.gateways.mocks.PlayerGatewayMock;
+import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.player.UpdateProgress.Request;
 import com.mazebert.usecases.player.UpdateProgress.Response;
 import org.junit.Before;
@@ -18,8 +18,8 @@ import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.date;
 
 public class UpdateProgressTest extends UsecaseTest<Request, Response> {
-    private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
-    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
+    private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
+    private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
 
     @Before
     public void setUp() {

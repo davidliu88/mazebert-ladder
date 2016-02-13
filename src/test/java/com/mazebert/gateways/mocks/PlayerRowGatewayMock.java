@@ -1,13 +1,14 @@
-package com.mazebert.gateways;
+package com.mazebert.gateways.mocks;
 
 import com.mazebert.entities.PlayerRow;
+import com.mazebert.gateways.PlayerRowGateway;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerRowGatewayCoach implements PlayerRowGateway {
+public class PlayerRowGatewayMock implements PlayerRowGateway {
     private Map<String, List<PlayerRow>> playersInRange = new HashMap<>();
     private Map<String, List<PlayerRow>> playersNowPlaying = new HashMap<>();
     private int totalPlayerCount;

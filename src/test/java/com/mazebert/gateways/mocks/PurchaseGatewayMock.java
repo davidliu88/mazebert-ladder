@@ -1,13 +1,14 @@
-package com.mazebert.gateways;
+package com.mazebert.gateways.mocks;
 
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Purchase;
+import com.mazebert.gateways.PurchaseGateway;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PurchaseGatewayCoach implements PurchaseGateway {
+public class PurchaseGatewayMock implements PurchaseGateway {
     private Map<Long, List<String>> purchasedProductIdsForPlayer = new HashMap<>();
 
     @Override

@@ -4,12 +4,12 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
-import com.mazebert.gateways.FoilCardGatewayCoach;
-import com.mazebert.gateways.PlayerGatewayCoach;
-import com.mazebert.gateways.PurchaseGatewayCoach;
-import com.mazebert.gateways.QuestGatewayCoach;
-import com.mazebert.plugins.random.RandomNumberGeneratorCoach;
-import com.mazebert.plugins.time.CurrentDatePluginCoach;
+import com.mazebert.gateways.mocks.FoilCardGatewayMock;
+import com.mazebert.gateways.mocks.PlayerGatewayMock;
+import com.mazebert.gateways.mocks.PurchaseGatewayMock;
+import com.mazebert.gateways.mocks.QuestGatewayMock;
+import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
+import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.player.SynchronizePlayer.Request;
 import com.mazebert.usecases.player.SynchronizePlayer.Response;
 import org.junit.Before;
@@ -25,12 +25,12 @@ import static org.junit.Assert.*;
 import static org.jusecase.builders.BuilderFactory.*;
 
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
-    private PlayerGatewayCoach playerGateway = new PlayerGatewayCoach();
-    private FoilCardGatewayCoach foilCardGateway = new FoilCardGatewayCoach();
-    private QuestGatewayCoach questGateway = new QuestGatewayCoach();
-    private PurchaseGatewayCoach productGateway = new PurchaseGatewayCoach();
-    private CurrentDatePluginCoach currentDatePlugin = new CurrentDatePluginCoach();
-    private RandomNumberGeneratorCoach randomNumberGenerator = new RandomNumberGeneratorCoach();
+    private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
+    private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
+    private QuestGatewayMock questGateway = new QuestGatewayMock();
+    private PurchaseGatewayMock productGateway = new PurchaseGatewayMock();
+    private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
+    private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
 
     @Before
     public void setUp() {

@@ -1,10 +1,11 @@
-package com.mazebert.gateways;
+package com.mazebert.gateways.mocks;
 
 import com.mazebert.entities.Player;
+import com.mazebert.gateways.PlayerGateway;
 
 import java.util.*;
 
-public class PlayerGatewayCoach implements PlayerGateway {
+public class PlayerGatewayMock implements PlayerGateway {
     private int nextPlayerId;
     private Player addedPlayer;
     private Player updatedPlayer;

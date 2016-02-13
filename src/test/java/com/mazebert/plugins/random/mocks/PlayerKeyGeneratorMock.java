@@ -1,13 +1,15 @@
-package com.mazebert.plugins.random;
+package com.mazebert.plugins.random.mocks;
+
+import com.mazebert.plugins.random.PlayerKeyGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlayerKeyGeneratorCoach extends PlayerKeyGenerator {
+public class PlayerKeyGeneratorMock extends PlayerKeyGenerator {
     private List<String> keysToGenerate = new ArrayList<>();
 
-    public PlayerKeyGeneratorCoach() {
+    public PlayerKeyGeneratorMock() {
         super(null);
     }
 

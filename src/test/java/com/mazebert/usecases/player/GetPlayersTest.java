@@ -2,7 +2,7 @@ package com.mazebert.usecases.player;
 
 import com.mazebert.entities.PlayerRow;
 import com.mazebert.error.BadRequest;
-import com.mazebert.gateways.PlayerRowGatewayCoach;
+import com.mazebert.gateways.mocks.PlayerRowGatewayMock;
 import com.mazebert.usecases.player.GetPlayers.Request;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.listWith;
 
 public class GetPlayersTest extends UsecaseTest<Request, List<PlayerRow>> {
-    private PlayerRowGatewayCoach playerGateway = new PlayerRowGatewayCoach();
+    private PlayerRowGatewayMock playerGateway = new PlayerRowGatewayMock();
 
     @Before
     public void setUp() {
