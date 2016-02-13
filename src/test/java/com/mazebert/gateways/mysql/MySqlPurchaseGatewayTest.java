@@ -3,7 +3,7 @@ package com.mazebert.gateways.mysql;
 import com.mazebert.gateways.PurchaseGatewayTest;
 import org.junit.Before;
 
-public class MySqlPurchasePurchaseGatewayTest extends PurchaseGatewayTest {
+public class MySqlPurchaseGatewayTest extends PurchaseGatewayTest {
     @Before
     public void setUp() throws Exception {
         gateway = new MySqlPurchaseGateway(TestDataSourceProvider.instance.getDataSource());
