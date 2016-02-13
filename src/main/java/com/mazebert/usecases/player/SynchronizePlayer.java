@@ -25,6 +25,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     private final PurchaseGateway purchaseGateway;
     private final DailyQuestGenerator dailyQuestGenerator;
     private final TimeZoneParser timeZoneParser;
+    private final BlackMarket blackMarket;
 
     @Inject
     public SynchronizePlayer(PlayerGateway playerGateway,
@@ -39,6 +40,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         this.purchaseGateway = purchaseGateway;
         this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
+        blackMarket = new BlackMarket(currentDatePlugin);
     }
 
     public Response execute(Request request) {
@@ -66,6 +68,8 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         addFoilCardsToResponse(player, response);
         addQuestsToResponse(player, appVersion, timeZone, response);
         addProductsToResponse(player, response);
+
+        response.isBlackMarketAvailable = blackMarket.isAvailable(timeZone);
 
         return response;
     }
@@ -143,6 +147,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public List<Quest> dailyQuests;
         public boolean canReplaceDailyQuest;
         public List<String> purchasedProductIds;
+        public boolean isBlackMarketAvailable;
 
         public static class Card {
             public long id;

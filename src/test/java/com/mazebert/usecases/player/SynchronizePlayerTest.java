@@ -245,11 +245,18 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void blackMarketAvailabilityIsAdded() {
-        // TODO
+    public void blackMarket_isAvailable() {
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-13 10:00:00")));
+        whenRequestIsExecuted();
+        assertTrue(response.isBlackMarketAvailable);
     }
 
-
+    @Test
+    public void blackMarket_isNotAvailable() {
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-15 10:00:00")));
+        whenRequestIsExecuted();
+        assertFalse(response.isBlackMarketAvailable);
+    }
 
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
         assertEquals(expected.size(), actual.size());
