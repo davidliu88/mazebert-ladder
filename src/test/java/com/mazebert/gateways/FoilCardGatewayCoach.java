@@ -16,7 +16,7 @@ public class FoilCardGatewayCoach implements FoilCardGateway {
     }
 
     @Override
-    public boolean isFoilCardOwnedByPlayer(long playerId, int cardId, int cardType) {
+    public boolean isFoilCardOwnedByPlayer(long playerId, long cardId, int cardType) {
         List<FoilCard> cards = foilCardsForPlayer.get(playerId);
         if (cards != null) {
             for (FoilCard card : cards) {
@@ -27,6 +27,10 @@ public class FoilCardGatewayCoach implements FoilCardGateway {
         }
 
         return false;
+    }
+
+    @Override
+    public void addFoilCardToPlayer(long playerId, FoilCard foilCard) {
     }
 
     public void givenFoilCardsForPlayer(Player player, List<FoilCard> foilCards) {

@@ -30,8 +30,7 @@ public class FoilCardBuilder implements Builder<FoilCard> {
     public FoilCardBuilder bowlingBall() {
         return this
                 .item()
-                .withCardId(58)
-                .withCardType(CardType.ITEM);
+                .withCardId(58);
     }
 
     @Override
