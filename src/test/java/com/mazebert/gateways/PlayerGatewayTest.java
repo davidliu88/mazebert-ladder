@@ -5,9 +5,7 @@ import com.mazebert.gateways.error.KeyAlreadyExists;
 import org.junit.Test;
 
 import static com.mazebert.builders.BuilderFactory.player;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.date;
 

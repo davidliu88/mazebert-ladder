@@ -14,9 +14,7 @@ import org.junit.Test;
 import java.util.TimeZone;
 
 import static com.mazebert.builders.BuilderFactory.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.jusecase.builders.BuilderFactory.*;
 
 public class DailyQuestGeneratorTest {

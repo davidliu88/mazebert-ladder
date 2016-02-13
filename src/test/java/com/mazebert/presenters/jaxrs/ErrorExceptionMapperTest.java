@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ErrorExceptionMapperTest {
     private ErrorExceptionMapper exceptionMapper = new ErrorExceptionMapper();

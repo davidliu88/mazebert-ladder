@@ -1,7 +1,7 @@
 package com.mazebert.builders;
 
 import com.mazebert.entities.Player;
-import org.jusecase.builders.*;
+import org.jusecase.builders.Builder;
 
 import java.util.Date;
 

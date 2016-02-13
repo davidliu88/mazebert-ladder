@@ -4,7 +4,10 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.error.Error;
 import com.mazebert.error.Type;
-import com.mazebert.gateways.*;
+import com.mazebert.gateways.FoilCardGatewayCoach;
+import com.mazebert.gateways.PlayerGatewayCoach;
+import com.mazebert.gateways.PurchaseGatewayCoach;
+import com.mazebert.gateways.QuestGatewayCoach;
 import com.mazebert.plugins.random.RandomNumberGeneratorCoach;
 import com.mazebert.plugins.time.CurrentDatePluginCoach;
 import com.mazebert.usecases.player.SynchronizePlayer.Request;
@@ -18,9 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.jusecase.builders.BuilderFactory.*;
 
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {

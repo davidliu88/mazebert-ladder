@@ -1,11 +1,11 @@
 package com.mazebert.usecases;
 
+import com.mazebert.usecases.GetVersion.Request;
+import com.mazebert.usecases.GetVersion.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
-import com.mazebert.usecases.GetVersion.Request;
-import com.mazebert.usecases.GetVersion.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.builders.BuilderFactory.a;

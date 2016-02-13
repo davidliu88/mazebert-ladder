@@ -12,8 +12,8 @@ import com.mazebert.gateways.mysql.*;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.usecases.GetStatus;
-import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.GetVersion;
+import com.mazebert.usecases.player.*;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 import javax.sql.DataSource;
