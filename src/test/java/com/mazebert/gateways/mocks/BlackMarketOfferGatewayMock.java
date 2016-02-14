@@ -5,13 +5,9 @@ import com.mazebert.entities.Card;
 import com.mazebert.entities.Player;
 import com.mazebert.gateways.BlackMarketOfferGateway;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class BlackMarketOfferGatewayMock implements BlackMarketOfferGateway {
     private BlackMarketOffer latestOffer;
@@ -42,16 +38,19 @@ public class BlackMarketOfferGatewayMock implements BlackMarketOfferGateway {
         latestOffer = blackMarketOffer;
     }
 
-    public void thenOfferWasCreatedForCard(Card card) {
-        assertNotNull(lastAddedOffer);
-        assertEquals(card.getId(), lastAddedOffer.getCardId());
-        assertEquals(card.getType(), lastAddedOffer.getCardType());
-    }
-
     public void givenOfferIsPurchased(BlackMarketOffer offer, Player player) {
         if (!purchasedOffers.containsKey(player.getId())) {
             purchasedOffers.put(player.getId(), new ArrayList<>());
         }
         purchasedOffers.get(player.getId()).add(offer);
+    }
+
+    public void thenOfferWasCreatedForCard(Card card) {
+        assertEquals(card.getId(), lastAddedOffer.getCardId());
+        assertEquals(card.getType(), lastAddedOffer.getCardType());
+    }
+
+    public void thenOfferWasCreatedWithExpirationDate(Date date) {
+        assertEquals(date, lastAddedOffer.getExpirationDate());
     }
 }

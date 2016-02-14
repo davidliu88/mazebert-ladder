@@ -6,9 +6,7 @@ import com.mazebert.gateways.CardGateway;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 public class BlackMarket {
     private static final int DEFAULT_PRICE = 250;
@@ -80,6 +78,7 @@ public class BlackMarket {
         BlackMarketOffer offer = new BlackMarketOffer();
         offer.setCardId(card.getId());
         offer.setCardType(card.getType());
+        offer.setExpirationDate(determineExpirationDate());
         offerGateway.addOffer(offer);
         return offer;
     }
@@ -91,6 +90,20 @@ public class BlackMarket {
         }
 
         return cards.get(randomNumberGenerator.randomInteger(0, cards.size() - 1));
+    }
+
+    private Date determineExpirationDate() {
+        Calendar calendar = Calendar.getInstance(new SimpleTimeZone(0, "utc"));
+        calendar.setTime(currentDatePlugin.getCurrentDate());
+        while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            calendar.add(Calendar.DAY_OF_WEEK, 1);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
     }
 
     public int getPrice() {

@@ -108,6 +108,22 @@ public class BlackMarketTest {
     }
 
     @Test
+    public void createOffer_expirationDateAfterWeekend_1() {
+        cardGateway.givenCardExists(a(item().mjoelnir()));
+        currentDatePlugin.givenCurrentDate(a(date().with("2015-09-25 19:23:01")));
+        whenOfferIsCreated();
+        blackMarketOfferGateway.thenOfferWasCreatedWithExpirationDate(a(date().with("2015-09-28 00:00:00")));
+    }
+
+    @Test
+    public void createOffer_expirationDateAfterWeekend_2() {
+        cardGateway.givenCardExists(a(item().mjoelnir()));
+        currentDatePlugin.givenCurrentDate(a(date().with("2015-12-01 01:05:14")));
+        whenOfferIsCreated();
+        blackMarketOfferGateway.thenOfferWasCreatedWithExpirationDate(a(date().with("2015-12-07 00:00:00")));
+    }
+
+    @Test
     public void createOffer_cardIsPickedRandomly() {
         randomNumberGenerator.givenRandomIntegers(1);
         cardGateway.givenCardsExist(a(listWith(
