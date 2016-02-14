@@ -41,7 +41,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         this.cardGateway = cardGateway;
         this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
-        blackMarket = new BlackMarket(currentDatePlugin, blackMarketOfferGateway, cardGateway);
+        blackMarket = new BlackMarket(currentDatePlugin, blackMarketOfferGateway, cardGateway, randomNumberGenerator);
     }
 
     public Response execute(Request request) {

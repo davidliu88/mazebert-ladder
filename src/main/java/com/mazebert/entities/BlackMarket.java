@@ -2,32 +2,38 @@ package com.mazebert.entities;
 
 import com.mazebert.gateways.BlackMarketOfferGateway;
 import com.mazebert.gateways.CardGateway;
+import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 public class BlackMarket {
     private final CurrentDatePlugin currentDatePlugin;
     private final BlackMarketOfferGateway blackMarketOfferGateway;
     private final CardGateway cardGateway;
+    private final RandomNumberGenerator randomNumberGenerator;
 
     public BlackMarket(CurrentDatePlugin currentDatePlugin,
                        BlackMarketOfferGateway blackMarketOfferGateway,
-                       CardGateway cardGateway) {
+                       CardGateway cardGateway,
+                       RandomNumberGenerator randomNumberGenerator) {
         this.currentDatePlugin = currentDatePlugin;
         this.blackMarketOfferGateway = blackMarketOfferGateway;
         this.cardGateway = cardGateway;
+        this.randomNumberGenerator = randomNumberGenerator;
     }
 
     public boolean isAvailable(Version appVersion, TimeZone timeZone) {
         BlackMarketOffer offer = getOffer();
-
-        Card card = cardGateway.findCard(offer.getCardId(), offer.getCardType());
-        if (card != null) {
-            Version offerVersion = new Version(card.getSinceVersion());
-            if (appVersion.compareTo(offerVersion) >= 0) {
-                return isAvailable(timeZone);
+        if (offer != null) {
+            Card card = cardGateway.findCard(offer.getCardId(), offer.getCardType());
+            if (card != null) {
+                Version offerVersion = new Version(card.getSinceVersion());
+                if (appVersion.compareTo(offerVersion) >= 0) {
+                    return isAvailable(timeZone);
+                }
             }
         }
 
@@ -55,16 +61,29 @@ public class BlackMarket {
         BlackMarketOffer offer = blackMarketOfferGateway.findLatestOffer();
         if (offer == null) {
             offer = createOffer();
-
-            blackMarketOfferGateway.addOffer(offer);
         }
         return offer;
     }
 
-    private BlackMarketOffer createOffer() {
+    public BlackMarketOffer createOffer() {
+        Card card = getRandomCard();
+        return card == null ? null : createOfferFromCard(card);
+    }
+
+    private BlackMarketOffer createOfferFromCard(Card card) {
         BlackMarketOffer offer = new BlackMarketOffer();
-        offer.setCardId(58);
-        offer.setCardType(CardType.ITEM);
+        offer.setCardId(card.getId());
+        offer.setCardType(card.getType());
+        blackMarketOfferGateway.addOffer(offer);
         return offer;
+    }
+
+    private Card getRandomCard() {
+        List<Card> cards = cardGateway.findAllBlackMarketCards();
+        if (cards.isEmpty()) {
+            return null;
+        }
+
+        return cards.get(randomNumberGenerator.randomInteger(0, cards.size() - 1));
     }
 }

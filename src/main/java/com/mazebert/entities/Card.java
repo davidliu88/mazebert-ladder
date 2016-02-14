@@ -4,6 +4,8 @@ public abstract class Card {
     private long id;
     private String sinceVersion;
     private String name;
+    private boolean blackMarketOffer;
+    private boolean forgeable;
 
     public long getId() {
         return id;
@@ -30,5 +32,21 @@ public abstract class Card {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isBlackMarketOffer() {
+        return blackMarketOffer;
+    }
+
+    public void setBlackMarketOffer(boolean blackMarketOffer) {
+        this.blackMarketOffer = blackMarketOffer;
+    }
+
+    public void setForgeable(boolean forgeable) {
+        this.forgeable = forgeable;
+    }
+
+    public boolean isForgeable() {
+        return forgeable;
     }
 }

@@ -248,6 +248,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void blackMarket_isAvailable() {
+        blackMarketOfferGateway.givenLatestOffer(a(blackMarketOffer().withCard(item().bowlingBall())));
         currentDatePlugin.givenCurrentDate(a(dateAtWeekend()));
         whenRequestIsExecuted();
         assertTrue(response.isBlackMarketAvailable);
@@ -255,6 +256,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void blackMarket_isNotAvailable() {
+        blackMarketOfferGateway.givenLatestOffer(a(blackMarketOffer().withCard(item().bowlingBall())));
         currentDatePlugin.givenCurrentDate(a(dateAtWeek()));
         whenRequestIsExecuted();
         assertFalse(response.isBlackMarketAvailable);

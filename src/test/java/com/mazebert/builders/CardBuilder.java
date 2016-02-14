@@ -18,6 +18,20 @@ public abstract class CardBuilder<BuilderType extends CardBuilder, CardType exte
     }
 
     @SuppressWarnings("unchecked")
+    public BuilderType normalCard() {
+        return (BuilderType) this
+                .withIsForgeable(true)
+                .withIsBlackMarketOffer(false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public BuilderType blackMarketCard() {
+        return (BuilderType) this
+                .withIsForgeable(false)
+                .withIsBlackMarketOffer(true);
+    }
+
+    @SuppressWarnings("unchecked")
     public BuilderType withId(long value) {
         card.setId(value);
         return (BuilderType) this;
@@ -32,6 +46,18 @@ public abstract class CardBuilder<BuilderType extends CardBuilder, CardType exte
     @SuppressWarnings("unchecked")
     public BuilderType withSinceVersion(String value) {
         card.setSinceVersion(value);
+        return (BuilderType) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public BuilderType withIsBlackMarketOffer(boolean value) {
+        card.setBlackMarketOffer(value);
+        return (BuilderType) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public BuilderType withIsForgeable(boolean value) {
+        card.setForgeable(value);
         return (BuilderType) this;
     }
 }

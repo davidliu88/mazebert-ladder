@@ -2,6 +2,7 @@ package com.mazebert.entities;
 
 import com.mazebert.gateways.mocks.BlackMarketOfferGatewayMock;
 import com.mazebert.gateways.mocks.CardGatewayMock;
+import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
 import com.mazebert.plugins.time.TimeZoneParser;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import org.junit.Before;
@@ -9,18 +10,21 @@ import org.junit.Test;
 
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.mazebert.builders.BuilderFactory.item;
+import static org.junit.Assert.*;
 import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.date;
+import static org.jusecase.builders.BuilderFactory.listWith;
 
 public class BlackMarketTest {
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
     private BlackMarketOfferGatewayMock blackMarketOfferGateway = new BlackMarketOfferGatewayMock();
     private CardGatewayMock cardGateway = new CardGatewayMock();
-    private BlackMarket blackMarket = new BlackMarket(currentDatePlugin, blackMarketOfferGateway, cardGateway);
+    private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
+    private BlackMarket blackMarket = new BlackMarket(currentDatePlugin, blackMarketOfferGateway, cardGateway, randomNumberGenerator);
 
     private TimeZone timeZone;
+    private BlackMarketOffer offer;
 
     @Before
     public void setUp() throws Exception {
@@ -71,6 +75,47 @@ public class BlackMarketTest {
         thenBlackMarketIsAvailable();
     }
 
+    @Test
+    public void createOffer_noAvailableCards() {
+        cardGateway.givenNoCardsExist();
+        whenOfferIsCreated();
+        thenOfferIsNull();
+    }
+
+    @Test
+    public void createOffer_noAvailableBlackMarketCards() {
+        cardGateway.givenCardExists(a(item().babySword()));
+        whenOfferIsCreated();
+        thenOfferIsNull();
+    }
+
+    @Test
+    public void createOffer_oneAvailableBlackMarketCard() {
+        cardGateway.givenCardExists(a(item().mjoelnir()));
+        whenOfferIsCreated();
+        thenOfferWasCreatedForCard(a(item().mjoelnir()));
+    }
+
+    @Test
+    public void createOffer_offerIsPersisted() {
+        cardGateway.givenCardExists(a(item().mjoelnir()));
+        whenOfferIsCreated();
+        blackMarketOfferGateway.thenOfferWasCreatedForCard(a(item().mjoelnir()));
+    }
+
+    @Test
+    public void createOffer_cardIsPickedRandomly() {
+        randomNumberGenerator.givenRandomIntegers(1);
+        cardGateway.givenCardsExist(a(listWith(
+                a(item().babySword()),
+                a(item().mjoelnir()),
+                a(item().bowlingBall())
+        )));
+        whenOfferIsCreated();
+        randomNumberGenerator.thenRandomIntegerCallsAre("min: 0, max: 1");
+        thenOfferWasCreatedForCard(a(item().bowlingBall()));
+    }
+
     private void givenTimeZoneOffset(int offset) {
         timeZone = new TimeZoneParser().parseOffset(offset);
     }
@@ -79,11 +124,24 @@ public class BlackMarketTest {
         currentDatePlugin.givenCurrentDate(a(date().with(date)));
     }
 
+    private void whenOfferIsCreated() {
+        offer = blackMarket.createOffer();
+    }
+
     private void thenBlackMarketIsAvailable() {
         assertTrue(blackMarket.isAvailable(timeZone));
     }
 
     private void thenBlackMarketIsNotAvailable() {
         assertFalse(blackMarket.isAvailable(timeZone));
+    }
+
+    private void thenOfferIsNull() {
+        assertNull(offer);
+    }
+
+    private void thenOfferWasCreatedForCard(Card card) {
+        assertEquals(card.getId(), offer.getCardId());
+        assertEquals(card.getType(), offer.getCardType());
     }
 }
