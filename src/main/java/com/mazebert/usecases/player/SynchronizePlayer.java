@@ -3,10 +3,7 @@ package com.mazebert.usecases.player;
 import com.mazebert.entities.*;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
-import com.mazebert.gateways.FoilCardGateway;
-import com.mazebert.gateways.PlayerGateway;
-import com.mazebert.gateways.PurchaseGateway;
-import com.mazebert.gateways.QuestGateway;
+import com.mazebert.gateways.*;
 import com.mazebert.plugins.random.DailyQuestGenerator;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
@@ -23,6 +20,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     private final FoilCardGateway foilCardGateway;
     private final QuestGateway questGateway;
     private final PurchaseGateway purchaseGateway;
+    private final CardGateway cardGateway;
     private final DailyQuestGenerator dailyQuestGenerator;
     private final TimeZoneParser timeZoneParser;
     private final BlackMarket blackMarket;
@@ -32,15 +30,18 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
                              FoilCardGateway foilCardGateway,
                              QuestGateway questGateway,
                              PurchaseGateway purchaseGateway,
+                             BlackMarketOfferGateway blackMarketOfferGateway,
+                             CardGateway cardGateway,
                              CurrentDatePlugin currentDatePlugin,
                              RandomNumberGenerator randomNumberGenerator) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.questGateway = questGateway;
         this.purchaseGateway = purchaseGateway;
+        this.cardGateway = cardGateway;
         this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
-        blackMarket = new BlackMarket(currentDatePlugin);
+        blackMarket = new BlackMarket(currentDatePlugin, blackMarketOfferGateway, cardGateway);
     }
 
     public Response execute(Request request) {
@@ -68,10 +69,13 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         addFoilCardsToResponse(player, response);
         addQuestsToResponse(player, appVersion, timeZone, response);
         addProductsToResponse(player, response);
-
-        response.isBlackMarketAvailable = blackMarket.isAvailable(timeZone);
+        addBlackMarketToResponse(appVersion, timeZone, response);
 
         return response;
+    }
+
+    private void addBlackMarketToResponse(Version appVersion, TimeZone timeZone, Response response) {
+        response.isBlackMarketAvailable = blackMarket.isAvailable(appVersion, timeZone);
     }
 
     private void addProductsToResponse(Player player, Response response) {

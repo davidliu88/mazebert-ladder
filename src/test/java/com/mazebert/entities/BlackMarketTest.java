@@ -1,5 +1,7 @@
 package com.mazebert.entities;
 
+import com.mazebert.gateways.mocks.BlackMarketOfferGatewayMock;
+import com.mazebert.gateways.mocks.CardGatewayMock;
 import com.mazebert.plugins.time.TimeZoneParser;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import org.junit.Before;
@@ -14,7 +16,10 @@ import static org.jusecase.builders.BuilderFactory.date;
 
 public class BlackMarketTest {
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
-    private BlackMarket blackMarket = new BlackMarket(currentDatePlugin);
+    private BlackMarketOfferGatewayMock blackMarketOfferGateway = new BlackMarketOfferGatewayMock();
+    private CardGatewayMock cardGateway = new CardGatewayMock();
+    private BlackMarket blackMarket = new BlackMarket(currentDatePlugin, blackMarketOfferGateway, cardGateway);
+
     private TimeZone timeZone;
 
     @Before

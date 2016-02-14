@@ -4,10 +4,7 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
-import com.mazebert.gateways.mocks.FoilCardGatewayMock;
-import com.mazebert.gateways.mocks.PlayerGatewayMock;
-import com.mazebert.gateways.mocks.PurchaseGatewayMock;
-import com.mazebert.gateways.mocks.QuestGatewayMock;
+import com.mazebert.gateways.mocks.*;
 import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.player.SynchronizePlayer.Request;
@@ -29,16 +26,21 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
     private QuestGatewayMock questGateway = new QuestGatewayMock();
     private PurchaseGatewayMock productGateway = new PurchaseGatewayMock();
+    private BlackMarketOfferGatewayMock blackMarketOfferGateway = new BlackMarketOfferGatewayMock();
+    private CardGatewayMock cardGateway = new CardGatewayMock();
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
     private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
 
     @Before
     public void setUp() {
         usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway,
-                productGateway, currentDatePlugin, randomNumberGenerator);
+                productGateway, blackMarketOfferGateway, cardGateway, currentDatePlugin,
+                randomNumberGenerator);
 
         givenRequest(a(request()));
         playerGateway.givenPlayer(a(player().casid()));
+
+        cardGateway.givenCardExists(a(item().bowlingBall()));
     }
 
     @Test
@@ -246,16 +248,52 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void blackMarket_isAvailable() {
-        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-13 10:00:00")));
+        currentDatePlugin.givenCurrentDate(a(dateAtWeekend()));
         whenRequestIsExecuted();
         assertTrue(response.isBlackMarketAvailable);
     }
 
     @Test
     public void blackMarket_isNotAvailable() {
-        currentDatePlugin.givenCurrentDate(a(date().with("2016-02-15 10:00:00")));
+        currentDatePlugin.givenCurrentDate(a(dateAtWeek()));
         whenRequestIsExecuted();
         assertFalse(response.isBlackMarketAvailable);
+    }
+
+    @Test
+    public void blackMarket_offerIsNewerThanAppVersion() {
+        currentDatePlugin.givenCurrentDate(a(dateAtWeekend()));
+        blackMarketOfferGateway.givenLatestOffer(a(blackMarketOffer().withCard(item().bowlingBall())));
+        cardGateway.givenCardExists(a(item().bowlingBall().withSinceVersion("1.4.0")));
+        givenRequest(a(request().withAppVersion("1.3.0")));
+
+        whenRequestIsExecuted();
+
+        assertFalse(response.isBlackMarketAvailable);
+    }
+
+    @Test
+    public void blackMarket_offerIsEqualToAppVersion() {
+        currentDatePlugin.givenCurrentDate(a(dateAtWeekend()));
+        blackMarketOfferGateway.givenLatestOffer(a(blackMarketOffer().withCard(item().bowlingBall())));
+        cardGateway.givenCardExists(a(item().bowlingBall().withSinceVersion("1.3.0")));
+        givenRequest(a(request().withAppVersion("1.3.0")));
+
+        whenRequestIsExecuted();
+
+        assertTrue(response.isBlackMarketAvailable);
+    }
+
+    @Test
+    public void blackMarket_offerIsOlderThanAppVersion() {
+        currentDatePlugin.givenCurrentDate(a(dateAtWeekend()));
+        blackMarketOfferGateway.givenLatestOffer(a(blackMarketOffer().withCard(item().bowlingBall())));
+        cardGateway.givenCardExists(a(item().bowlingBall().withSinceVersion("1.2.0")));
+        givenRequest(a(request().withAppVersion("1.3.0")));
+
+        whenRequestIsExecuted();
+
+        assertTrue(response.isBlackMarketAvailable);
     }
 
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
@@ -295,7 +333,9 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
         public RequestBuilder golden() {
             return this
-                    .withKey("abcdef");
+                    .withKey("abcdef")
+                    .withTimeZoneOffset(0)
+                    .withAppVersion("1.3.0");
         }
 
         public Request build() {
@@ -309,6 +349,11 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
         public RequestBuilder withTimeZoneOffset(int value) {
             request.timeZoneOffset = value;
+            return this;
+        }
+
+        public RequestBuilder withAppVersion(String value) {
+            request.appVersion = value;
             return this;
         }
     }
