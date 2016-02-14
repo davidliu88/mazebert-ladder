@@ -35,15 +35,20 @@ public class BlackMarketOfferGatewayMock implements BlackMarketOfferGateway {
         return offers.stream().anyMatch(blackMarketOffer -> blackMarketOffer.getId() == offer.getId());
     }
 
+    @Override
+    public void markOfferAsPurchased(BlackMarketOffer offer, Player player) {
+        if (!purchasedOffers.containsKey(player.getId())) {
+            purchasedOffers.put(player.getId(), new ArrayList<>());
+        }
+        purchasedOffers.get(player.getId()).add(offer);
+    }
+
     public void givenLatestOffer(BlackMarketOffer blackMarketOffer) {
         latestOffer = blackMarketOffer;
     }
 
     public void givenOfferIsPurchased(BlackMarketOffer offer, Player player) {
-        if (!purchasedOffers.containsKey(player.getId())) {
-            purchasedOffers.put(player.getId(), new ArrayList<>());
-        }
-        purchasedOffers.get(player.getId()).add(offer);
+        markOfferAsPurchased(offer, player);
     }
 
     public void thenOfferWasCreatedForCard(Card card) {

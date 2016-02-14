@@ -7,4 +7,5 @@ public interface BlackMarketOfferGateway {
     BlackMarketOffer findLatestOffer();
     void addOffer(BlackMarketOffer offer);
     boolean isOfferPurchased(BlackMarketOffer offer, Player player);
+    void markOfferAsPurchased(BlackMarketOffer offer, Player player);
 }
