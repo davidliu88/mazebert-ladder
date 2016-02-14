@@ -63,10 +63,21 @@ public class BlackMarket {
 
     public BlackMarketOffer getOffer() {
         BlackMarketOffer offer = offerGateway.findLatestOffer();
-        if (offer == null) {
+        if (offer == null || isOfferExpired(offer)) {
             offer = createOffer();
         }
         return offer;
+    }
+
+    private boolean isOfferExpired(BlackMarketOffer offer) {
+        if (offer.getExpirationDate() == null) {
+            return false;
+        }
+
+        long now = currentDatePlugin.getCurrentDate().getTime();
+        long expiration = offer.getExpirationDate().getTime() + 12 * 3600000;
+
+        return now > expiration;
     }
 
     public BlackMarketOffer createOffer() {

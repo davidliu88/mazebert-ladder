@@ -4,6 +4,8 @@ import com.mazebert.entities.BlackMarketOffer;
 import com.mazebert.entities.Card;
 import org.jusecase.builders.Builder;
 
+import java.util.Date;
+
 public class BlackMarketOfferBuilder implements Builder<BlackMarketOffer> {
     private BlackMarketOffer blackMarketOffer = new BlackMarketOffer();
 
@@ -34,6 +36,11 @@ public class BlackMarketOfferBuilder implements Builder<BlackMarketOffer> {
 
     public BlackMarketOfferBuilder withId(long id) {
         blackMarketOffer.setId(id);
+        return this;
+    }
+
+    public BlackMarketOfferBuilder withExpirationDate(Date date) {
+        blackMarketOffer.setExpirationDate(date);
         return this;
     }
 }

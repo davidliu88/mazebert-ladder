@@ -8,6 +8,7 @@ import com.mazebert.gateways.BlackMarketOfferGateway;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class BlackMarketOfferGatewayMock implements BlackMarketOfferGateway {
     private BlackMarketOffer latestOffer;
@@ -52,5 +53,9 @@ public class BlackMarketOfferGatewayMock implements BlackMarketOfferGateway {
 
     public void thenOfferWasCreatedWithExpirationDate(Date date) {
         assertEquals(date, lastAddedOffer.getExpirationDate());
+    }
+
+    public void thenNoOfferWasCreated() {
+        assertNull(lastAddedOffer);
     }
 }

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.util.TimeZone;
 
+import static com.mazebert.builders.BuilderFactory.blackMarketOffer;
 import static com.mazebert.builders.BuilderFactory.item;
 import static org.junit.Assert.*;
 import static org.jusecase.builders.BuilderFactory.a;
@@ -19,12 +20,12 @@ import static org.jusecase.builders.BuilderFactory.listWith;
 
 public class BlackMarketTest {
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
-    private BlackMarketOfferGatewayMock blackMarketOfferGateway = new BlackMarketOfferGatewayMock();
+    private BlackMarketOfferGatewayMock offerGateway = new BlackMarketOfferGatewayMock();
     private BlackMarketSettingsGatewayMock blackMarketSettingsGateway = new BlackMarketSettingsGatewayMock();
     private CardGatewayMock cardGateway = new CardGatewayMock();
     private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
     private BlackMarket blackMarket = new BlackMarket(currentDatePlugin,
-            blackMarketOfferGateway, blackMarketSettingsGateway, cardGateway,
+            offerGateway, blackMarketSettingsGateway, cardGateway,
             randomNumberGenerator);
 
     private TimeZone timeZone;
@@ -104,7 +105,7 @@ public class BlackMarketTest {
     public void createOffer_offerIsPersisted() {
         cardGateway.givenCardExists(a(item().mjoelnir()));
         whenOfferIsCreated();
-        blackMarketOfferGateway.thenOfferWasCreatedForCard(a(item().mjoelnir()));
+        offerGateway.thenOfferWasCreatedForCard(a(item().mjoelnir()));
     }
 
     @Test
@@ -112,7 +113,7 @@ public class BlackMarketTest {
         cardGateway.givenCardExists(a(item().mjoelnir()));
         currentDatePlugin.givenCurrentDate(a(date().with("2015-09-25 19:23:01")));
         whenOfferIsCreated();
-        blackMarketOfferGateway.thenOfferWasCreatedWithExpirationDate(a(date().with("2015-09-28 00:00:00")));
+        offerGateway.thenOfferWasCreatedWithExpirationDate(a(date().with("2015-09-28 00:00:00")));
     }
 
     @Test
@@ -120,7 +121,7 @@ public class BlackMarketTest {
         cardGateway.givenCardExists(a(item().mjoelnir()));
         currentDatePlugin.givenCurrentDate(a(date().with("2015-12-01 01:05:14")));
         whenOfferIsCreated();
-        blackMarketOfferGateway.thenOfferWasCreatedWithExpirationDate(a(date().with("2015-12-07 00:00:00")));
+        offerGateway.thenOfferWasCreatedWithExpirationDate(a(date().with("2015-12-07 00:00:00")));
     }
 
     @Test
@@ -136,6 +137,76 @@ public class BlackMarketTest {
         thenOfferWasCreatedForCard(a(item().bowlingBall()));
     }
 
+    @Test
+    public void getOffer_currentOfferNotExpired() {
+        cardGateway.givenCardExists(a(item().bowlingBall()));
+        offerGateway.givenLatestOffer(a(blackMarketOffer()
+                .withCard(item().mjoelnir())
+                .withExpirationDate(a(date().with("2015-07-20 00:00:00")))
+        ));
+        currentDatePlugin.givenCurrentDate(a(date().with("2015-07-19 01:05:14")));
+
+        whenOfferIsGet();
+
+        offerGateway.thenNoOfferWasCreated();
+    }
+
+    @Test
+    public void getOffer_currentOfferIsExpired() {
+        cardGateway.givenCardExists(a(item().bowlingBall()));
+        offerGateway.givenLatestOffer(a(blackMarketOffer()
+                .withCard(item().mjoelnir())
+                .withExpirationDate(a(date().with("2015-07-20 00:00:00")))
+        ));
+        currentDatePlugin.givenCurrentDate(a(date().with("2015-07-25 10:01:14")));
+
+        whenOfferIsGet();
+
+        offerGateway.thenOfferWasCreatedForCard(a(item().bowlingBall()));
+    }
+
+    @Test
+    public void getOffer_currentOfferNotExpired_midnight() {
+        cardGateway.givenCardExists(a(item().bowlingBall()));
+        offerGateway.givenLatestOffer(a(blackMarketOffer()
+                .withCard(item().mjoelnir())
+                .withExpirationDate(a(date().with("2015-07-20 00:00:00")))
+        ));
+        currentDatePlugin.givenCurrentDate(a(date().with("2015-07-20 00:00:00")));
+
+        whenOfferIsGet();
+
+        offerGateway.thenNoOfferWasCreated();
+    }
+
+    @Test
+    public void getOffer_currentOfferNotExpired_midnight_maximumTimeOffsetIsRespected() {
+        cardGateway.givenCardExists(a(item().bowlingBall()));
+        offerGateway.givenLatestOffer(a(blackMarketOffer()
+                .withCard(item().mjoelnir())
+                .withExpirationDate(a(date().with("2015-07-20 00:00:00")))
+        ));
+        currentDatePlugin.givenCurrentDate(a(date().with("2015-07-20 12:00:00")));
+
+        whenOfferIsGet();
+
+        offerGateway.thenNoOfferWasCreated();
+    }
+
+    @Test
+    public void getOffer_currentOfferNotExpired_oneSecondPastMidnight_maximumTimeOffsetIsRespected() {
+        cardGateway.givenCardExists(a(item().bowlingBall()));
+        offerGateway.givenLatestOffer(a(blackMarketOffer()
+                .withCard(item().mjoelnir())
+                .withExpirationDate(a(date().with("2015-07-20 00:00:00")))
+        ));
+        currentDatePlugin.givenCurrentDate(a(date().with("2015-07-20 12:00:01")));
+
+        whenOfferIsGet();
+
+        offerGateway.thenOfferWasCreatedForCard(a(item().bowlingBall()));
+    }
+
     private void givenTimeZoneOffset(int offset) {
         timeZone = new TimeZoneParser().parseOffset(offset);
     }
@@ -146,6 +217,10 @@ public class BlackMarketTest {
 
     private void whenOfferIsCreated() {
         offer = blackMarket.createOffer();
+    }
+
+    private void whenOfferIsGet() {
+        offer = blackMarket.getOffer();
     }
 
     private void thenBlackMarketIsAvailable() {
