@@ -1,6 +1,5 @@
 package com.mazebert.builders;
 
-import com.mazebert.entities.Item;
 import org.jusecase.builders.DateBuilder;
 
 import static org.jusecase.builders.BuilderFactory.date;
@@ -36,6 +35,10 @@ public class BuilderFactory {
 
     public static BlackMarketOfferBuilder blackMarketOffer() {
         return new BlackMarketOfferBuilder();
+    }
+
+    public static BlackMarketSettingsBuilder blackMarketSettings() {
+        return new BlackMarketSettingsBuilder();
     }
 
     public static ItemBuilder item() {

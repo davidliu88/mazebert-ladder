@@ -37,6 +37,7 @@ public class Logic extends GuiceUsecaseExecutor {
             bind(FoilCardGateway.class).to(MySqlFoilCardGateway.class);
             bind(QuestGateway.class).to(MySqlQuestGateway.class);
             bind(BlackMarketOfferGateway.class).to(MySqlBlackMarketOfferGateway.class);
+            bind(BlackMarketSettingsGateway.class).to(MySqlBlackMarketSettingsGateway.class);
             bind(CardGateway.class).to(MySqlCardGateway.class);
         }
     }

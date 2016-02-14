@@ -1,6 +1,7 @@
 package com.mazebert.entities;
 
 import com.mazebert.gateways.BlackMarketOfferGateway;
+import com.mazebert.gateways.BlackMarketSettingsGateway;
 import com.mazebert.gateways.CardGateway;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
@@ -10,17 +11,22 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class BlackMarket {
+    private static final int DEFAULT_PRICE = 250;
+
     private final CurrentDatePlugin currentDatePlugin;
     private final BlackMarketOfferGateway blackMarketOfferGateway;
+    private final BlackMarketSettingsGateway blackMarketSettingsGateway;
     private final CardGateway cardGateway;
     private final RandomNumberGenerator randomNumberGenerator;
 
     public BlackMarket(CurrentDatePlugin currentDatePlugin,
                        BlackMarketOfferGateway blackMarketOfferGateway,
+                       BlackMarketSettingsGateway blackMarketSettingsGateway,
                        CardGateway cardGateway,
                        RandomNumberGenerator randomNumberGenerator) {
         this.currentDatePlugin = currentDatePlugin;
         this.blackMarketOfferGateway = blackMarketOfferGateway;
+        this.blackMarketSettingsGateway = blackMarketSettingsGateway;
         this.cardGateway = cardGateway;
         this.randomNumberGenerator = randomNumberGenerator;
     }
@@ -85,5 +91,10 @@ public class BlackMarket {
         }
 
         return cards.get(randomNumberGenerator.randomInteger(0, cards.size() - 1));
+    }
+
+    public int getPrice() {
+        BlackMarketSettings settings = blackMarketSettingsGateway.getSettings();
+        return settings != null ? settings.getPrice() : DEFAULT_PRICE;
     }
 }

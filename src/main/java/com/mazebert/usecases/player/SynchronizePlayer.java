@@ -31,6 +31,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
                              QuestGateway questGateway,
                              PurchaseGateway purchaseGateway,
                              BlackMarketOfferGateway blackMarketOfferGateway,
+                             BlackMarketSettingsGateway blackMarketSettingsGateway,
                              CardGateway cardGateway,
                              CurrentDatePlugin currentDatePlugin,
                              RandomNumberGenerator randomNumberGenerator) {
@@ -41,7 +42,11 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         this.cardGateway = cardGateway;
         this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
-        blackMarket = new BlackMarket(currentDatePlugin, blackMarketOfferGateway, cardGateway, randomNumberGenerator);
+        blackMarket = new BlackMarket(currentDatePlugin,
+                blackMarketOfferGateway,
+                blackMarketSettingsGateway,
+                cardGateway,
+                randomNumberGenerator);
     }
 
     public Response execute(Request request) {
@@ -76,6 +81,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
 
     private void addBlackMarketToResponse(Version appVersion, TimeZone timeZone, Response response) {
         response.isBlackMarketAvailable = blackMarket.isAvailable(appVersion, timeZone);
+        response.blackMarketPrice = blackMarket.getPrice();
     }
 
     private void addProductsToResponse(Player player, Response response) {
@@ -152,6 +158,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public boolean canReplaceDailyQuest;
         public List<String> purchasedProductIds;
         public boolean isBlackMarketAvailable;
+        public int blackMarketPrice;
 
         public static class Card {
             public long id;

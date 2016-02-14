@@ -27,6 +27,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private QuestGatewayMock questGateway = new QuestGatewayMock();
     private PurchaseGatewayMock productGateway = new PurchaseGatewayMock();
     private BlackMarketOfferGatewayMock blackMarketOfferGateway = new BlackMarketOfferGatewayMock();
+    private BlackMarketSettingsGatewayMock blackMarketSettingsGateway = new BlackMarketSettingsGatewayMock();
     private CardGatewayMock cardGateway = new CardGatewayMock();
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
     private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
@@ -34,8 +35,8 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     @Before
     public void setUp() {
         usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway,
-                productGateway, blackMarketOfferGateway, cardGateway, currentDatePlugin,
-                randomNumberGenerator);
+                productGateway, blackMarketOfferGateway, blackMarketSettingsGateway,
+                cardGateway, currentDatePlugin, randomNumberGenerator);
 
         givenRequest(a(request()));
         playerGateway.givenPlayer(a(player().casid()));
@@ -296,6 +297,20 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         assertTrue(response.isBlackMarketAvailable);
+    }
+
+    @Test
+    public void blackMarket_priceIsAdded() {
+        blackMarketSettingsGateway.givenSettings(a(blackMarketSettings().withPrice(100)));
+        whenRequestIsExecuted();
+        assertEquals(100, response.blackMarketPrice);
+    }
+
+    @Test
+    public void blackMarket_defaultPriceInCaseNoSettingsAvailable() {
+        blackMarketSettingsGateway.givenSettings(null);
+        whenRequestIsExecuted();
+        assertEquals(250, response.blackMarketPrice);
     }
 
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
