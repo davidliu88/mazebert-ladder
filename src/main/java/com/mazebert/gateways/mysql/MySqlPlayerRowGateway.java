@@ -14,17 +14,15 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-public class MySqlPlayerRowGateway implements PlayerRowGateway {
-    private final DataSource dataSource;
-
+public class MySqlPlayerRowGateway extends MySqlGateway implements PlayerRowGateway {
     @Inject
     public MySqlPlayerRowGateway(DataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
     }
 
     @Override
     public List<PlayerRow> findPlayers(int start, int limit) {
-        QueryRunner runner = new QueryRunner(dataSource);
+        QueryRunner runner = getQueryRunner();
         try(Connection connection = dataSource.getConnection()) {
             runner.update(connection, "SET @rownum := ?;", start);
             return runner.query(connection,
@@ -39,9 +37,8 @@ public class MySqlPlayerRowGateway implements PlayerRowGateway {
 
     @Override
     public List<PlayerRow> findPlayersUpdatedSince(Date updatedSince) {
-        QueryRunner runner = new QueryRunner(dataSource);
         try {
-            return runner.query("SELECT id, name FROM Player WHERE lastUpdate >= ? ORDER BY LOWER(name) ASC;",
+            return getQueryRunner().query("SELECT id, name FROM Player WHERE lastUpdate >= ? ORDER BY LOWER(name) ASC;",
                     new BeanListHandler<>(PlayerRow.class),
                     updatedSince);
         } catch (SQLException e) {
@@ -51,9 +48,8 @@ public class MySqlPlayerRowGateway implements PlayerRowGateway {
 
     @Override
     public int getTotalPlayerCount() {
-        QueryRunner runner = new QueryRunner(dataSource);
         try {
-            Long count = runner.query("SELECT COUNT(*) FROM Player;", new ScalarHandler<>());
+            Long count = getQueryRunner().query("SELECT COUNT(*) FROM Player;", new ScalarHandler<>());
             return count == null ? 0 : count.intValue();
         } catch (SQLException e) {
             throw new GatewayError("Failed to select amount of players from database", e);

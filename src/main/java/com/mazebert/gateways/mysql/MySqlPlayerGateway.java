@@ -14,19 +14,16 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class MySqlPlayerGateway implements PlayerGateway {
-    private final DataSource dataSource;
-
+public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
     @Inject
     public MySqlPlayerGateway(DataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
     }
 
     @Override
     public Player addPlayer(Player player) {
-        QueryRunner runner = new QueryRunner(dataSource);
         try {
-            long id = runner.insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate, email, supporterLevel, relics, isCheater, lastQuestCreation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", new ScalarHandler<>(),
+            long id = getQueryRunner().insert("INSERT INTO Player (savekey, name, level, experience, lastUpdate, email, supporterLevel, relics, isCheater, lastQuestCreation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", new ScalarHandler<>(),
                     player.getKey(),
                     player.getName(),
                     player.getLevel(),
@@ -49,10 +46,9 @@ public class MySqlPlayerGateway implements PlayerGateway {
     }
 
     public Player findPlayer(String key) {
-        QueryRunner runner = new QueryRunner(dataSource);
         try {
             ResultSetHandler<Player> handler = new BeanHandler<>(Player.class);
-            return runner.query("SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player WHERE savekey=?;", handler, key);
+            return getQueryRunner().query("SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player WHERE savekey=?;", handler, key);
         } catch (SQLException e) {
             throw new GatewayError("Failed to find player by key in database", e);
         }
@@ -60,7 +56,7 @@ public class MySqlPlayerGateway implements PlayerGateway {
 
     @Override
     public int findPlayerRank(long id) {
-        QueryRunner runner = new QueryRunner(dataSource);
+        QueryRunner runner = getQueryRunner();
         try(Connection connection = dataSource.getConnection()) {
             runner.update(connection, "SET @rownum := 0;");
             Long rank = runner.query(connection,
@@ -75,9 +71,8 @@ public class MySqlPlayerGateway implements PlayerGateway {
     }
 
     public void updatePlayer(Player player) {
-        QueryRunner runner = new QueryRunner(dataSource);
         try {
-            runner.update("UPDATE Player SET level=?, experience=?, lastUpdate=? WHERE id=?",
+            getQueryRunner().update("UPDATE Player SET level=?, experience=?, lastUpdate=? WHERE id=?",
                     player.getLevel(),
                     player.getExperience(),
                     player.getLastUpdate(),

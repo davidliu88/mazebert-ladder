@@ -4,7 +4,6 @@ import com.mazebert.entities.BlackMarketOffer;
 import com.mazebert.entities.Player;
 import com.mazebert.gateways.BlackMarketOfferGateway;
 import com.mazebert.gateways.error.GatewayError;
-import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
@@ -12,19 +11,16 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
-public class MySqlBlackMarketOfferGateway implements BlackMarketOfferGateway {
-    private final DataSource dataSource;
-
+public class MySqlBlackMarketOfferGateway extends MySqlGateway implements BlackMarketOfferGateway {
     @Inject
     public MySqlBlackMarketOfferGateway(DataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
     }
 
     @Override
     public BlackMarketOffer findLatestOffer() {
-        QueryRunner queryRunner = new QueryRunner(dataSource);
         try {
-            return queryRunner.query("SELECT id, cardId, cardType, expirationDate FROM BlackMarketOffer ORDER BY expirationDate DESC LIMIT 1;",
+            return getQueryRunner().query("SELECT id, cardId, cardType, expirationDate FROM BlackMarketOffer ORDER BY expirationDate DESC LIMIT 1;",
                     new BeanHandler<>(BlackMarketOffer.class));
         } catch (SQLException e) {
             throw new GatewayError("Failed to find latest black market offer.", e);
@@ -33,9 +29,8 @@ public class MySqlBlackMarketOfferGateway implements BlackMarketOfferGateway {
 
     @Override
     public void addOffer(BlackMarketOffer offer) {
-        QueryRunner queryRunner = new QueryRunner(dataSource);
         try {
-            long id = queryRunner.insert("INSERT INTO BlackMarketOffer (cardId, cardType, expirationDate) VALUES(?, ?, ?);",
+            long id = getQueryRunner().insert("INSERT INTO BlackMarketOffer (cardId, cardType, expirationDate) VALUES(?, ?, ?);",
                     new ScalarHandler<>(),
                     offer.getCardId(),
                     offer.getCardType(),
@@ -48,9 +43,8 @@ public class MySqlBlackMarketOfferGateway implements BlackMarketOfferGateway {
 
     @Override
     public boolean isOfferPurchased(BlackMarketOffer offer, Player player) {
-        QueryRunner queryRunner = new QueryRunner(dataSource);
         try {
-            long count = queryRunner.query("SELECT COUNT(*) FROM PlayerPurchasedBlackMarketOffer WHERE playerId=? AND offerId=?;",
+            long count = getQueryRunner().query("SELECT COUNT(*) FROM PlayerPurchasedBlackMarketOffer WHERE playerId=? AND offerId=?;",
                     new ScalarHandler<>(),
                     player.getId(),
                     offer.getId());
@@ -62,9 +56,8 @@ public class MySqlBlackMarketOfferGateway implements BlackMarketOfferGateway {
 
     @Override
     public void markOfferAsPurchased(BlackMarketOffer offer, Player player) {
-        QueryRunner queryRunner = new QueryRunner(dataSource);
         try {
-            queryRunner.insert("INSERT INTO PlayerPurchasedBlackMarketOffer (playerId, offerId) VALUES(?, ?);",
+            getQueryRunner().insert("INSERT INTO PlayerPurchasedBlackMarketOffer (playerId, offerId) VALUES(?, ?);",
                     new ScalarHandler<>(),
                     player.getId(),
                     offer.getId());
