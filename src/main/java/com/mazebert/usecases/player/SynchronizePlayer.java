@@ -74,14 +74,15 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         addFoilCardsToResponse(player, response);
         addQuestsToResponse(player, appVersion, timeZone, response);
         addProductsToResponse(player, response);
-        addBlackMarketToResponse(appVersion, timeZone, response);
+        addBlackMarketToResponse(player, appVersion, timeZone, response);
 
         return response;
     }
 
-    private void addBlackMarketToResponse(Version appVersion, TimeZone timeZone, Response response) {
+    private void addBlackMarketToResponse(Player player, Version appVersion, TimeZone timeZone, Response response) {
         response.isBlackMarketAvailable = blackMarket.isAvailable(appVersion, timeZone);
         response.blackMarketPrice = blackMarket.getPrice();
+        response.blackMarketPurchase = blackMarket.getThisWeeksPurchase(player);
     }
 
     private void addProductsToResponse(Player player, Response response) {
@@ -159,6 +160,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public List<String> purchasedProductIds;
         public boolean isBlackMarketAvailable;
         public int blackMarketPrice;
+        public BlackMarketOffer blackMarketPurchase;
 
         public static class Card {
             public long id;

@@ -31,4 +31,9 @@ public class BlackMarketOfferBuilder implements Builder<BlackMarketOffer> {
         blackMarketOffer.setCardId(id);
         return this;
     }
+
+    public BlackMarketOfferBuilder withId(long id) {
+        blackMarketOffer.setId(id);
+        return this;
+    }
 }

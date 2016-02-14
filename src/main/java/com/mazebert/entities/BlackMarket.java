@@ -14,19 +14,19 @@ public class BlackMarket {
     private static final int DEFAULT_PRICE = 250;
 
     private final CurrentDatePlugin currentDatePlugin;
-    private final BlackMarketOfferGateway blackMarketOfferGateway;
-    private final BlackMarketSettingsGateway blackMarketSettingsGateway;
+    private final BlackMarketOfferGateway offerGateway;
+    private final BlackMarketSettingsGateway settingsGateway;
     private final CardGateway cardGateway;
     private final RandomNumberGenerator randomNumberGenerator;
 
     public BlackMarket(CurrentDatePlugin currentDatePlugin,
-                       BlackMarketOfferGateway blackMarketOfferGateway,
-                       BlackMarketSettingsGateway blackMarketSettingsGateway,
+                       BlackMarketOfferGateway offerGateway,
+                       BlackMarketSettingsGateway settingsGateway,
                        CardGateway cardGateway,
                        RandomNumberGenerator randomNumberGenerator) {
         this.currentDatePlugin = currentDatePlugin;
-        this.blackMarketOfferGateway = blackMarketOfferGateway;
-        this.blackMarketSettingsGateway = blackMarketSettingsGateway;
+        this.offerGateway = offerGateway;
+        this.settingsGateway = settingsGateway;
         this.cardGateway = cardGateway;
         this.randomNumberGenerator = randomNumberGenerator;
     }
@@ -64,7 +64,7 @@ public class BlackMarket {
     }
 
     public BlackMarketOffer getOffer() {
-        BlackMarketOffer offer = blackMarketOfferGateway.findLatestOffer();
+        BlackMarketOffer offer = offerGateway.findLatestOffer();
         if (offer == null) {
             offer = createOffer();
         }
@@ -80,7 +80,7 @@ public class BlackMarket {
         BlackMarketOffer offer = new BlackMarketOffer();
         offer.setCardId(card.getId());
         offer.setCardType(card.getType());
-        blackMarketOfferGateway.addOffer(offer);
+        offerGateway.addOffer(offer);
         return offer;
     }
 
@@ -94,7 +94,15 @@ public class BlackMarket {
     }
 
     public int getPrice() {
-        BlackMarketSettings settings = blackMarketSettingsGateway.getSettings();
+        BlackMarketSettings settings = settingsGateway.getSettings();
         return settings != null ? settings.getPrice() : DEFAULT_PRICE;
+    }
+
+    public BlackMarketOffer getThisWeeksPurchase(Player player) {
+        BlackMarketOffer offer = getOffer();
+        if (offerGateway.isOfferPurchased(offer, player)) {
+            return offer;
+        }
+        return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.mazebert.usecases.player;
 
+import com.mazebert.entities.BlackMarketOffer;
+import com.mazebert.entities.CardType;
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.error.BadRequest;
@@ -311,6 +313,26 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         blackMarketSettingsGateway.givenSettings(null);
         whenRequestIsExecuted();
         assertEquals(250, response.blackMarketPrice);
+    }
+
+    @Test
+    public void blackMarket_offerNotYetPurchased() {
+        blackMarketOfferGateway.givenLatestOffer(a(blackMarketOffer().withCard(item().bowlingBall())));
+        whenRequestIsExecuted();
+        assertNull(response.blackMarketPurchase);
+    }
+
+    @Test
+    public void blackMarket_offerAlreadyPurchased() {
+        BlackMarketOffer currentOffer = a(blackMarketOffer().withCard(item().bowlingBall()));
+        blackMarketOfferGateway.givenLatestOffer(currentOffer);
+        blackMarketOfferGateway.givenOfferIsPurchased(currentOffer, a(player().casid()));
+
+        whenRequestIsExecuted();
+
+        assertNotNull(response.blackMarketPurchase);
+        assertEquals(58, response.blackMarketPurchase.getCardId());
+        assertEquals(CardType.ITEM, response.blackMarketPurchase.getCardType());
     }
 
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
