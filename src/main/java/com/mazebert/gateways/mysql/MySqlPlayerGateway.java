@@ -59,7 +59,7 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
     @Override
     public Player findPlayerByEmail(String email) {
         try {
-            return getQueryRunner().query(FIND_PLAYER + " WHERE email=?;",
+            return getQueryRunner().query(FIND_PLAYER + " WHERE LOWER(email)=LOWER(?);",
                     new BeanHandler<>(Player.class),
                     email);
         } catch (SQLException e) {

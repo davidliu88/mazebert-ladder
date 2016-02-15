@@ -79,9 +79,23 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
     }
 
     @Test
+    public void findPlayerByEmail_notFound() {
+        gateway.addPlayer(a(player().casid().withEmail("player@mazebert.com")));
+        Player actual = gateway.findPlayerByEmail("someone.else@mazebert.com");
+        assertNull(actual);
+    }
+
+    @Test
     public void findPlayerByEmail_valuesAreReturned() {
         Player expected = gateway.addPlayer(a(player().casid().withEmail("player@mazebert.com")));
         Player actual = gateway.findPlayerByEmail("player@mazebert.com");
+        thenPlayerIsEqualTo(expected, actual);
+    }
+
+    @Test
+    public void findPlayerByEmail_emailCheckIsCaseInsensitive() {
+        Player expected = gateway.addPlayer(a(player().casid().withEmail("player@MAZEBERT.COM")));
+        Player actual = gateway.findPlayerByEmail("PLAYER@mazebert.com");
         thenPlayerIsEqualTo(expected, actual);
     }
 
