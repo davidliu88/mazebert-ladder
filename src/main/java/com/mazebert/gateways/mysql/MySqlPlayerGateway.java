@@ -5,7 +5,6 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
@@ -15,6 +14,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
+    private static final String FIND_PLAYER = "SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player";
+
     @Inject
     public MySqlPlayerGateway(DataSource dataSource) {
         super(dataSource);
@@ -47,8 +48,9 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
 
     public Player findPlayerByKey(String key) {
         try {
-            ResultSetHandler<Player> handler = new BeanHandler<>(Player.class);
-            return getQueryRunner().query("SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player WHERE savekey=?;", handler, key);
+            return getQueryRunner().query(FIND_PLAYER + " WHERE savekey=?;",
+                    new BeanHandler<>(Player.class),
+                    key);
         } catch (SQLException e) {
             throw new GatewayError("Failed to find player by key in database", e);
         }
@@ -56,8 +58,13 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
 
     @Override
     public Player findPlayerByEmail(String email) {
-        // TODO
-        return null;
+        try {
+            return getQueryRunner().query(FIND_PLAYER + " WHERE email=?;",
+                    new BeanHandler<>(Player.class),
+                    email);
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to find player by email in database", e);
+        }
     }
 
     @Override

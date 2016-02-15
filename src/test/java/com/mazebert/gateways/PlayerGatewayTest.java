@@ -69,16 +69,20 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
     public void findPlayerByKey_valuesAreReturned() {
         Player expected = gateway.addPlayer(a(player().casid()));
         Player actual = gateway.findPlayerByKey("abcdef");
+        thenPlayerIsEqualTo(expected, actual);
+    }
 
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getLevel(), actual.getLevel());
-        assertEquals(expected.getExperience(), actual.getExperience());
-        assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getSupporterLevel(), actual.getSupporterLevel());
-        assertEquals(expected.getRelics(), actual.getRelics());
-        assertEquals(expected.getLastUpdate(), actual.getLastUpdate());
-        assertEquals(expected.getLastQuestCreation(), actual.getLastQuestCreation());
+    @Test
+    public void findPlayerByEmail_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findPlayerByEmail("?"));
+        thenGatewayErrorIs("Failed to find player by email in database");
+    }
+
+    @Test
+    public void findPlayerByEmail_valuesAreReturned() {
+        Player expected = gateway.addPlayer(a(player().casid().withEmail("player@mazebert.com")));
+        Player actual = gateway.findPlayerByEmail("player@mazebert.com");
+        thenPlayerIsEqualTo(expected, actual);
     }
 
     @Test
@@ -146,5 +150,17 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals(200, updated.getLevel());
         assertEquals(100000000, updated.getExperience());
         assertEquals(a(date().with("2016-02-02 23:00:11")), updated.getLastUpdate());
+    }
+
+    private void thenPlayerIsEqualTo(Player expected, Player actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getLevel(), actual.getLevel());
+        assertEquals(expected.getExperience(), actual.getExperience());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getSupporterLevel(), actual.getSupporterLevel());
+        assertEquals(expected.getRelics(), actual.getRelics());
+        assertEquals(expected.getLastUpdate(), actual.getLastUpdate());
+        assertEquals(expected.getLastQuestCreation(), actual.getLastQuestCreation());
     }
 }
