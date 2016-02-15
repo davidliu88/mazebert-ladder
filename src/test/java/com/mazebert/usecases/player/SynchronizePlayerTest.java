@@ -39,7 +39,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
                 cardGateway, versionInfoGateway, currentDatePlugin, randomNumberGenerator);
 
         givenRequest(a(request()));
-        playerGateway.givenPlayer(a(player().casid()));
+        playerGateway.givenPlayerExists(a(player().casid()));
 
         cardGateway.givenCardExists(a(item().bowlingBall()));
     }
@@ -62,7 +62,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     public void playerExists_propertiesAreFilled() {
         Player expected = a(player().casid());
         givenRequest(a(request()));
-        playerGateway.givenPlayer(expected);
+        playerGateway.givenPlayerExists(expected);
 
         whenRequestIsExecuted();
 
@@ -190,7 +190,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
                 a(quest().withId(1)),
                 a(quest().withId(2))
         )));
-        playerGateway.givenPlayer(a(player().casid()
+        playerGateway.givenPlayerExists(a(player().casid()
                 .withLastQuestCreation(a(date().with("2016-02-02 15:00:00"))))
         );
         givenRequest(a(request().golden().withTimeZoneOffset(+1))); // Actually -1: Adobe AIR App sends inverted Timezone.
@@ -227,7 +227,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
                 a(quest().withId(1)),
                 a(quest().withId(2))
         )));
-        playerGateway.givenPlayer(a(player().casid()
+        playerGateway.givenPlayerExists(a(player().casid()
                 .withLastQuestCreation(a(date().with("2016-01-01 16:00:00")))
         ));
         currentDatePlugin.givenCurrentDate(a(date().with("2016-01-03 16:00:00")));
@@ -412,7 +412,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
                 a(quest().withId(2)),
                 a(quest().withId(3))
         )));
-        playerGateway.givenPlayer(a(player().casid()
+        playerGateway.givenPlayerExists(a(player().casid()
                 .withLastQuestCreation(date)
         ));
     }

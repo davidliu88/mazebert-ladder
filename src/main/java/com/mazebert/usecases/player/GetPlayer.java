@@ -21,7 +21,7 @@ public class GetPlayer implements Usecase<GetPlayer.Request, Player> {
             throw new BadRequest("Player key must not be null");
         }
 
-        Player player = playerGateway.findPlayer(request.key);
+        Player player = playerGateway.findPlayerByKey(request.key);
         if (player == null) {
             throw new NotFound("A player with this key could not be found");
         }

@@ -45,7 +45,7 @@ public class UpdateProgressTest extends UsecaseTest<Request, Response> {
         givenRequest(a(request()
                 .withLevel(100)
                 .withExperience(100000)));
-        playerGateway.givenPlayer(a(player().casid()));
+        playerGateway.givenPlayerExists(a(player().casid()));
 
         whenRequestIsExecuted();
 
@@ -57,7 +57,7 @@ public class UpdateProgressTest extends UsecaseTest<Request, Response> {
     @Test
     public void lastUpdateIsAdjusted() {
         givenRequest(a(request()));
-        playerGateway.givenPlayer(a(player().casid()));
+        playerGateway.givenPlayerExists(a(player().casid()));
         currentDatePlugin.givenCurrentDate(a(date().with("2018-10-10 22:00:00")));
 
         whenRequestIsExecuted();
@@ -68,7 +68,7 @@ public class UpdateProgressTest extends UsecaseTest<Request, Response> {
     @Test
     public void responseIsNotNull() {
         givenRequest(a(request()));
-        playerGateway.givenPlayer(a(player().casid()));
+        playerGateway.givenPlayerExists(a(player().casid()));
 
         whenRequestIsExecuted();
 
@@ -78,7 +78,7 @@ public class UpdateProgressTest extends UsecaseTest<Request, Response> {
     @Test
     public void experienceCannotBeReduced() {
         givenRequest(a(request().withExperience(1000)));
-        playerGateway.givenPlayer(a(player().casid().withExperience(1001)));
+        playerGateway.givenPlayerExists(a(player().casid().withExperience(1001)));
 
         whenRequestIsExecuted();
 
@@ -88,7 +88,7 @@ public class UpdateProgressTest extends UsecaseTest<Request, Response> {
     @Test
     public void levelCannotBeReduced() {
         givenRequest(a(request().withLevel(10)));
-        playerGateway.givenPlayer(a(player().casid().withLevel(20)));
+        playerGateway.givenPlayerExists(a(player().casid().withLevel(20)));
 
         whenRequestIsExecuted();
 

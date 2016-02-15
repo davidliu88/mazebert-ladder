@@ -12,6 +12,7 @@ public class PlayerGatewayMock implements PlayerGateway {
     private List<RuntimeException> exceptions = new ArrayList<>();
 
     private Map<String, Player> playerByKey = new HashMap<>();
+    private Map<String, Player> playerByEmail = new HashMap<>();
     private Map<Long, Integer> playerRankById = new HashMap<>();
 
     public Player addPlayer(Player player) {
@@ -24,8 +25,13 @@ public class PlayerGatewayMock implements PlayerGateway {
         return player;
     }
 
-    public Player findPlayer(String key) {
+    public Player findPlayerByKey(String key) {
         return playerByKey.get(key);
+    }
+
+    @Override
+    public Player findPlayerByEmail(String email) {
+        return playerByEmail.get(email);
     }
 
     @Override
@@ -54,8 +60,9 @@ public class PlayerGatewayMock implements PlayerGateway {
         this.exceptions.addAll(Arrays.asList(exceptions));
     }
 
-    public void givenPlayer(Player player) {
+    public void givenPlayerExists(Player player) {
         playerByKey.put(player.getKey(), player);
+        playerByEmail.put(player.getEmail(), player);
     }
 
     public void givenNoPlayerExists() {

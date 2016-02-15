@@ -40,7 +40,7 @@ public class GetPlayerTest extends UsecaseTest<Request, Player> {
     public void playerIsReturnedFromGateway() {
         Player expected = a(player().casid());
         givenRequest(a(request()));
-        playerGateway.givenPlayer(expected);
+        playerGateway.givenPlayerExists(expected);
 
         whenRequestIsExecuted();
 
@@ -50,7 +50,7 @@ public class GetPlayerTest extends UsecaseTest<Request, Player> {
     @Test
     public void playerRankIsReturnedFromGateway() {
         givenRequest(a(request()));
-        playerGateway.givenPlayer(a(player().casid()));
+        playerGateway.givenPlayerExists(a(player().casid()));
         playerGateway.givenPlayerRank(133, a(player().casid()));
 
         whenRequestIsExecuted();

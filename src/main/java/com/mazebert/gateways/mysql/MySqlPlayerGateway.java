@@ -45,13 +45,19 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
         }
     }
 
-    public Player findPlayer(String key) {
+    public Player findPlayerByKey(String key) {
         try {
             ResultSetHandler<Player> handler = new BeanHandler<>(Player.class);
             return getQueryRunner().query("SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player WHERE savekey=?;", handler, key);
         } catch (SQLException e) {
             throw new GatewayError("Failed to find player by key in database", e);
         }
+    }
+
+    @Override
+    public Player findPlayerByEmail(String email) {
+        // TODO
+        return null;
     }
 
     @Override

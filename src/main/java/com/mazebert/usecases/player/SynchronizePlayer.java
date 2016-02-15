@@ -62,7 +62,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     }
 
     private Response createResponse(Request request) {
-        Player player = playerGateway.findPlayer(request.key);
+        Player player = playerGateway.findPlayerByKey(request.key);
         if (player == null) {
             throw new NotFound("Player does not exist");
         }

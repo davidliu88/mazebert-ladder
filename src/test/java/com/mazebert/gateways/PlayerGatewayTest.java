@@ -39,7 +39,7 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
 
         gateway.addPlayer(expected);
 
-        Player actual = gateway.findPlayer("abcdef");
+        Player actual = gateway.findPlayerByKey("abcdef");
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getExperience(), actual.getExperience());
@@ -60,15 +60,15 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
     }
 
     @Test
-    public void findPlayer_gatewayError() {
-        whenGatewayErrorIsForced(() -> errorGateway.findPlayer("?"));
+    public void findPlayerByKey_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findPlayerByKey("?"));
         thenGatewayErrorIs("Failed to find player by key in database");
     }
 
     @Test
-    public void findPlayer_valuesAreReturned() {
+    public void findPlayerByKey_valuesAreReturned() {
         Player expected = gateway.addPlayer(a(player().casid()));
-        Player actual = gateway.findPlayer("abcdef");
+        Player actual = gateway.findPlayerByKey("abcdef");
 
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
@@ -142,7 +142,7 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
                 .withLastUpdate(a(date().with("2016-02-02 23:00:11")))
         ));
 
-        Player updated = gateway.findPlayer(existing.getKey());
+        Player updated = gateway.findPlayerByKey(existing.getKey());
         assertEquals(200, updated.getLevel());
         assertEquals(100000000, updated.getExperience());
         assertEquals(a(date().with("2016-02-02 23:00:11")), updated.getLastUpdate());
