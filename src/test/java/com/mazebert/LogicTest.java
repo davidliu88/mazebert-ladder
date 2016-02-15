@@ -38,6 +38,7 @@ public class LogicTest extends UsecaseExecutorTest {
     public void secureUsecases() {
         thenUsecaseIsSecured(CreateAccount.class);
         thenUsecaseIsSecured(UpdateProgress.class);
+        thenUsecaseIsSecured(ForgotSavecode.class);
     }
 
     @Test
