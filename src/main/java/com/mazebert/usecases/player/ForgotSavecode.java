@@ -7,10 +7,13 @@ import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
+
 public class ForgotSavecode implements Usecase<ForgotSavecode.Request, ForgotSavecode.Response> {
     private final PlayerGateway playerGateway;
     private final EmailMessagePlugin emailMessagePlugin;
 
+    @Inject
     public ForgotSavecode(PlayerGateway playerGateway, EmailMessagePlugin emailMessagePlugin) {
         this.playerGateway = playerGateway;
         this.emailMessagePlugin = emailMessagePlugin;

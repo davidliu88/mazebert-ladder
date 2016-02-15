@@ -8,6 +8,8 @@ import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.*;
+import com.mazebert.plugins.message.EmailMessageFakePlugin;
+import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.usecases.GetStatus;
@@ -18,7 +20,7 @@ import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 import javax.sql.DataSource;
 
 public class Logic extends GuiceUsecaseExecutor {
-    public static Logic instance = new Logic(C3p0DataSourceProvider.class);
+    public static final Logic instance = new Logic(C3p0DataSourceProvider.class);
 
     private static class GatewayModule extends AbstractModule {
         private final Class<? extends Provider<DataSource>> dataSourceProvider;
@@ -47,6 +49,7 @@ public class Logic extends GuiceUsecaseExecutor {
         @Override
         protected void configure() {
             bind(RandomNumberGenerator.class).to(SecureRandomNumberGenerator.class);
+            bind(EmailMessagePlugin.class).to(EmailMessageFakePlugin.class);
         }
     }
 
@@ -64,6 +67,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(GetPlayers.class);
         addUsecase(GetPlayer.class);
         addUsecase(SynchronizePlayer.class);
+        addUsecase(ForgotSavecode.class);
     }
 
     @Override

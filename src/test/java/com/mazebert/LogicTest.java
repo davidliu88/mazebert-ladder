@@ -31,6 +31,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(GetPlayers.class);
         thenUsecaseCanBeExecuted(GetPlayer.class);
         thenUsecaseCanBeExecuted(SynchronizePlayer.class);
+        thenUsecaseCanBeExecuted(ForgotSavecode.class);
     }
 
     @Test
