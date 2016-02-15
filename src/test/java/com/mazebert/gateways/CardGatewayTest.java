@@ -3,6 +3,8 @@ package com.mazebert.gateways;
 import com.mazebert.entities.*;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -22,7 +24,12 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
     @Test
     public void findCard_propertiesAreSet() {
         Card card = gateway.findCard(1, CardType.ITEM);
-        thenCardIsWoodenStaff(card);
+
+        assertEquals(1, card.getId());
+        assertEquals("Wooden Staff", card.getName());
+        assertEquals("0.2", card.getSinceVersion());
+        assertEquals(true, card.isForgeable());
+        assertEquals(false, card.isBlackMarketOffer());
     }
 
     @Test
@@ -55,12 +62,20 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
         thenCardIsOfType(card, Hero.class, CardType.HERO);
     }
 
-    private void thenCardIsWoodenStaff(Card card) {
-        assertEquals(1, card.getId());
-        assertEquals("Wooden Staff", card.getName());
-        assertEquals("0.2", card.getSinceVersion());
-        assertEquals(true, card.isForgeable());
-        assertEquals(false, card.isBlackMarketOffer());
+    @Test
+    public void findAllBlackMarketCards_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findAllBlackMarketCards());
+        thenGatewayErrorIs("Failed to find black market cards.");
+    }
+
+    @Test
+    public void findAllBlackMarketCards_blackMarketItemsAreAdded() {
+        List<Card> cards = gateway.findAllBlackMarketCards();
+
+        assertEquals(6, cards.size());
+        for (Card card : cards) {
+            assertEquals(true, card.isBlackMarketOffer());
+        }
     }
 
     private void thenCardIsOfType(Card card, Class<? extends Card> expectedClass, int expectedType) {
