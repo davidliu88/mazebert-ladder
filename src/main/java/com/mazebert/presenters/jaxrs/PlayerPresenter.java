@@ -1,13 +1,11 @@
 package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.entities.Player;
+import com.mazebert.usecases.player.ForgotSavecode;
 import com.mazebert.usecases.player.GetPlayer;
 import com.mazebert.usecases.player.SynchronizePlayer;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,5 +38,13 @@ public class PlayerPresenter extends AbstractPresenter {
         result.put("player", response);
 
         return result;
+    }
+
+    @GET
+    @Path("/forgot-savecode")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ForgotSavecode.Response forgotSavecode(ForgotSavecode.Request request) {
+        return execute(request);
     }
 }
