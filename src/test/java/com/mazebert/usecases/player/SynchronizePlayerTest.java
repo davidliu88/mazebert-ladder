@@ -1,9 +1,6 @@
 package com.mazebert.usecases.player;
 
-import com.mazebert.entities.BlackMarketOffer;
-import com.mazebert.entities.CardType;
-import com.mazebert.entities.Player;
-import com.mazebert.entities.Quest;
+import com.mazebert.entities.*;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.mocks.*;
@@ -33,12 +30,13 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private CardGatewayMock cardGateway = new CardGatewayMock();
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
     private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
+    private VersionInfoGatewayMock versionInfoGateway = new VersionInfoGatewayMock();
 
     @Before
     public void setUp() {
         usecase = new SynchronizePlayer(playerGateway, foilCardGateway, questGateway,
                 productGateway, blackMarketOfferGateway, blackMarketSettingsGateway,
-                cardGateway, currentDatePlugin, randomNumberGenerator);
+                cardGateway, versionInfoGateway, currentDatePlugin, randomNumberGenerator);
 
         givenRequest(a(request()));
         playerGateway.givenPlayer(a(player().casid()));
@@ -335,6 +333,66 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         assertEquals(CardType.ITEM, response.blackMarketPurchase.getCardType());
     }
 
+    @Test
+    public void versionInfo_noAppVersionAvailable() {
+        givenRequest(a(request()
+                .withAppVersion("1.0.0")
+                .withAppStore("GooglePlay")
+        ));
+        versionInfoGateway.givenNoVersionInfo();
+        whenRequestIsExecuted();
+        thenNoAppUpdateIsRequired();
+    }
+
+    @Test
+    public void versionInfo_appVersionGreaterThanAvailableVersion() {
+        givenRequest(a(request()
+                .withAppVersion("3.0.0")
+                .withAppStore("GooglePlay")
+        ));
+        versionInfoGateway.givenVersionInfo(a(versionInfo()
+                .withVersion("1.0.0")
+                .withStore("GooglePlay")
+        ));
+        whenRequestIsExecuted();
+        thenNoAppUpdateIsRequired();
+    }
+
+    @Test
+    public void versionInfo_appVersionEqualToAvailableVersion() {
+        givenRequest(a(request()
+                .withAppVersion("1.0.0")
+                .withAppStore("GooglePlay")
+        ));
+        versionInfoGateway.givenVersionInfo(a(versionInfo()
+                .withVersion("1.0.0")
+                .withStore("GooglePlay")
+        ));
+        whenRequestIsExecuted();
+        thenNoAppUpdateIsRequired();
+    }
+
+    @Test
+    public void versionInfo_appVersionLowerThanAvailableVersion() {
+        givenRequest(a(request()
+                .withAppVersion("1.0.0")
+                .withAppStore("GooglePlay")
+        ));
+        VersionInfo expected = a(versionInfo()
+                .withVersion("1.0.1")
+                .withStore("GooglePlay")
+        );
+        versionInfoGateway.givenVersionInfo(expected);
+
+        whenRequestIsExecuted();
+
+        assertEquals(expected, response.appUpdate);
+    }
+
+    private void thenNoAppUpdateIsRequired() {
+        assertNull(response.appUpdate);
+    }
+
     private void thenFoilCardsAre(List<Response.Card> expected, List<Response.Card> actual) {
         assertEquals(expected.size(), actual.size());
 
@@ -393,6 +451,11 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
         public RequestBuilder withAppVersion(String value) {
             request.appVersion = value;
+            return this;
+        }
+
+        public RequestBuilder withAppStore(String value) {
+            request.appStore = value;
             return this;
         }
     }

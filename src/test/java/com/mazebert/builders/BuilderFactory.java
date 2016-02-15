@@ -44,4 +44,8 @@ public class BuilderFactory {
     public static ItemBuilder item() {
         return new ItemBuilder();
     }
+
+    public static VersionInfoBuilder versionInfo() {
+        return new VersionInfoBuilder();
+    }
 }

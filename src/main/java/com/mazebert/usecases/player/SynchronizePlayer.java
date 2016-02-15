@@ -20,7 +20,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     private final FoilCardGateway foilCardGateway;
     private final QuestGateway questGateway;
     private final PurchaseGateway purchaseGateway;
-    private final CardGateway cardGateway;
+    private final VersionInfoGateway versionInfoGateway;
     private final DailyQuestGenerator dailyQuestGenerator;
     private final TimeZoneParser timeZoneParser;
     private final BlackMarket blackMarket;
@@ -33,13 +33,14 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
                              BlackMarketOfferGateway blackMarketOfferGateway,
                              BlackMarketSettingsGateway blackMarketSettingsGateway,
                              CardGateway cardGateway,
+                             VersionInfoGateway versionInfoGateway,
                              CurrentDatePlugin currentDatePlugin,
                              RandomNumberGenerator randomNumberGenerator) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.questGateway = questGateway;
         this.purchaseGateway = purchaseGateway;
-        this.cardGateway = cardGateway;
+        this.versionInfoGateway = versionInfoGateway;
         this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
         blackMarket = new BlackMarket(currentDatePlugin,
@@ -75,8 +76,20 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         addQuestsToResponse(player, appVersion, timeZone, response);
         addProductsToResponse(player, response);
         addBlackMarketToResponse(player, appVersion, timeZone, response);
+        addUpdateInfoToResponse(request, appVersion, response);
 
         return response;
+    }
+
+    private void addUpdateInfoToResponse(Request request, Version appVersion, Response response) {
+        if (request.appStore != null) {
+            VersionInfo latestVersion = versionInfoGateway.findVersionInfo(request.appStore);
+            if (latestVersion != null) {
+                if (appVersion.compareTo(new Version(latestVersion.getVersion())) < 0) {
+                    response.appUpdate = latestVersion;
+                }
+            }
+        }
     }
 
     private void addBlackMarketToResponse(Player player, Version appVersion, TimeZone timeZone, Response response) {
@@ -142,6 +155,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public String key;
         public String appVersion;
         public int timeZoneOffset;
+        public String appStore;
     }
 
     public static class Response {
@@ -161,6 +175,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public boolean isBlackMarketAvailable;
         public int blackMarketPrice;
         public BlackMarketOffer blackMarketPurchase;
+        public VersionInfo appUpdate;
 
         public static class Card {
             public long id;
