@@ -32,6 +32,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(GetPlayer.class);
         thenUsecaseCanBeExecuted(SynchronizePlayer.class);
         thenUsecaseCanBeExecuted(ForgotSavecode.class);
+        thenUsecaseCanBeExecuted(RegisterEmail.class);
     }
 
     @Test
@@ -39,6 +40,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseIsSecured(CreateAccount.class);
         thenUsecaseIsSecured(UpdateProgress.class);
         thenUsecaseIsSecured(ForgotSavecode.class);
+        thenUsecaseIsSecured(RegisterEmail.class);
     }
 
     @Test

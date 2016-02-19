@@ -68,6 +68,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(GetPlayer.class);
         addUsecase(SynchronizePlayer.class);
         addUsecase(ForgotSavecode.class);
+        addUsecase(RegisterEmail.class);
     }
 
     @Override

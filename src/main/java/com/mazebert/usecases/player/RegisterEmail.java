@@ -7,13 +7,17 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.validation.EmailValidator;
+import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
+
+import javax.inject.Inject;
 
 public class RegisterEmail implements Usecase<RegisterEmail.Request, RegisterEmail.Response> {
     private final PlayerGateway playerGateway;
     private final EmailMessagePlugin emailMessagePlugin;
     private final EmailValidator emailValidator;
 
+    @Inject
     public RegisterEmail(PlayerGateway playerGateway, EmailMessagePlugin emailMessagePlugin) {
         this.playerGateway = playerGateway;
         this.emailMessagePlugin = emailMessagePlugin;
@@ -82,6 +86,7 @@ public class RegisterEmail implements Usecase<RegisterEmail.Request, RegisterEma
         return response;
     }
 
+    @SecureRequest
     public static class Request {
         public String email;
         public String key;
