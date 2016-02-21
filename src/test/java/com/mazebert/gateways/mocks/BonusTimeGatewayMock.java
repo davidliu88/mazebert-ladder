@@ -1,19 +1,20 @@
 package com.mazebert.gateways.mocks;
 
-import com.mazebert.entities.BonusTime;
+import com.mazebert.entities.PlayerBonusTime;
 import com.mazebert.gateways.BonusTimeGateway;
-import com.mazebert.usecases.bonusround.GetBonusTimes;
+import com.mazebert.usecases.bonustime.GetBonusTimes;
+import com.mazebert.usecases.bonustime.UpdateBonusTime;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BonusTimeGatewayMock implements BonusTimeGateway {
-    private Map<String, List<BonusTime>> bonusTimes = new HashMap<>();
+    private Map<String, List<PlayerBonusTime>> bonusTimes = new HashMap<>();
 
 
     @Override
-    public List<BonusTime> findBonusTimes(GetBonusTimes.Request request) {
+    public List<PlayerBonusTime> findBonusTimes(GetBonusTimes.Request request) {
         return bonusTimes.get(
                 "M" + request.mapId +
                 "D" + request.difficultyType +
@@ -22,7 +23,12 @@ public class BonusTimeGatewayMock implements BonusTimeGateway {
         );
     }
 
-    public void givenBonusTimes(String arguments, List<BonusTime> times) {
+    @Override
+    public void updateBonusTime(UpdateBonusTime.Request request) {
+
+    }
+
+    public void givenBonusTimes(String arguments, List<PlayerBonusTime> times) {
         bonusTimes.put(arguments, times);
     }
 }

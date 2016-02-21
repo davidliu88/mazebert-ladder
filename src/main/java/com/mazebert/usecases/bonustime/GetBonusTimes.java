@@ -1,6 +1,6 @@
-package com.mazebert.usecases.bonusround;
+package com.mazebert.usecases.bonustime;
 
-import com.mazebert.entities.BonusTime;
+import com.mazebert.entities.PlayerBonusTime;
 import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.BonusTimeGateway;
 import org.jusecase.Usecase;
@@ -8,7 +8,7 @@ import org.jusecase.Usecase;
 import javax.inject.Inject;
 import java.util.List;
 
-public class GetBonusTimes implements Usecase<GetBonusTimes.Request, List<BonusTime>> {
+public class GetBonusTimes implements Usecase<GetBonusTimes.Request, List<PlayerBonusTime>> {
     private final BonusTimeGateway bonusTimeGateway;
 
     @Inject
@@ -16,7 +16,7 @@ public class GetBonusTimes implements Usecase<GetBonusTimes.Request, List<BonusT
         this.bonusTimeGateway = bonusTimeGateway;
     }
 
-    public List<BonusTime> execute(Request request) {
+    public List<PlayerBonusTime> execute(Request request) {
         validateRequest(request);
         return bonusTimeGateway.findBonusTimes(request);
     }

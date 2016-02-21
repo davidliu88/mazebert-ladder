@@ -1,6 +1,6 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.entities.BonusTime;
+import com.mazebert.entities.PlayerBonusTime;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,7 +12,7 @@ import java.util.List;
 public class BonusRoundPresenter extends AbstractPresenter {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BonusTime> getBonusTimes() {
+    public List<PlayerBonusTime> getBonusTimes() {
         return null;
     }
 }

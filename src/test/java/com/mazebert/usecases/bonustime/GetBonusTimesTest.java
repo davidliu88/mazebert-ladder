@@ -1,9 +1,9 @@
-package com.mazebert.usecases.bonusround;
+package com.mazebert.usecases.bonustime;
 
-import com.mazebert.entities.BonusTime;
+import com.mazebert.entities.PlayerBonusTime;
 import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.mocks.BonusTimeGatewayMock;
-import com.mazebert.usecases.bonusround.GetBonusTimes.Request;
+import com.mazebert.usecases.bonustime.GetBonusTimes.Request;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -14,10 +14,10 @@ import java.util.List;
 import static org.jusecase.builders.BuilderFactory.a;
 import static org.jusecase.builders.BuilderFactory.listWith;
 
-public class GetBonusTimesTest extends UsecaseTest<Request, List<BonusTime>> {
+public class GetBonusTimesTest extends UsecaseTest<Request, List<PlayerBonusTime>> {
     private BonusTimeGatewayMock bonusTimeGateway = new BonusTimeGatewayMock();
 
-    private static List<BonusTime> bonusTimesOnFirstMap = a(listWith(
+    private static List<PlayerBonusTime> playerBonusTimesOnFirstMap = a(listWith(
     ));
 
     @Before
@@ -27,10 +27,10 @@ public class GetBonusTimesTest extends UsecaseTest<Request, List<BonusTime>> {
 
     @Test
     public void zeroMapId() {
-        bonusTimeGateway.givenBonusTimes("M1D*W*V1.0.0", bonusTimesOnFirstMap);
+        bonusTimeGateway.givenBonusTimes("M1D*W*V1.0.0", playerBonusTimesOnFirstMap);
         givenRequest(a(request().withMapId(0)));
         whenRequestIsExecuted();
-        thenResponseIs(bonusTimesOnFirstMap);
+        thenResponseIs(playerBonusTimesOnFirstMap);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class GetBonusTimesTest extends UsecaseTest<Request, List<BonusTime>> {
 
     @Test
     public void parametersArePassedToGateway() {
-        bonusTimeGateway.givenBonusTimes("M1D2W3V1.2.3", bonusTimesOnFirstMap);
+        bonusTimeGateway.givenBonusTimes("M1D2W3V1.2.3", playerBonusTimesOnFirstMap);
         givenRequest(a(request()
                 .withMapId(1)
                 .withDifficultyType("2")
@@ -71,7 +71,7 @@ public class GetBonusTimesTest extends UsecaseTest<Request, List<BonusTime>> {
                 .withAppVersion("1.2.3")
         ));
         whenRequestIsExecuted();
-        thenResponseIs(bonusTimesOnFirstMap);
+        thenResponseIs(playerBonusTimesOnFirstMap);
     }
 
     private RequestBuilder request() {
@@ -82,7 +82,7 @@ public class GetBonusTimesTest extends UsecaseTest<Request, List<BonusTime>> {
                 .withAppVersion("1.0.0");
     }
 
-    private static class RequestBuilder implements Builder<Request> {
+    public static class RequestBuilder implements Builder<Request> {
         private Request request = new Request();
 
         @Override
