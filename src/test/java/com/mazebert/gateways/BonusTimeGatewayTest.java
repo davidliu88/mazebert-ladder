@@ -184,11 +184,25 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     }
 
     @Test
-    public void cheater() {
+    public void cheatersAreIgnored() {
         givenPlayerExists(a(player().cheater()));
         givenBonusTimeExists(a(updateRequest().withPlayerId(1).withSecondsSurvived(999999)));
 
         whenFindingBonusTimes(a(findRequest()));
+
+        assertEquals(0, bonusTimes.size());
+    }
+
+    @Test
+    public void zeroScoresAreIgnored() {
+        givenPlayerExists(a(player().casid()));
+        givenBonusTimeExists(a(updateRequest()
+                .withPlayerId(1)
+                .withDifficultyType(0)
+                .withWaveAmountType(0)
+                .withSecondsSurvived(10)));
+
+        whenFindingBonusTimes(a(findRequest().withDifficultyType("1")));
 
         assertEquals(0, bonusTimes.size());
     }
