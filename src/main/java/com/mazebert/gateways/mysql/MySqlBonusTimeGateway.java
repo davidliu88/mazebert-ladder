@@ -19,9 +19,6 @@ import java.util.List;
 
 public class MySqlBonusTimeGateway extends MySqlGateway implements BonusTimeGateway {
 
-    private static final int WAVE_TYPE_AMOUNT = 4;
-    private static final int DIFFICULTY_AMOUNT = 3;
-
     @Inject
     public MySqlBonusTimeGateway(DataSource dataSource) {
         super(dataSource);

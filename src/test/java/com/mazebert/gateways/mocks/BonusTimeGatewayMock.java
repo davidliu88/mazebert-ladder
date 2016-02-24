@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class BonusTimeGatewayMock implements BonusTimeGateway {
     private Map<String, List<PlayerBonusTime>> bonusTimes = new HashMap<>();
-
+    private UpdateBonusTime.Request updateRequest;
 
     @Override
     public List<PlayerBonusTime> findBonusTimes(GetBonusTimes.Request request) {
@@ -25,10 +25,14 @@ public class BonusTimeGatewayMock implements BonusTimeGateway {
 
     @Override
     public void updateBonusTime(UpdateBonusTime.Request request) {
-
+        updateRequest = request;
     }
 
     public void givenBonusTimes(String arguments, List<PlayerBonusTime> times) {
         bonusTimes.put(arguments, times);
+    }
+
+    public UpdateBonusTime.Request getUpdateRequest() {
+        return updateRequest;
     }
 }
