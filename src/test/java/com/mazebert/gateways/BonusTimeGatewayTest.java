@@ -38,7 +38,6 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
         ));
         givenBonusTimeExists(a(updateRequest()
                 .withPlayerId(1)
-                .withMapId(3)
                 .withSecondsSurvived(2531)
         ));
 
@@ -190,7 +189,7 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
 
         whenFindingBonusTimes(a(findRequest()));
 
-        assertEquals(0, bonusTimes.size());
+        thenNoBonusTimesWereFound();
     }
 
     @Test
@@ -204,7 +203,24 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
 
         whenFindingBonusTimes(a(findRequest().withDifficultyType("1")));
 
-        assertEquals(0, bonusTimes.size());
+        thenNoBonusTimesWereFound();
+    }
+
+    @Test
+    public void mapIsConsidered() {
+        givenPlayerExists(a(player().casid()));
+        givenBonusTimeExists(a(updateRequest().withMapId(3)));
+
+        whenFindingBonusTimes(a(findRequest().withMapId(2)));
+
+        thenNoBonusTimesWereFound();
+    }
+
+
+
+    @Test
+    public void versionIsConsidered() {
+        // TODO depends on table name!
     }
 
     @Test
@@ -253,6 +269,10 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
         bonusTimes = gateway.findBonusTimes(request);
     }
 
+    private void thenNoBonusTimesWereFound() {
+        assertEquals(0, bonusTimes.size());
+    }
+
     private GetBonusTimesTest.RequestBuilder findRequest() {
         return new GetBonusTimesTest.RequestBuilder()
                 .withMapId(1)
@@ -265,8 +285,10 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
 
     private UpdateBonusTimeTest.RequestBuilder updateRequest() {
         return new UpdateBonusTimeTest.RequestBuilder()
+                .withPlayerId(1)
                 .withMapId(1)
                 .withDifficultyType(0)
-                .withWaveAmountType(0);
+                .withWaveAmountType(0)
+                .withSecondsSurvived(100);
     }
 }

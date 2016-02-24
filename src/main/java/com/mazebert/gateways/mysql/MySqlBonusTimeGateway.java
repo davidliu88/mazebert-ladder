@@ -30,9 +30,10 @@ public class MySqlBonusTimeGateway extends MySqlGateway implements BonusTimeGate
     public List<PlayerBonusTime> findBonusTimes(GetBonusTimes.Request request) {
         try {
             String bonusTimeStatement = getBonusTimeStatement(request);
-            String sql = "SELECT Player.name AS name, Player.id, " + bonusTimeStatement + " AS bonusTime FROM BonusTime LEFT JOIN Player ON Player.id=BonusTime.playerId WHERE Player.isCheater=0 AND " + bonusTimeStatement + ">0 ORDER BY bonusTime DESC, playerId ASC LIMIT ?, ?;";
+            String sql = "SELECT Player.name AS name, Player.id, " + bonusTimeStatement + " AS bonusTime FROM BonusTime LEFT JOIN Player ON Player.id=BonusTime.playerId WHERE mapId=? AND Player.isCheater=0 AND " + bonusTimeStatement + ">0 ORDER BY bonusTime DESC, playerId ASC LIMIT ?, ?;";
             List<PlayerBonusTime> result = getQueryRunner().query(sql,
                     new BeanListHandler<>(PlayerBonusTime.class),
+                    request.mapId,
                     request.start,
                     request.limit);
             addRankToResult(result, request.start);
