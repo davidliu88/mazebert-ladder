@@ -216,11 +216,14 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
         thenNoBonusTimesWereFound();
     }
 
-
-
     @Test
     public void versionIsConsidered() {
-        // TODO depends on table name!
+        givenPlayerExists(a(player().casid()));
+        givenBonusTimeExists(a(updateRequest()));
+
+        whenFindingBonusTimes(a(findRequest().withAppVersion("0.9.2")));
+
+        thenNoBonusTimesWereFound();
     }
 
     @Test
@@ -278,7 +281,7 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
                 .withMapId(1)
                 .withWaveAmountType("*")
                 .withDifficultyType("*")
-                .withAppVersion("1.0.0")
+                .withAppVersion("*")
                 .withStart(0)
                 .withLimit(500);
     }

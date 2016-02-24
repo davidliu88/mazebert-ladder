@@ -1,6 +1,7 @@
 package com.mazebert.gateways.mysql;
 
 import com.mazebert.entities.PlayerBonusTime;
+import com.mazebert.entities.Version;
 import com.mazebert.gateways.BonusTimeGateway;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
@@ -29,8 +30,9 @@ public class MySqlBonusTimeGateway extends MySqlGateway implements BonusTimeGate
     @Override
     public List<PlayerBonusTime> findBonusTimes(GetBonusTimes.Request request) {
         try {
+            String tableName = getTableName(request);
             String bonusTimeStatement = getBonusTimeStatement(request);
-            String sql = "SELECT Player.name AS name, Player.id, " + bonusTimeStatement + " AS bonusTime FROM BonusTime LEFT JOIN Player ON Player.id=BonusTime.playerId WHERE mapId=? AND Player.isCheater=0 AND " + bonusTimeStatement + ">0 ORDER BY bonusTime DESC, playerId ASC LIMIT ?, ?;";
+            String sql = "SELECT Player.name AS name, Player.id, " + bonusTimeStatement + " AS bonusTime FROM " + tableName + " LEFT JOIN Player ON Player.id=" + tableName + ".playerId WHERE mapId=? AND Player.isCheater=0 AND " + bonusTimeStatement + ">0 ORDER BY bonusTime DESC, playerId ASC LIMIT ?, ?;";
             List<PlayerBonusTime> result = getQueryRunner().query(sql,
                     new BeanListHandler<>(PlayerBonusTime.class),
                     request.mapId,
@@ -41,6 +43,15 @@ public class MySqlBonusTimeGateway extends MySqlGateway implements BonusTimeGate
         } catch (SQLException e) {
             throw new GatewayError("Could not find bonus times in database.", e);
         }
+    }
+
+    private String getTableName(GetBonusTimes.Request request) {
+        if ("*".equals(request.appVersion)) {
+            return "BonusTime";
+        }
+
+        Version version = new Version(request.appVersion);
+        return "BonusTime_" + version.getMajor() + "_" + version.getMinor() + "_" + version.getBugfix();
     }
 
     private String getBonusTimeStatement(GetBonusTimes.Request request) {
