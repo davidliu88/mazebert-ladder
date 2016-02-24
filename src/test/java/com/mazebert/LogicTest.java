@@ -7,6 +7,7 @@ import com.mazebert.gateways.mysql.FakeDataSourceProvider;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
+import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.security.SecureRequest;
 import org.junit.Test;
@@ -36,6 +37,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(RegisterEmail.class);
 
         thenUsecaseCanBeExecuted(GetBonusTimes.class);
+        thenUsecaseCanBeExecuted(UpdateBonusTime.class);
     }
 
     @Test
@@ -44,6 +46,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseIsSecured(UpdateProgress.class);
         thenUsecaseIsSecured(ForgotSavecode.class);
         thenUsecaseIsSecured(RegisterEmail.class);
+        thenUsecaseIsSecured(UpdateBonusTime.class);
     }
 
     @Test

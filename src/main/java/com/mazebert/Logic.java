@@ -15,6 +15,7 @@ import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
+import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
@@ -73,6 +74,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(RegisterEmail.class);
 
         addUsecase(GetBonusTimes.class);
+        addUsecase(UpdateBonusTime.class);
     }
 
     @Override

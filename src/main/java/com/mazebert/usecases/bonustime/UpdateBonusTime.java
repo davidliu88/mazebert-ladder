@@ -5,12 +5,16 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.BonusTimeGateway;
 import com.mazebert.gateways.PlayerGateway;
+import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
+
+import javax.inject.Inject;
 
 public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateBonusTime.Response> {
     private final BonusTimeGateway bonusTimeGateway;
     private final PlayerGateway playerGateway;
 
+    @Inject
     public UpdateBonusTime(BonusTimeGateway bonusTimeGateway, PlayerGateway playerGateway) {
         this.bonusTimeGateway = bonusTimeGateway;
         this.playerGateway = playerGateway;
@@ -45,6 +49,7 @@ public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateB
         }
     }
 
+    @SecureRequest
     public static class Request {
         public long playerId;
         public String key;
