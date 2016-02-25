@@ -1,8 +1,10 @@
 package com.mazebert.usecases.bonustime;
 
 import com.mazebert.entities.Player;
+import com.mazebert.entities.Version;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
+import com.mazebert.error.Unauthorized;
 import com.mazebert.gateways.BonusTimeGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.usecases.security.SecureRequest;
@@ -13,6 +15,8 @@ import javax.inject.Inject;
 public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateBonusTime.Response> {
     private final BonusTimeGateway bonusTimeGateway;
     private final PlayerGateway playerGateway;
+
+    private static final Version minimumVersion = new Version("1.3.0");
 
     @Inject
     public UpdateBonusTime(BonusTimeGateway bonusTimeGateway, PlayerGateway playerGateway) {
@@ -46,6 +50,9 @@ public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateB
         }
         if (request.secondsSurvived <= 0) {
             throw new BadRequest("Survival time must be positive");
+        }
+        if (minimumVersion.compareTo(new Version(request.appVersion)) > 0) {
+            throw new Unauthorized("This game version can no longer submit bonus round scores.");
         }
     }
 
