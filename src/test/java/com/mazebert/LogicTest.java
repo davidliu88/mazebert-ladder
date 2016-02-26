@@ -9,6 +9,7 @@ import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
+import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.security.SecureRequest;
 import org.junit.Test;
 import org.jusecase.Usecase;
@@ -38,6 +39,8 @@ public class LogicTest extends UsecaseExecutorTest {
 
         thenUsecaseCanBeExecuted(GetBonusTimes.class);
         thenUsecaseCanBeExecuted(UpdateBonusTime.class);
+
+        thenUsecaseCanBeExecuted(CompleteQuests.class);
     }
 
     @Test
@@ -47,6 +50,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseIsSecured(ForgotSavecode.class);
         thenUsecaseIsSecured(RegisterEmail.class);
         thenUsecaseIsSecured(UpdateBonusTime.class);
+        thenUsecaseIsSecured(CompleteQuests.class);
     }
 
     @Test

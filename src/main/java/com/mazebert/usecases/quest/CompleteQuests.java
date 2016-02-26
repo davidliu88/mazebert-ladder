@@ -6,8 +6,10 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
+import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQuests.Response> {
@@ -16,6 +18,7 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
     private final QuestGateway questGateway;
     private final FoilCardGateway foilCardGateway;
 
+    @Inject
     public CompleteQuests(PlayerGateway playerGateway, QuestGateway questGateway, FoilCardGateway foilCardGateway) {
         this.playerGateway = playerGateway;
         this.questGateway = questGateway;
@@ -110,6 +113,7 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
         }
     }
 
+    @SecureRequest
     public static class Request {
         public String appVersion;
         public String key;
