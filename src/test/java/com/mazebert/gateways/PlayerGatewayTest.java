@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.*;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.date;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.date;
 
 public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
 

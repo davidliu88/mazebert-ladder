@@ -8,8 +8,8 @@ import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.foilCard;
 import static org.junit.Assert.*;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.listWith;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.list;
 
 public abstract class FoilCardGatewayTest extends GatewayTest<FoilCardGateway> {
 
@@ -22,7 +22,7 @@ public abstract class FoilCardGatewayTest extends GatewayTest<FoilCardGateway> {
 
     @Test
     public void getFoilCardsForPlayerId_noFoilCards() {
-        assertEquals(a(listWith()), gateway.getFoilCardsForPlayerId(1));
+        assertEquals(a(list()), gateway.getFoilCardsForPlayerId(1));
     }
 
     @Test

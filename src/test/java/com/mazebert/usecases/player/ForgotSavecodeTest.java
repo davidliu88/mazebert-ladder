@@ -9,14 +9,12 @@ import com.mazebert.usecases.player.ForgotSavecode.Request;
 import com.mazebert.usecases.player.ForgotSavecode.Response;
 import org.junit.Before;
 import org.junit.Test;
-import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
+import org.jusecase.UsecaseTest;
 
 import static com.mazebert.builders.BuilderFactory.player;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.jusecase.builders.BuilderFactory.a;
+import static org.junit.Assert.*;
+import static org.jusecase.Builders.a;
 
 public class ForgotSavecodeTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();

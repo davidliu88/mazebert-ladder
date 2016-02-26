@@ -11,8 +11,8 @@ import static com.mazebert.builders.BuilderFactory.player;
 import static com.mazebert.builders.BuilderFactory.quest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.date;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.date;
 
 public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
     private Player player = a(player().casid());

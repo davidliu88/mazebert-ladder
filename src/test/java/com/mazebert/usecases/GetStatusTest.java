@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.playerRow;
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.builders.BuilderFactory.*;
+import static org.jusecase.Builders.*;
 
 public class GetStatusTest extends UsecaseTest<Request, Response> {
     private PlayerRowGatewayMock playerRowGateway = new PlayerRowGatewayMock();
@@ -37,7 +37,7 @@ public class GetStatusTest extends UsecaseTest<Request, Response> {
     @Test
     public void nowPlayingPlayersAreReturned() {
         currentDatePlugin.givenCurrentDate(a(date().with("2015-10-10 08:00:00")));
-        List<PlayerRow> players = a(listWith(
+        List<PlayerRow> players = a(list(
                 a(playerRow()),
                 a(playerRow()),
                 a(playerRow())

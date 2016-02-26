@@ -6,8 +6,8 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.inputStream;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.inputStream;
 
 public class TestDataSourceProvider extends C3p0DataSourceProvider {
     public static final TestDataSourceProvider instance = new TestDataSourceProvider();
@@ -20,7 +20,7 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
         String defaultHost = "localhost";
         Properties properties = new Properties();
         try {
-            properties.load(a(inputStream().withTestResource("integrationtest-database.properties")));
+            properties.load(a(inputStream().withResource("integrationtest-database.properties")));
             return properties.getProperty("host", defaultHost);
         } catch (Throwable e) {
             return defaultHost;

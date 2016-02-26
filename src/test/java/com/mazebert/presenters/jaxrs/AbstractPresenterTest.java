@@ -20,8 +20,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.listWith;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.list;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -83,7 +83,7 @@ public class AbstractPresenterTest {
     @Test
     public void secureRequest_signatureIsPassedForClientVerification() throws Exception {
         MultivaluedHashMap<String, String> parameters = new MultivaluedHashMap<>();
-        parameters.put("signature", a(listWith("hash")));
+        parameters.put("signature", a(list("hash")));
         when(uriInfo.getQueryParameters(anyBoolean())).thenReturn(parameters);
 
         whenSecureRequestIsExecuted();

@@ -14,9 +14,9 @@ import java.util.TimeZone;
 import static com.mazebert.builders.BuilderFactory.blackMarketOffer;
 import static com.mazebert.builders.BuilderFactory.item;
 import static org.junit.Assert.*;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.date;
-import static org.jusecase.builders.BuilderFactory.listWith;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.date;
+import static org.jusecase.Builders.list;
 
 public class BlackMarketTest {
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
@@ -127,7 +127,7 @@ public class BlackMarketTest {
     @Test
     public void createOffer_cardIsPickedRandomly() {
         randomNumberGenerator.givenRandomIntegers(1);
-        cardGateway.givenCardsExist(a(listWith(
+        cardGateway.givenCardsExist(a(list(
                 a(item().babySword()),
                 a(item().mjoelnir()),
                 a(item().bowlingBall())

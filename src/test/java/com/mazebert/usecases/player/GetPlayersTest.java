@@ -13,8 +13,8 @@ import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.playerRow;
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.listWith;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.list;
 
 public class GetPlayersTest extends UsecaseTest<Request, List<PlayerRow>> {
     private PlayerRowGatewayMock playerGateway = new PlayerRowGatewayMock();
@@ -50,7 +50,7 @@ public class GetPlayersTest extends UsecaseTest<Request, List<PlayerRow>> {
         givenRequest(a(request()
                 .withStart(1000)
                 .withLimit(500)));
-        List<PlayerRow> expectedPlayers = a(listWith(
+        List<PlayerRow> expectedPlayers = a(list(
                 a(playerRow()),
                 a(playerRow()),
                 a(playerRow())

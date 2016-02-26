@@ -16,7 +16,7 @@ import java.util.TimeZone;
 
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.*;
-import static org.jusecase.builders.BuilderFactory.*;
+import static org.jusecase.Builders.*;
 
 public class DailyQuestGeneratorTest {
     private DailyQuestGenerator questGenerator;
@@ -39,14 +39,14 @@ public class DailyQuestGeneratorTest {
         player = a(player().casid());
         version = new Version("2.0.0");
 
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(goldenQuest()))
         ));
     }
 
     @Test
     public void hiddenQuest() {
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(goldenQuest().hidden()))
         ));
         whenTryToGenerateDailyQuest();
@@ -56,7 +56,7 @@ public class DailyQuestGeneratorTest {
     @Test
     public void incompatibleQuestVersion() {
         version = new Version("1.0.0");
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(goldenQuest().withSinceVersion("1.0.1")))
         ));
         whenTryToGenerateDailyQuest();
@@ -65,10 +65,10 @@ public class DailyQuestGeneratorTest {
 
     @Test
     public void questAlreadyOwnedByPlayer() {
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(goldenQuest().withId(200)))
         ));
-        questGateway.givenDailyQuestsForPlayer(player, a(listWith(
+        questGateway.givenDailyQuestsForPlayer(player, a(list(
                 a(goldenQuest().withId(200))
         )));
         whenTryToGenerateDailyQuest();
@@ -77,7 +77,7 @@ public class DailyQuestGeneratorTest {
 
     @Test
     public void playerAlreadyHasMaximumAmountOfQuests() {
-        questGateway.givenDailyQuestsForPlayer(player, a(listWith(
+        questGateway.givenDailyQuestsForPlayer(player, a(list(
                 a(goldenQuest().withId(1)),
                 a(goldenQuest().withId(2)),
                 a(goldenQuest().withId(3))
@@ -121,7 +121,7 @@ public class DailyQuestGeneratorTest {
 
     @Test
     public void randomQuestIsGenerated() {
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(goldenQuest().withId(200)),
                 a(goldenQuest().withId(201)),
                 a(goldenQuest().withId(203))
@@ -135,7 +135,7 @@ public class DailyQuestGeneratorTest {
 
     @Test
     public void playerHasNoBowlingBall() {
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(quest().rollStrikesWithBowlingBall()))
         ));
         whenTryToGenerateDailyQuest();
@@ -145,8 +145,8 @@ public class DailyQuestGeneratorTest {
     @Test
     public void playerHasBowlingBall() {
         Quest expected = a(quest().rollStrikesWithBowlingBall());
-        questGateway.givenQuests(a(listWith(expected)));
-        foilCardGateway.givenFoilCardsForPlayer(player, a(listWith(
+        questGateway.givenQuests(a(list(expected)));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
                 a(foilCard().bowlingBall())
         )));
         whenTryToGenerateDailyQuest();

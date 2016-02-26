@@ -11,13 +11,13 @@ import org.jusecase.builders.Builder;
 
 import java.util.List;
 
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.listWith;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.list;
 
 public class GetBonusTimesTest extends UsecaseTest<Request, List<PlayerBonusTime>> {
     private BonusTimeGatewayMock bonusTimeGateway = new BonusTimeGatewayMock();
 
-    private static List<PlayerBonusTime> playerBonusTimesOnFirstMap = a(listWith(
+    private static List<PlayerBonusTime> playerBonusTimesOnFirstMap = a(list(
     ));
 
     @Before

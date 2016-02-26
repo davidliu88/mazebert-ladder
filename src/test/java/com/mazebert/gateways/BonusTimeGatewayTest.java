@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.builders.BuilderFactory.a;
+import static org.jusecase.Builders.a;
 
 public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway> {
     protected PlayerGateway playerGateway;

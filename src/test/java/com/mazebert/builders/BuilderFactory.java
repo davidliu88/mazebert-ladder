@@ -1,8 +1,8 @@
 package com.mazebert.builders;
 
-import org.jusecase.builders.DateBuilder;
+import org.jusecase.builders.time.DateBuilder;
 
-import static org.jusecase.builders.BuilderFactory.date;
+import static org.jusecase.Builders.date;
 
 public class BuilderFactory {
     public static DateBuilder dateAtWeekend() {

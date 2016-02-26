@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.*;
-import static org.jusecase.builders.BuilderFactory.*;
+import static org.jusecase.Builders.*;
 
 public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
@@ -75,14 +75,14 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void foilTowerCardsAreAdded() {
-        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(listWith(
+        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
                 a(foilCard().tower().withCardId(7).withAmount(5)),
                 a(foilCard().tower().withCardId(10).withAmount(3))
         )));
 
         whenRequestIsExecuted();
 
-        thenFoilCardsAre(a(listWith(
+        thenFoilCardsAre(a(list(
                 a(card().withId(7).withAmount(5)),
                 a(card().withId(10).withAmount(3))
         )), response.foilTowers);
@@ -90,14 +90,14 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void foilItemCardsAreAdded() {
-        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(listWith(
+        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
                 a(foilCard().item().withCardId(7).withAmount(5)),
                 a(foilCard().item().withCardId(100).withAmount(1))
         )));
 
         whenRequestIsExecuted();
 
-        thenFoilCardsAre(a(listWith(
+        thenFoilCardsAre(a(list(
                 a(card().withId(7).withAmount(5)),
                 a(card().withId(100).withAmount(1))
         )), response.foilItems);
@@ -105,14 +105,14 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void foilPotionCardsAreAdded() {
-        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(listWith(
+        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
                 a(foilCard().potion().withCardId(7).withAmount(5)),
                 a(foilCard().potion().withCardId(100).withAmount(1))
         )));
 
         whenRequestIsExecuted();
 
-        thenFoilCardsAre(a(listWith(
+        thenFoilCardsAre(a(list(
                 a(card().withId(7).withAmount(5)),
                 a(card().withId(100).withAmount(1))
         )), response.foilPotions);
@@ -120,14 +120,14 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void foilHeroCardsAreAdded() {
-        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(listWith(
+        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
                 a(foilCard().hero().withCardId(7).withAmount(5)),
                 a(foilCard().hero().withCardId(100).withAmount(1))
         )));
 
         whenRequestIsExecuted();
 
-        thenFoilCardsAre(a(listWith(
+        thenFoilCardsAre(a(list(
                 a(card().withId(7).withAmount(5)),
                 a(card().withId(100).withAmount(1))
         )), response.foilHeroes);
@@ -135,7 +135,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void completedHiddenQuestIdsAreAdded() {
-        List<Long> expected = a(listWith(10L, 11L, 12L));
+        List<Long> expected = a(list(10L, 11L, 12L));
         questGateway.givenCompletedHiddenQuestIdsForPlayer(a(player().casid()), expected);
 
         whenRequestIsExecuted();
@@ -145,7 +145,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void noDailyQuests() {
-        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith()));
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(list()));
 
         whenRequestIsExecuted();
 
@@ -154,7 +154,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void dailyQuests() {
-        List<Quest> expected = a(listWith(
+        List<Quest> expected = a(list(
                 a(quest()),
                 a(quest())
         ));
@@ -167,10 +167,10 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void dailyQuestIsGenerated() {
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(quest().withId(10))
         )));
-        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(list(
                 a(quest().withId(1)),
                 a(quest().withId(2))
         )));
@@ -183,10 +183,10 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void timeZoneIsRespectedForDailyQuestCreation() {
-        questGateway.givenQuests(a(listWith(
+        questGateway.givenQuests(a(list(
                 a(quest().withId(10))
         )));
-        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(list(
                 a(quest().withId(1)),
                 a(quest().withId(2))
         )));
@@ -223,7 +223,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void questReplacementImpossible_notEnoughQuests() {
-        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(list(
                 a(quest().withId(1)),
                 a(quest().withId(2))
         )));
@@ -239,7 +239,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void purchasedProductsAreAdded() {
-        List<String> expected = a(listWith("com.mazebert.Cookie", "com.mazebert.Beer"));
+        List<String> expected = a(list("com.mazebert.Cookie", "com.mazebert.Beer"));
         productGateway.givenPurchasedProductIds(a(player().casid()), expected);
 
         whenRequestIsExecuted();
@@ -407,7 +407,7 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     }
 
     private void givenPlayerHasQuestsCreatedAt(Date date) {
-        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(listWith(
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(list(
                 a(quest().withId(1)),
                 a(quest().withId(2)),
                 a(quest().withId(3))

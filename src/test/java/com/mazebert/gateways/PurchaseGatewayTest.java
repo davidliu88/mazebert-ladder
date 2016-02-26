@@ -6,8 +6,8 @@ import org.junit.Test;
 import static com.mazebert.builders.BuilderFactory.player;
 import static com.mazebert.builders.BuilderFactory.purchase;
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.listWith;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.list;
 
 public abstract class PurchaseGatewayTest extends GatewayTest<PurchaseGateway> {
     protected PlayerGateway playerGateway;
@@ -22,7 +22,7 @@ public abstract class PurchaseGatewayTest extends GatewayTest<PurchaseGateway> {
     public void findPurchasedProductIds_noPurchases() {
         Player player = a(player().casid());
         givenPlayerExists(player);
-        assertEquals(a(listWith()), gateway.findPurchasedProductIds(player.getId()));
+        assertEquals(a(list()), gateway.findPurchasedProductIds(player.getId()));
     }
 
     @Test
@@ -33,7 +33,7 @@ public abstract class PurchaseGatewayTest extends GatewayTest<PurchaseGateway> {
         gateway.addPurchase(a(purchase().googlePlayCookie().withPlayerId(player.getId())));
         gateway.addPurchase(a(purchase().googlePlayBeer().withPlayerId(player.getId())));
 
-        assertEquals(a(listWith(
+        assertEquals(a(list(
                 "com.mazebert.beer",
                 "com.mazebert.cookie",
                 "com.mazebert.whisky")), gateway.findPurchasedProductIds(player.getId()));

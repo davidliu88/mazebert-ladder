@@ -13,7 +13,7 @@ import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
 
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.builders.BuilderFactory.a;
+import static org.jusecase.Builders.a;
 
 public class CreateAccountTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();

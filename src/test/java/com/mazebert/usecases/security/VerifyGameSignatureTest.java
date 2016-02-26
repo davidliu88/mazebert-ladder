@@ -9,8 +9,8 @@ import org.jusecase.builders.Builder;
 
 import java.io.InputStream;
 
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.inputStream;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.inputStream;
 
 public class VerifyGameSignatureTest extends UsecaseTest<Request, Void> {
 

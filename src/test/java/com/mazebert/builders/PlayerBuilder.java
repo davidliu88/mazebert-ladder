@@ -5,8 +5,8 @@ import org.jusecase.builders.Builder;
 
 import java.util.Date;
 
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.date;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.date;
 
 public class PlayerBuilder implements Builder<Player> {
     private Player player = new Player();

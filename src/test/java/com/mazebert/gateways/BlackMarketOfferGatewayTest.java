@@ -10,8 +10,8 @@ import java.util.Date;
 
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.*;
-import static org.jusecase.builders.BuilderFactory.a;
-import static org.jusecase.builders.BuilderFactory.date;
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.date;
 
 public abstract class BlackMarketOfferGatewayTest extends GatewayTest<BlackMarketOfferGateway> {
     private Player player = a(player().casid());
