@@ -11,4 +11,7 @@ public interface PlayerGateway {
     int findPlayerRank(long id);
 
     void updatePlayer(Player player);
+
+    int getRelics(long playerId);
+    void addRelics(long playerId, int relics);
 }

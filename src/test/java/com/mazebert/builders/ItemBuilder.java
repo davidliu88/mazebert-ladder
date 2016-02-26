@@ -31,4 +31,12 @@ public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
                 .withName("Baby Sword")
                 .withSinceVersion("0.2");
     }
+
+    public ItemBuilder scepterOfTime() {
+        return this
+                .normalCard()
+                .withId(29)
+                .withName("Scepter of Time")
+                .withSinceVersion("0.8");
+    }
 }

@@ -67,6 +67,12 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
     }
 
     @Override
+    public List<Quest> findQuestsByIds(List<Long> questIds) {
+        // TODO implement me!
+        return null;
+    }
+
+    @Override
     public void addDailyQuest(Player player, Quest quest, Date creationDate) {
         try {
             getQueryRunner().insert("INSERT INTO PlayerDailyQuest (playerId, questId, creationDate) VALUES(?, ?, ?);",
@@ -77,6 +83,11 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
         } catch (SQLException e) {
             throw new GatewayError("Failed to add daily quest to player.", e);
         }
+    }
+
+    @Override
+    public void removeDailyQuest(Player player, long questId) {
+        // TODO implement me!
     }
 
     @Override

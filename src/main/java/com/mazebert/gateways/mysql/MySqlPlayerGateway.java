@@ -96,4 +96,15 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
             throw new GatewayError("Failed to update player in database", e);
         }
     }
+
+    @Override
+    public int getRelics(long playerId) {
+        // TODO implement me!
+        return 0;
+    }
+
+    @Override
+    public void addRelics(long playerId, int relics) {
+        // TODO implement me!
+    }
 }

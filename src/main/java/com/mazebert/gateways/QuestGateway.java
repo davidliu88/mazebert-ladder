@@ -11,6 +11,8 @@ public interface QuestGateway {
     List<Quest> findDailyQuests(long playerId);
     List<Long> findDailyQuestIds(long playerId);
     List<Quest> findAllQuests();
+    List<Quest> findQuestsByIds(List<Long> questIds);
     void addDailyQuest(Player player, Quest quest, Date creationDate);
+    void removeDailyQuest(Player player, long questId);
     void addCompletedHiddenQuestId(long playerId, long questId);
 }

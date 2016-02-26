@@ -11,6 +11,7 @@ public class PlayerGatewayMock implements PlayerGateway {
     private Player updatedPlayer;
     private List<RuntimeException> exceptions = new ArrayList<>();
 
+    private Map<Long, Player> playerById = new HashMap<>();
     private Map<String, Player> playerByKey = new HashMap<>();
     private Map<String, Player> playerByEmail = new HashMap<>();
     private Map<Long, Integer> playerRankById = new HashMap<>();
@@ -44,6 +45,18 @@ public class PlayerGatewayMock implements PlayerGateway {
         updatedPlayer = player;
     }
 
+    @Override
+    public int getRelics(long playerId) {
+        Player player = playerById.get(playerId);
+        return player == null ? 0 : player.getRelics();
+    }
+
+    @Override
+    public void addRelics(long playerId, int relics) {
+        Player player = playerById.get(playerId);
+        player.setRelics(player.getRelics() + relics);
+    }
+
     public void givenNextPlayerId(int id) {
         nextPlayerId = id;
     }
@@ -61,12 +74,15 @@ public class PlayerGatewayMock implements PlayerGateway {
     }
 
     public void givenPlayerExists(Player player) {
+        playerById.put(player.getId(), player);
         playerByKey.put(player.getKey(), player);
         playerByEmail.put(player.getEmail(), player);
     }
 
     public void givenNoPlayerExists() {
+        playerById.clear();
         playerByKey.clear();
+        playerByEmail.clear();
     }
 
     public void givenPlayerRank(int rank, Player player) {

@@ -21,6 +21,14 @@ public class QuestBuilder implements Builder<Quest> {
                 .withSinceVersion("1.2.0");
     }
 
+    public QuestBuilder completeTwistedPaths() {
+        return this
+                .hidden()
+                .withId(11)
+                .withReward(100)
+                .withSinceVersion("1.0.0");
+    }
+
     public QuestBuilder withId(long value) {
         quest.setId(value);
         return this;
@@ -33,6 +41,11 @@ public class QuestBuilder implements Builder<Quest> {
 
     public QuestBuilder withSinceVersion(String value) {
         quest.setSinceVersion(value);
+        return this;
+    }
+
+    public QuestBuilder withReward(int value) {
+        quest.setReward(value);
         return this;
     }
 
