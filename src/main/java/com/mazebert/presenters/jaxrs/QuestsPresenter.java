@@ -15,7 +15,7 @@ public class QuestsPresenter extends AbstractPresenter {
     @Path("/complete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CompleteQuests.Response createAccount(CompleteQuests.Request request) {
+    public CompleteQuests.Response completeQuests(CompleteQuests.Request request) {
         return execute(request);
     }
 
