@@ -7,6 +7,7 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
@@ -113,6 +114,7 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
     }
 
     @SecureRequest
+    @StatusResponse
     public static class Request {
         public String appVersion;
         public String key;

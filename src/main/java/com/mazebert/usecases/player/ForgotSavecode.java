@@ -5,6 +5,7 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
@@ -52,6 +53,7 @@ public class ForgotSavecode implements Usecase<ForgotSavecode.Request, ForgotSav
     }
 
     @SecureRequest
+    @StatusResponse
     public static class Request {
         public String email;
     }

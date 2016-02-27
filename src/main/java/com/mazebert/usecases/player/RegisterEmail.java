@@ -7,6 +7,7 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.validation.EmailValidator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
@@ -87,6 +88,7 @@ public class RegisterEmail implements Usecase<RegisterEmail.Request, RegisterEma
     }
 
     @SecureRequest
+    @StatusResponse
     public static class Request {
         public String email;
         public String key;

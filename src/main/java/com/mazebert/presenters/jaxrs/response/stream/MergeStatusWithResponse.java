@@ -37,6 +37,7 @@ public class MergeStatusWithResponse extends AbstractResponseStream {
     private static class OutputStreamWrapper extends OutputStream {
         private final OutputStream os;
         private boolean interceptNextCharacter;
+        private int interceptedCharacter;
 
         private OutputStreamWrapper(OutputStream os) {
             this.os = os;
@@ -45,8 +46,17 @@ public class MergeStatusWithResponse extends AbstractResponseStream {
         @Override
         public void write(int b) throws IOException {
             if (interceptNextCharacter) {
-                os.write(',');
-                interceptNextCharacter = false;
+                if (interceptedCharacter == 0) {
+                    interceptedCharacter = b;
+                } else {
+                    if ('}' == b) {
+                        os.write('}');
+                    } else {
+                        os.write(',');
+                        os.write(b);
+                    }
+                    interceptNextCharacter = false;
+                }
             } else {
                 os.write(b);
             }

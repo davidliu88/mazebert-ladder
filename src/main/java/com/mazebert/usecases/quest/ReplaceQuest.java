@@ -13,6 +13,7 @@ import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeZoneParser;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
@@ -67,6 +68,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
     }
 
     @SecureRequest
+    @StatusResponse(field = "quest")
     public static class Request {
         public String appVersion;
         public String key;

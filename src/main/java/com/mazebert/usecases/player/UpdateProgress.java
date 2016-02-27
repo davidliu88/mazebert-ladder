@@ -5,6 +5,7 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.time.CurrentDatePlugin;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
@@ -13,16 +14,6 @@ import javax.inject.Inject;
 public class UpdateProgress implements Usecase<UpdateProgress.Request, UpdateProgress.Response> {
     private final PlayerGateway playerGateway;
     private final CurrentDatePlugin currentDatePlugin;
-
-    @SecureRequest
-    public static class Request {
-        public String key;
-        public int level;
-        public long experience;
-    }
-
-    public static class Response {
-    }
 
     @Inject
     public UpdateProgress(PlayerGateway playerGateway, CurrentDatePlugin currentDatePlugin) {
@@ -46,5 +37,16 @@ public class UpdateProgress implements Usecase<UpdateProgress.Request, UpdatePro
         playerGateway.updatePlayer(player);
 
         return new Response();
+    }
+
+    @SecureRequest
+    @StatusResponse
+    public static class Request {
+        public String key;
+        public int level;
+        public long experience;
+    }
+
+    public static class Response {
     }
 }

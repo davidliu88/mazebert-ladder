@@ -7,6 +7,7 @@ import com.mazebert.error.NotFound;
 import com.mazebert.error.Unauthorized;
 import com.mazebert.gateways.BonusTimeGateway;
 import com.mazebert.gateways.PlayerGateway;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
@@ -57,6 +58,7 @@ public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateB
     }
 
     @SecureRequest
+    @StatusResponse
     public static class Request {
         public long playerId;
         public String key;

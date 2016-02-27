@@ -8,6 +8,7 @@ import com.mazebert.plugins.random.DailyQuestGenerator;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeZoneParser;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -151,6 +152,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         response.relics = player.getRelics();
     }
 
+    @StatusResponse(field = "player")
     public static class Request {
         public String key;
         public String appVersion;

@@ -2,9 +2,10 @@ package com.mazebert.presenters.jaxrs;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mazebert.Logic;
-import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
+import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
 import com.mazebert.presenters.jaxrs.response.stream.PlainResponse;
 import com.mazebert.presenters.jaxrs.response.stream.WrapStatusAndResponse;
 import com.mazebert.usecases.security.SecureRequest;
@@ -23,13 +24,18 @@ public abstract class AbstractPresenter {
 
     UsecaseExecutor usecaseExecutor = Logic.instance;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Context
     HttpServletRequest servletRequest;
 
     @Context
     UriInfo uriInfo;
+
+    protected AbstractPresenter() {
+        objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    }
 
     public <Request> Response execute(Request request) {
         if (isVerificationRequired(request)) {
@@ -59,7 +65,7 @@ public abstract class AbstractPresenter {
         }
     }
 
-    private <Request> boolean isVerificationRequired(Request request) {
+    private boolean isVerificationRequired(Object request) {
         return request.getClass().isAnnotationPresent(SecureRequest.class);
     }
 

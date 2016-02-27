@@ -3,6 +3,7 @@ package com.mazebert.presenters.jaxrs;
 import com.mazebert.error.Error;
 import com.mazebert.error.Unauthorized;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
+import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayer;
 import com.mazebert.usecases.security.SecureRequest;
@@ -150,6 +151,14 @@ public class AbstractPresenterTest {
     }
 
     @Test
+    public void responseWithMergedStatus_responseIsEmpty() {
+        givenUsecaseRequest(new UpdateBonusTime.Request());
+        givenUsecaseResponse(new UpdateBonusTime.Response());
+        whenRequestIsExecuted();
+        thenResponseJsonIs("{\"status\":\"ok\"}");
+    }
+
+    @Test
     public void responseContainingStatusAndUsecaseResponse() {
         givenUsecaseRequest(new GetPlayer.Request());
         givenUsecaseResponse(a(player().casid()));
@@ -207,7 +216,7 @@ public class AbstractPresenterTest {
         try {
             output.write(outputStream);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to write to test output stream.");
+            throw new RuntimeException("Failed to write to test output stream.", e);
         }
 
         return outputStream.toString();
