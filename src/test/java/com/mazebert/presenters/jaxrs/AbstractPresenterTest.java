@@ -2,6 +2,9 @@ package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.error.Error;
 import com.mazebert.error.Unauthorized;
+import com.mazebert.usecases.bonustime.GetBonusTimes;
+import com.mazebert.usecases.player.CreateAccount;
+import com.mazebert.usecases.player.GetPlayer;
 import com.mazebert.usecases.security.SecureRequest;
 import com.mazebert.usecases.security.VerifyGameSignature;
 import org.junit.Before;
@@ -14,10 +17,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.jusecase.Builders.a;
@@ -34,6 +42,9 @@ public class AbstractPresenterTest {
     @Mock private UriInfo uriInfo;
 
     private List<Object> sentRequests = new ArrayList<>();
+    private Object usecaseRequest;
+    private Object usecaseResponse;
+    private Response presenterResponse;
 
     @SecureRequest
     private class DummySecureRequest {
@@ -45,9 +56,10 @@ public class AbstractPresenterTest {
         presenter.servletRequest = servletRequest;
         presenter.uriInfo = uriInfo;
         presenter.usecaseExecutor = new UsecaseExecutor() {
-            public <Request, Response> Response execute(Request request) {
+            @SuppressWarnings("unchecked")
+            public <RequestType, ResponseType> ResponseType execute(RequestType request) {
                 sentRequests.add(request);
-                return null;
+                return (ResponseType) usecaseResponse;
             }
         };
     }
@@ -101,7 +113,7 @@ public class AbstractPresenterTest {
     @Test
     public void secureRequest_clientSignatureIncorrect_actualRequestIsNotCalled() throws Exception {
         presenter.usecaseExecutor = new UsecaseExecutor() {
-            public <Request, Response> Response execute(Request request) {
+            public <RequestType, ResponseType> ResponseType execute(RequestType request) {
                 throw new Unauthorized("Invalid client signature.");
             }
         };
@@ -114,8 +126,60 @@ public class AbstractPresenterTest {
         }
     }
 
+    @Test
+    public void responseStatus() throws Exception {
+        givenUsecaseRequest(new CreateAccount.Request());
+        whenRequestIsExecuted();
+        assertEquals(200, presenterResponse.getStatus());
+    }
+
+    @Test
+    public void responseWithMergedStatus() {
+        givenUsecaseRequest(new CreateAccount.Request());
+        givenUsecaseResponse(new CreateAccount.Response());
+        whenRequestIsExecuted();
+        thenResponseJsonIs("{\"status\":\"ok\",\"id\":0,\"key\":null}");
+    }
+
+    @Test
+    public void responseWithMergedStatus_responseIsNull() {
+        givenUsecaseRequest(new CreateAccount.Request());
+        givenUsecaseResponse(null);
+        whenRequestIsExecuted();
+        thenResponseJsonIs("{\"status\":\"ok\"}");
+    }
+
+    @Test
+    public void responseContainingStatusAndUsecaseResponse() {
+        givenUsecaseRequest(new GetPlayer.Request());
+        givenUsecaseResponse(a(player().casid()));
+        whenRequestIsExecuted();
+        thenResponseJsonStartsWith("{\"status\":\"ok\",\"player\":{");
+    }
+
+    @Test
+    public void responseWithoutStatusAddition() {
+        givenUsecaseRequest(new GetBonusTimes.Request());
+        givenUsecaseResponse(a(list()));
+        whenRequestIsExecuted();
+        thenResponseJsonIs("[]");
+    }
+
+    private void givenUsecaseRequest(Object usecaseRequest) {
+        this.usecaseRequest = usecaseRequest;
+    }
+
+    private void givenUsecaseResponse(Object response) {
+        this.usecaseResponse = response;
+    }
+
     private void whenSecureRequestIsExecuted() {
-        presenter.execute(new DummySecureRequest());
+        givenUsecaseRequest(new DummySecureRequest());
+        whenRequestIsExecuted();
+    }
+
+    private void whenRequestIsExecuted() {
+        presenterResponse = presenter.execute(usecaseRequest);
     }
 
     private void thenVerificationBodyIs(ServletInputStream expected) {
@@ -126,5 +190,26 @@ public class AbstractPresenterTest {
     private void thenVerificationSignatureIs(String expected) {
         VerifyGameSignature.Request request = (VerifyGameSignature.Request)sentRequests.get(0);
         assertEquals(expected, request.signature);
+    }
+
+    private void thenResponseJsonIs(String expected) {
+        assertEquals(expected, getResponseJson());
+    }
+
+    private void thenResponseJsonStartsWith(String expected) {
+        String json = getResponseJson().substring(0, expected.length());
+        assertEquals(expected, json);
+    }
+
+    private String getResponseJson() {
+        StreamingOutput output = (StreamingOutput)presenterResponse.getEntity();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            output.write(outputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write to test output stream.");
+        }
+
+        return outputStream.toString();
     }
 }

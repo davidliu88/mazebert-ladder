@@ -8,6 +8,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/quests")
 public class QuestsPresenter extends AbstractPresenter {
@@ -15,7 +16,7 @@ public class QuestsPresenter extends AbstractPresenter {
     @Path("/complete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CompleteQuests.Response completeQuests(CompleteQuests.Request request) {
+    public Response completeQuests(CompleteQuests.Request request) {
         return execute(request);
     }
 
@@ -23,7 +24,7 @@ public class QuestsPresenter extends AbstractPresenter {
     @Path("/replace")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ReplaceQuest.Response replaceQuest(ReplaceQuest.Request request) {
+    public Response replaceQuest(ReplaceQuest.Request request) {
         return execute(request);
     }
 }

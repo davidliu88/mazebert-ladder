@@ -5,23 +5,13 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.plugins.random.PlayerKeyGenerator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
 
 public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccount.Response> {
-    @SecureRequest public static class Request {
-        public String name;
-        public int level;
-        public long experience;
-    }
-
-    public static class Response {
-        public long id;
-        public String key;
-    }
-
     private final PlayerGateway playerGateway;
     private final PlayerKeyGenerator keyGenerator;
 
@@ -80,5 +70,18 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
         if (request.experience <= 0) {
             throw new BadRequest("Player experience must be greater than 0");
         }
+    }
+
+    @SecureRequest
+    @StatusResponse
+    public static class Request {
+        public String name;
+        public int level;
+        public long experience;
+    }
+
+    public static class Response {
+        public long id;
+        public String key;
     }
 }

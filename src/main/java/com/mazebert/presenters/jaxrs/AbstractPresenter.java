@@ -1,19 +1,29 @@
 package com.mazebert.presenters.jaxrs;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mazebert.Logic;
+import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
+import com.mazebert.presenters.jaxrs.response.stream.PlainResponse;
+import com.mazebert.presenters.jaxrs.response.stream.WrapStatusAndResponse;
 import com.mazebert.usecases.security.SecureRequest;
 import com.mazebert.usecases.security.VerifyGameSignature;
 import org.jusecase.UsecaseExecutor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 
-public abstract class AbstractPresenter implements UsecaseExecutor {
+public abstract class AbstractPresenter {
 
     UsecaseExecutor usecaseExecutor = Logic.instance;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Context
     HttpServletRequest servletRequest;
@@ -21,12 +31,32 @@ public abstract class AbstractPresenter implements UsecaseExecutor {
     @Context
     UriInfo uriInfo;
 
-    public <Request, Response> Response execute(Request request) {
+    public <Request> Response execute(Request request) {
         if (isVerificationRequired(request)) {
             verifyRequest();
         }
 
-        return usecaseExecutor.execute(request);
+        Object response = usecaseExecutor.execute(request);
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(createResponseStream(request, response))
+                .build();
+    }
+
+    private StreamingOutput createResponseStream(Object request, Object response) {
+        JsonFactory jsonFactory = objectMapper.getFactory();
+
+        if (request.getClass().isAnnotationPresent(StatusResponse.class)) {
+            StatusResponse statusResponseAnnotation = request.getClass().getAnnotation(StatusResponse.class);
+            if (statusResponseAnnotation.field().isEmpty()) {
+                return new MergeStatusWithResponse(jsonFactory, response);
+            } else {
+                return new WrapStatusAndResponse(jsonFactory, response, statusResponseAnnotation.field());
+            }
+        } else {
+            return new PlainResponse(jsonFactory, response);
+        }
     }
 
     private <Request> boolean isVerificationRequired(Request request) {

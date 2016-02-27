@@ -1,18 +1,17 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.entities.PlayerBonusTime;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+import javax.ws.rs.core.Response;
 
 @Path("/bonus")
 public class BonusRoundPresenter extends AbstractPresenter {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<PlayerBonusTime> getBonusTimes(
+    public Response getBonusTimes(
             @QueryParam("appVersion") String appVersion,
             @QueryParam("mapId") int mapId,
             @QueryParam("difficultyType") String difficultyType,
@@ -35,7 +34,7 @@ public class BonusRoundPresenter extends AbstractPresenter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public UpdateBonusTime.Response updateBonusTime(UpdateBonusTime.Request request) {
+    public Response updateBonusTime(UpdateBonusTime.Request request) {
         return execute(request);
     }
 }
