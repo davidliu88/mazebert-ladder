@@ -108,7 +108,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         dailyQuestGenerator.tryToGenerateDailyQuest(player, appVersion, timeZone);
         response.dailyQuests = questGateway.findDailyQuests(player.getId());
 
-        response.canReplaceDailyQuest = dailyQuestGenerator.isQuestReplacementPossible(player, timeZone);
+        response.canReplaceDailyQuest = dailyQuestGenerator.isQuestReplacementPossible(player, questGateway.findDailyQuestIds(player.getId()), timeZone);
     }
 
     private void addFoilCardsToResponse(Player player, Response response) {

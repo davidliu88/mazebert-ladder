@@ -36,7 +36,7 @@ public class CompleteQuestsTest extends UsecaseTest<Request, Response> {
     public void appVersionTooOld() {
         givenRequest(a(request().withAppVersion("0.9.0")));
         whenRequestIsExecuted();
-        thenErrorIs(new BadRequest("This app version is too old to complete quests."));
+        thenErrorIs(new BadRequest("At least app version 1.0.0 is required for this request."));
     }
 
     @Test

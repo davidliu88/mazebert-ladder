@@ -91,6 +91,11 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
     }
 
     @Override
+    public void replaceDailyQuest(long playerId, long oldQuestId, long newQuestId, Date creationDate) {
+        // TODO implement me!
+    }
+
+    @Override
     public void addCompletedHiddenQuestId(long playerId, long questId) {
         try {
             getQueryRunner().insert("INSERT INTO PlayerHiddenQuest (playerId, questId) VALUES(?, ?);",

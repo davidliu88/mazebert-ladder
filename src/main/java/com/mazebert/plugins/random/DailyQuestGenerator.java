@@ -38,8 +38,15 @@ public class DailyQuestGenerator {
         }
     }
 
-    public boolean isQuestReplacementPossible(Player player, TimeZone timeZone) {
-        List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
+    public Quest tryToReplaceDailyQuest(Player player, Version appVersion, TimeZone timeZone, List<Long> dailyQuestIds, long questIdToReplace) {
+        if (isQuestReplacementPossible(player, dailyQuestIds, timeZone)) {
+            return replaceDailyQuest(player, dailyQuestIds, appVersion, questIdToReplace);
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isQuestReplacementPossible(Player player, List<Long> dailyQuestIds, TimeZone timeZone) {
         if (dailyQuestIds.size() < MAX_QUESTS ) {
             return false;
         }
@@ -65,7 +72,6 @@ public class DailyQuestGenerator {
         return true;
     }
 
-
     private boolean isQuestAlreadyGeneratedToday(Date now, Date lastQuestCreation, TimeZone timeZone) {
         Calendar calendar = Calendar.getInstance(timeZone);
 
@@ -82,6 +88,14 @@ public class DailyQuestGenerator {
         Quest quest = findNewRandomDailyQuest(player, dailyQuestIds, appVersion);
         if (quest != null) {
             questGateway.addDailyQuest(player, quest, currentDatePlugin.getCurrentDate());
+        }
+        return quest;
+    }
+
+    private Quest replaceDailyQuest(Player player, List<Long> dailyQuestIds, Version appVersion, long questIdToReplace) {
+        Quest quest = findNewRandomDailyQuest(player, dailyQuestIds, appVersion);
+        if (quest != null) {
+            questGateway.replaceDailyQuest(player.getId(), questIdToReplace, quest.getId(), currentDatePlugin.getCurrentDate());
         }
         return quest;
     }

@@ -67,6 +67,19 @@ public class QuestGatewayMock implements QuestGateway {
     }
 
     @Override
+    public void replaceDailyQuest(long playerId, long oldQuestId, long newQuestId, Date creationDate) {
+        List<Quest> dailyQuests = this.dailyQuests.get(playerId);
+        if (dailyQuests != null) {
+            for (Quest quest : dailyQuests) {
+                if (quest.getId() == oldQuestId) {
+                    quest.setId(newQuestId);
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
     public void addCompletedHiddenQuestId(long playerId, long questId) {
         List<Long> ids = completedHiddenQuestIds.get(playerId);
         if (ids == null) {

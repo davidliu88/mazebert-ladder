@@ -6,6 +6,7 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
+import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
@@ -13,7 +14,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQuests.Response> {
-    private static final Version requiredVersion = new Version("1.0.0");
+    private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;
     private final QuestGateway questGateway;
     private final FoilCardGateway foilCardGateway;
@@ -102,9 +103,7 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
     }
 
     private void validateRequest(Request request) {
-        if (new Version(request.appVersion).compareTo(requiredVersion) < 0) {
-            throw new BadRequest("This app version is too old to complete quests.");
-        }
+        versionValidator.validate(request.appVersion);
         if (request.key == null) {
             throw new BadRequest("Player key must be provided.");
         }
