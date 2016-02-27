@@ -18,6 +18,7 @@ import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.quest.CompleteQuests;
+import com.mazebert.usecases.quest.ReplaceQuest;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 import javax.sql.DataSource;
@@ -78,6 +79,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(UpdateBonusTime.class);
 
         addUsecase(CompleteQuests.class);
+        addUsecase(ReplaceQuest.class);
     }
 
     @Override

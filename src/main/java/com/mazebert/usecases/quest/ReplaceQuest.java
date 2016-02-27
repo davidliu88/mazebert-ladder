@@ -13,8 +13,10 @@ import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeZoneParser;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.usecases.security.SecureRequest;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.Response> {
@@ -24,6 +26,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
     private final DailyQuestGenerator questGenerator;
     private final TimeZoneParser timeZoneParser;
 
+    @Inject
     public ReplaceQuest(PlayerGateway playerGateway,
                         QuestGateway questGateway,
                         FoilCardGateway foilCardGateway,
@@ -63,6 +66,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
         }
     }
 
+    @SecureRequest
     public static class Request {
         public String appVersion;
         public String key;
