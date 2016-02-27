@@ -62,6 +62,24 @@ public class MergeStatusWithResponse extends AbstractResponseStream {
             }
         }
 
+        @Override
+        public void write(byte[] b) throws IOException {
+            if (interceptNextCharacter) {
+                super.write(b);
+            } else {
+                os.write(b);
+            }
+        }
+
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            if (interceptNextCharacter) {
+                super.write(b, off, len);
+            } else {
+                os.write(b);
+            }
+        }
+
         public void setInterceptNextCharacter(boolean interceptNextCharacter) {
             this.interceptNextCharacter = interceptNextCharacter;
         }
