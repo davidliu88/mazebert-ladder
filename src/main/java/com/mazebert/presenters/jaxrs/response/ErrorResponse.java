@@ -1,4 +1,4 @@
-package com.mazebert.presenters.jaxrs;
+package com.mazebert.presenters.jaxrs.response;
 
 public class ErrorResponse {
     public String status;

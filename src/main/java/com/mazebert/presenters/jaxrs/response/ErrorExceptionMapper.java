@@ -1,4 +1,4 @@
-package com.mazebert.presenters.jaxrs;
+package com.mazebert.presenters.jaxrs.response;
 
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
