@@ -15,6 +15,7 @@ import com.mazebert.plugins.message.EmailMessageFakePlugin;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.random.SecureRandomNumberGenerator;
+import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
@@ -22,6 +23,7 @@ import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
+import com.mazebert.usecases.security.VerifyGameSignature;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 import javax.sql.DataSource;
@@ -59,6 +61,7 @@ public class Logic extends GuiceUsecaseExecutor {
         protected void configure() {
             bind(RandomNumberGenerator.class).to(SecureRandomNumberGenerator.class);
             bind(EmailMessagePlugin.class).to(EmailMessageFakePlugin.class);
+            bind(GameContentVerifier.class).asEagerSingleton();
         }
     }
 
@@ -68,6 +71,7 @@ public class Logic extends GuiceUsecaseExecutor {
                 new PluginModule()
         ));
 
+        addUsecase(VerifyGameSignature.class);
         addUsecase(GetVersion.class);
         addUsecase(GetStatus.class);
 

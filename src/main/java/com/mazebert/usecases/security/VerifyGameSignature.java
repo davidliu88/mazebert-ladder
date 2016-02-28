@@ -1,21 +1,26 @@
 package com.mazebert.usecases.security;
 
 import com.mazebert.error.Unauthorized;
+import com.mazebert.plugins.security.GameContentVerifier;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.io.InputStream;
 
 public class VerifyGameSignature implements Usecase<VerifyGameSignature.Request, Void> {
-    public static class Request {
-        public InputStream body;
-        public String signature;
-    }
+    private final GameContentVerifier gameContentVerifier;
 
-    public static class Response {
+    @Inject
+    public VerifyGameSignature(GameContentVerifier gameContentVerifier) {
+        this.gameContentVerifier = gameContentVerifier;
     }
 
     public Void execute(Request request) {
         validate(request);
+
+        if (! gameContentVerifier.verify(request.body, request.signature)) {
+            failAuthentication("Request signature is invalid.");
+        }
 
         return null;
     }
@@ -30,5 +35,13 @@ public class VerifyGameSignature implements Usecase<VerifyGameSignature.Request,
 
     private void failAuthentication(String message) {
         throw new Unauthorized("The given request was not sent by a valid game client. " + message);
+    }
+
+    public static class Request {
+        public InputStream body;
+        public String signature;
+    }
+
+    public static class Response {
     }
 }
