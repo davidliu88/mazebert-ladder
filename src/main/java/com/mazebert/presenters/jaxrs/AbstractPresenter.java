@@ -9,7 +9,7 @@ import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
 import com.mazebert.presenters.jaxrs.response.stream.PlainResponse;
 import com.mazebert.presenters.jaxrs.response.stream.WrapStatusAndResponse;
 import com.mazebert.usecases.security.SecureRequest;
-import com.mazebert.usecases.security.VerifyGameSignature;
+import com.mazebert.usecases.security.VerifyGameRequest;
 import org.jusecase.UsecaseExecutor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,7 +76,7 @@ public abstract class AbstractPresenter {
     }
 
     private void verifyRequest() {
-        VerifyGameSignature.Request request = new VerifyGameSignature.Request();
+        VerifyGameRequest.Request request = new VerifyGameRequest.Request();
         request.body = getRequestBodyStream();
         request.signature = getRequestSignature();
 

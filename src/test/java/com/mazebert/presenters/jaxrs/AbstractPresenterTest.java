@@ -7,7 +7,7 @@ import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayer;
 import com.mazebert.usecases.security.SecureRequest;
-import com.mazebert.usecases.security.VerifyGameSignature;
+import com.mazebert.usecases.security.VerifyGameRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -201,12 +201,12 @@ public class AbstractPresenterTest {
     }
 
     private void thenVerificationBodyIs(ServletInputStream expected) {
-        VerifyGameSignature.Request request = (VerifyGameSignature.Request)sentRequests.get(0);
+        VerifyGameRequest.Request request = (VerifyGameRequest.Request)sentRequests.get(0);
         assertEquals(expected, request.body);
     }
 
     private void thenVerificationSignatureIs(String expected) {
-        VerifyGameSignature.Request request = (VerifyGameSignature.Request)sentRequests.get(0);
+        VerifyGameRequest.Request request = (VerifyGameRequest.Request)sentRequests.get(0);
         assertEquals(expected, request.signature);
     }
 

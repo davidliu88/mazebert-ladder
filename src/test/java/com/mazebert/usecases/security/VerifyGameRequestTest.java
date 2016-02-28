@@ -2,7 +2,7 @@ package com.mazebert.usecases.security;
 
 import com.mazebert.error.Unauthorized;
 import com.mazebert.plugins.security.GameContentVerifier;
-import com.mazebert.usecases.security.VerifyGameSignature.Request;
+import com.mazebert.usecases.security.VerifyGameRequest.Request;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -14,12 +14,12 @@ import static org.junit.Assert.assertNull;
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.inputStream;
 
-public class VerifyGameSignatureTest extends UsecaseTest<Request, Void> {
+public class VerifyGameRequestTest extends UsecaseTest<Request, Void> {
     private static GameContentVerifier gameContentVerifier = new GameContentVerifier();
 
     @Before
     public void setUp() {
-        usecase = new VerifyGameSignature(gameContentVerifier);
+        usecase = new VerifyGameRequest(gameContentVerifier);
     }
 
     @Test

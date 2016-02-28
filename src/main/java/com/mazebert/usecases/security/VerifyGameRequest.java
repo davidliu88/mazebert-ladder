@@ -7,11 +7,11 @@ import org.jusecase.Usecase;
 import javax.inject.Inject;
 import java.io.InputStream;
 
-public class VerifyGameSignature implements Usecase<VerifyGameSignature.Request, Void> {
+public class VerifyGameRequest implements Usecase<VerifyGameRequest.Request, Void> {
     private final GameContentVerifier gameContentVerifier;
 
     @Inject
-    public VerifyGameSignature(GameContentVerifier gameContentVerifier) {
+    public VerifyGameRequest(GameContentVerifier gameContentVerifier) {
         this.gameContentVerifier = gameContentVerifier;
     }
 

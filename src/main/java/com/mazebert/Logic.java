@@ -23,7 +23,7 @@ import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
-import com.mazebert.usecases.security.VerifyGameSignature;
+import com.mazebert.usecases.security.VerifyGameRequest;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 import javax.sql.DataSource;
@@ -93,7 +93,7 @@ public class Logic extends GuiceUsecaseExecutor {
     }
 
     private void addSystemUsecases() {
-        addUsecase(VerifyGameSignature.class);
+        addUsecase(VerifyGameRequest.class);
         addUsecase(GetVersion.class);
         addUsecase(GetStatus.class);
     }
