@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/bonus")
-public class BonusRoundPresenter extends AbstractPresenter {
+public class BonusTimePresenter extends AbstractPresenter {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBonusTimes(
