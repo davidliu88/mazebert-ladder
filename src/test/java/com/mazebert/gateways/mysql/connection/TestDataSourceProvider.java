@@ -1,4 +1,4 @@
-package com.mazebert.gateways.mysql;
+package com.mazebert.gateways.mysql.connection;
 
 import org.apache.commons.dbutils.QueryRunner;
 

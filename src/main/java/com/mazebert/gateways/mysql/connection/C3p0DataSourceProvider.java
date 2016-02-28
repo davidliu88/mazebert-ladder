@@ -1,4 +1,4 @@
-package com.mazebert.gateways.mysql;
+package com.mazebert.gateways.mysql.connection;
 
 import com.google.inject.Provider;
 import com.mazebert.error.InternalServerError;

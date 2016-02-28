@@ -8,6 +8,7 @@ import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.*;
+import com.mazebert.gateways.mysql.connection.C3p0DataSourceProvider;
 import com.mazebert.plugins.message.EmailMessageFakePlugin;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.random.RandomNumberGenerator;

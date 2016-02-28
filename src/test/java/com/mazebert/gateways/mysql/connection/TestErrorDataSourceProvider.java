@@ -1,4 +1,4 @@
-package com.mazebert.gateways.mysql;
+package com.mazebert.gateways.mysql.connection;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
