@@ -33,8 +33,8 @@ public class ContentVerifier {
     }
 
     private RSAKeyParameters parseKey(String key) {
-        try (InputStream inputStream = a(inputStream().withString(key))) {
-            PEMParser parser = new PEMParser(new InputStreamReader(inputStream));
+        try (InputStreamReader reader = new InputStreamReader(a(inputStream().withString(key)))) {
+            PEMParser parser = new PEMParser(reader);
             return (RSAKeyParameters)PublicKeyFactory.createKey((SubjectPublicKeyInfo)parser.readObject());
         } catch (Throwable e) {
             throw new InternalServerError("Failed to parse public key for content verification.", e);
@@ -43,10 +43,13 @@ public class ContentVerifier {
 
     public boolean verify(InputStream content, String signature) {
         try {
-            byte[] expectedHash = DigestUtils.md5(content);
-            byte[] receivedHash = decrypt(signature);
-
-            return Arrays.equals(expectedHash, receivedHash);
+            try {
+                byte[] expectedHash = DigestUtils.md5(content);
+                byte[] receivedHash = decrypt(signature);
+                return Arrays.equals(expectedHash, receivedHash);
+            } finally {
+                content.close();
+            }
         } catch (Throwable e) {
             return false;
         }
