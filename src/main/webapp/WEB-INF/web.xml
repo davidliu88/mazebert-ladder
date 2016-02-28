@@ -4,6 +4,10 @@
 http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          id="mazebert-ladder" version="3.0">
 
+    <listener>
+        <listener-class>com.mazebert.presenters.jaxrs.lifecycle.WebApplicationLifecycle</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>javax.ws.rs.core.Application</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -14,6 +18,7 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 
         <load-on-startup>1</load-on-startup>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>javax.ws.rs.core.Application</servlet-name>
         <url-pattern>/rest/*</url-pattern>

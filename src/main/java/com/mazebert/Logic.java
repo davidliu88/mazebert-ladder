@@ -3,7 +3,6 @@ package com.mazebert;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
@@ -31,6 +30,12 @@ import javax.sql.DataSource;
 public class Logic extends GuiceUsecaseExecutor {
     public static final Logic instance = new Logic(C3p0DataSourceProvider.class);
 
+    public void start() {
+    }
+
+    public void shutdown() {
+    }
+
     private static class GatewayModule extends AbstractModule {
         private final Class<? extends Provider<DataSource>> dataSourceProvider;
 
@@ -40,7 +45,7 @@ public class Logic extends GuiceUsecaseExecutor {
 
         @Override
         protected void configure() {
-            bind(DataSource.class).toProvider(dataSourceProvider).in(Singleton.class);
+            bind(DataSource.class).toProvider(dataSourceProvider).asEagerSingleton();
             bind(Credentials.class).toProvider(CredentialsProvider.class);
 
             bind(PlayerGateway.class).to(MySqlPlayerGateway.class);
