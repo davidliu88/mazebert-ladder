@@ -9,17 +9,12 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 
 public class C3p0DataSourceProvider implements DataSourceProvider, Provider<DataSource> {
-    private final String user;
-    private final String password;
-    private final String url;
-
+    private final Credentials credentials;
     private ComboPooledDataSource dataSource;
 
     @Inject
-    public C3p0DataSourceProvider(String user, String password, String url) {
-        this.user = user;
-        this.password = password;
-        this.url = url;
+    public C3p0DataSourceProvider(Credentials credentials) {
+        this.credentials = credentials;
     }
 
     @Override
@@ -40,9 +35,9 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         try {
             dataSource = new ComboPooledDataSource();
             dataSource.setDriverClass("com.mysql.jdbc.Driver");
-            dataSource.setJdbcUrl("jdbc:mysql://" + url);
-            dataSource.setUser(user);
-            dataSource.setPassword(password);
+            dataSource.setJdbcUrl("jdbc:mysql://" + credentials.getUrl());
+            dataSource.setUser(credentials.getUser());
+            dataSource.setPassword(credentials.getPassword());
         } catch (Throwable e) {
             throw new InternalServerError("Database connection pool could not be initialized", e);
         }

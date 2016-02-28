@@ -13,7 +13,7 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
     public static final TestDataSourceProvider instance = new TestDataSourceProvider();
 
     private TestDataSourceProvider() {
-        super("root", "integrationtest", resolveHost() + "/ladder_mazebert");
+        super(new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert"));
     }
 
     private static String resolveHost() {

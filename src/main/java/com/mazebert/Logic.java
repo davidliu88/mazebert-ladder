@@ -9,6 +9,8 @@ import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.*;
 import com.mazebert.gateways.mysql.connection.C3p0DataSourceProvider;
+import com.mazebert.gateways.mysql.connection.Credentials;
+import com.mazebert.gateways.mysql.connection.CredentialsProvider;
 import com.mazebert.plugins.message.EmailMessageFakePlugin;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.random.RandomNumberGenerator;
@@ -37,6 +39,7 @@ public class Logic extends GuiceUsecaseExecutor {
         @Override
         protected void configure() {
             bind(DataSource.class).toProvider(dataSourceProvider).in(Singleton.class);
+            bind(Credentials.class).toProvider(CredentialsProvider.class);
 
             bind(PlayerGateway.class).to(MySqlPlayerGateway.class);
             bind(PlayerRowGateway.class).to(MySqlPlayerRowGateway.class);
