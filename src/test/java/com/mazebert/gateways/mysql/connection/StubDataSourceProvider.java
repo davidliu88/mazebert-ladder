@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-public class FakeDataSourceProvider implements Provider<DataSource> {
+public class StubDataSourceProvider implements Provider<DataSource> {
     @Override
     public DataSource get() {
         return new DataSource() {

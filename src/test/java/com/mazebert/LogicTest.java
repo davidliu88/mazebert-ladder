@@ -3,7 +3,7 @@ package com.mazebert;
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.error.GatewayError;
-import com.mazebert.gateways.mysql.connection.FakeDataSourceProvider;
+import com.mazebert.gateways.mysql.connection.StubDataSourceProvider;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
@@ -82,7 +82,7 @@ public class LogicTest extends UsecaseExecutorTest {
     }
 
     private void givenTestLogic() {
-        givenExecutor(new Logic(FakeDataSourceProvider.class));
+        givenExecutor(new Logic(StubDataSourceProvider.class));
     }
 
     private Logic logic() {
