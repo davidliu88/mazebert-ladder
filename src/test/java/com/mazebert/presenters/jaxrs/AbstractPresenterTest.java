@@ -1,12 +1,16 @@
 package com.mazebert.presenters.jaxrs;
 
+import com.mazebert.Logic;
 import com.mazebert.error.Error;
 import com.mazebert.error.Unauthorized;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayer;
 import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.SecureResponse;
+import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +62,12 @@ public class AbstractPresenterTest {
             @SuppressWarnings("unchecked")
             public <RequestType, ResponseType> ResponseType execute(RequestType request) {
                 sentRequests.add(request);
-                return (ResponseType) usecaseResponse;
+
+                if (request instanceof SignServerResponse.Request) {
+                    return Logic.instance.execute(request);
+                } else {
+                    return (ResponseType) usecaseResponse;
+                }
             }
         });
     }
@@ -183,6 +192,14 @@ public class AbstractPresenterTest {
         thenResponseJsonIs("[]");
     }
 
+    @Test
+    public void signedResponse() {
+        givenUsecaseRequest(new DummySignedRequest());
+        givenUsecaseResponse(new DummySignedResponse("test"));
+        whenRequestIsExecuted();
+        thenResponseJsonIs("0d9d8064916fe6b55a0f2659a49ff0230dace940c48e9144e4a81b44828f1bf8{\"status\":\"ok\",\"name\":\"test\"}");
+    }
+
     private void givenUsecaseRequest(Object usecaseRequest) {
         this.usecaseRequest = usecaseRequest;
     }
@@ -229,5 +246,18 @@ public class AbstractPresenterTest {
         }
 
         return outputStream.toString();
+    }
+
+    @SecureResponse
+    @StatusResponse
+    private static class DummySignedRequest {
+    }
+
+    private static class DummySignedResponse {
+        public final String name;
+
+        private DummySignedResponse(String name) {
+            this.name = name;
+        }
     }
 }

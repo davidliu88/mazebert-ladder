@@ -7,8 +7,10 @@ import com.mazebert.Logic;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
 import com.mazebert.presenters.jaxrs.response.stream.PlainResponse;
+import com.mazebert.presenters.jaxrs.response.stream.SignedResponseStream;
 import com.mazebert.presenters.jaxrs.response.stream.WrapStatusAndResponse;
 import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.SecureResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
 import org.jusecase.UsecaseExecutor;
 
@@ -57,6 +59,19 @@ public abstract class AbstractPresenter {
     }
 
     private StreamingOutput createResponseStream(Object request, Object response) {
+        if (isSignatureRequired(request)) {
+            return createSignedResponseStream(request, response);
+        } else {
+            return createUnsignedResponseStream(request, response);
+        }
+    }
+
+    private StreamingOutput createSignedResponseStream(Object request, Object response) {
+        StreamingOutput output = createUnsignedResponseStream(request, response);
+        return new SignedResponseStream(usecaseExecutor, output);
+    }
+
+    private StreamingOutput createUnsignedResponseStream(Object request, Object response) {
         JsonFactory jsonFactory = objectMapper.getFactory();
 
         if (request.getClass().isAnnotationPresent(StatusResponse.class)) {
@@ -69,6 +84,10 @@ public abstract class AbstractPresenter {
         } else {
             return new PlainResponse(jsonFactory, response);
         }
+    }
+
+    private boolean isSignatureRequired(Object request) {
+        return request.getClass().isAnnotationPresent(SecureResponse.class);
     }
 
     private boolean isVerificationRequired(Object request) {
