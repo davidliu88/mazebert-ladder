@@ -71,10 +71,19 @@ public class Logic extends GuiceUsecaseExecutor {
                 new PluginModule()
         ));
 
+        addSystemUsecases();
+        addPlayerUsecases();
+        addBonusTimeUsecases();
+        addQuestUsecases();
+    }
+
+    private void addSystemUsecases() {
         addUsecase(VerifyGameSignature.class);
         addUsecase(GetVersion.class);
         addUsecase(GetStatus.class);
+    }
 
+    private void addPlayerUsecases() {
         addUsecase(CreateAccount.class);
         addUsecase(UpdateProgress.class);
         addUsecase(GetPlayers.class);
@@ -82,10 +91,14 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(SynchronizePlayer.class);
         addUsecase(ForgotSavecode.class);
         addUsecase(RegisterEmail.class);
+    }
 
+    private void addBonusTimeUsecases() {
         addUsecase(GetBonusTimes.class);
         addUsecase(UpdateBonusTime.class);
+    }
 
+    private void addQuestUsecases() {
         addUsecase(CompleteQuests.class);
         addUsecase(ReplaceQuest.class);
     }
