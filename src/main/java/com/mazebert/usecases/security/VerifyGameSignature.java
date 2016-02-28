@@ -41,7 +41,4 @@ public class VerifyGameSignature implements Usecase<VerifyGameSignature.Request,
         public InputStream body;
         public String signature;
     }
-
-    public static class Response {
-    }
 }
