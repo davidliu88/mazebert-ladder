@@ -8,9 +8,9 @@ import org.junit.Before;
 public class MySqlPurchaseGatewayTest extends PurchaseGatewayTest {
     @Before
     public void setUp() throws Exception {
-        gateway = new MySqlPurchaseGateway(TestDataSourceProvider.instance.getDataSource());
-        errorGateway = new MySqlPurchaseGateway(TestErrorDataSourceProvider.instance.getDataSource());
+        gateway = new MySqlPurchaseGateway(TestDataSourceProvider.instance.get());
+        errorGateway = new MySqlPurchaseGateway(TestErrorDataSourceProvider.instance.get());
 
-        playerGateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.getDataSource());
+        playerGateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.get());
     }
 }

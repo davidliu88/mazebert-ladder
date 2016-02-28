@@ -10,6 +10,7 @@ import com.mazebert.gateways.mysql.*;
 import com.mazebert.gateways.mysql.connection.C3p0DataSourceProvider;
 import com.mazebert.gateways.mysql.connection.Credentials;
 import com.mazebert.gateways.mysql.connection.CredentialsProvider;
+import com.mazebert.gateways.mysql.connection.DataSourceProvider;
 import com.mazebert.plugins.message.EmailMessageFakePlugin;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.random.RandomNumberGenerator;
@@ -29,11 +30,18 @@ import javax.sql.DataSource;
 
 public class Logic extends GuiceUsecaseExecutor {
     public static final Logic instance = new Logic(C3p0DataSourceProvider.class);
+    private final Class<? extends DataSourceProvider> dataSourceProvider;
 
     public void start() {
+        getDataSourceProvider().prepare();
     }
 
     public void shutdown() {
+        getDataSourceProvider().dispose();
+    }
+
+    private DataSourceProvider getDataSourceProvider() {
+        return getInjector().getInstance(dataSourceProvider);
     }
 
     private static class GatewayModule extends AbstractModule {
@@ -45,7 +53,7 @@ public class Logic extends GuiceUsecaseExecutor {
 
         @Override
         protected void configure() {
-            bind(DataSource.class).toProvider(dataSourceProvider).asEagerSingleton();
+            bind(DataSource.class).toProvider(dataSourceProvider);
             bind(Credentials.class).toProvider(CredentialsProvider.class);
 
             bind(PlayerGateway.class).to(MySqlPlayerGateway.class);
@@ -70,11 +78,13 @@ public class Logic extends GuiceUsecaseExecutor {
         }
     }
 
-    public Logic(Class<? extends Provider<DataSource>> dataSourceProvider) {
+    public <T extends Provider<DataSource> & DataSourceProvider> Logic(Class<T> dataSourceProvider) {
         super(Guice.createInjector(
                 new GatewayModule(dataSourceProvider),
                 new PluginModule()
         ));
+
+        this.dataSourceProvider = dataSourceProvider;
 
         addSystemUsecases();
         addPlayerUsecases();

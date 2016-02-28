@@ -8,7 +8,7 @@ import org.junit.Before;
 public class MySqlBlackMarketSettingsGatewayTest extends BlackMarketSettingsGatewayTest {
     @Before
     public void setUp() throws Exception {
-        gateway = new MySqlBlackMarketSettingsGateway(TestDataSourceProvider.instance.getDataSource());
-        errorGateway = new MySqlBlackMarketSettingsGateway(TestErrorDataSourceProvider.instance.getDataSource());
+        gateway = new MySqlBlackMarketSettingsGateway(TestDataSourceProvider.instance.get());
+        errorGateway = new MySqlBlackMarketSettingsGateway(TestErrorDataSourceProvider.instance.get());
     }
 }

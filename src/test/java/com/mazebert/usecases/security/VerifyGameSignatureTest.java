@@ -37,6 +37,16 @@ public class VerifyGameSignatureTest extends UsecaseTest<Request, Void> {
     }
 
     @Test
+    public void invalidSignatureFormat() {
+        givenRequest(a(request()
+                .withBody("{\"level\":68,\"ladderVersion\":2,\"experience\":306801,\"appVersion\":\"0.10.1\",\"name\":\"casid\"}")
+                .withSignature("§%tE")
+        ));
+        whenRequestIsExecuted();
+        thenAuthorizationFails("Request signature is invalid.");
+    }
+
+    @Test
     public void invalidContent() {
         givenRequest(a(request()
                 .withBody("{\"level\":68,\"ladderVersion\":2,\"experience\":306801,\"appVersion\":\"0.10.1\",\"name\":\"casid\"}")

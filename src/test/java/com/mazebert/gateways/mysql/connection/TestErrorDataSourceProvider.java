@@ -11,7 +11,11 @@ public class TestErrorDataSourceProvider implements DataSourceProvider {
     public static final TestErrorDataSourceProvider instance = new TestErrorDataSourceProvider();
 
     @Override
-    public DataSource getDataSource() {
+    public void prepare() {
+    }
+
+    @Override
+    public DataSource get() {
         return new DataSource() {
             @Override
             public Connection getConnection() throws SQLException {
@@ -58,5 +62,9 @@ public class TestErrorDataSourceProvider implements DataSourceProvider {
                 throw new SQLException();
             }
         };
+    }
+
+    @Override
+    public void dispose() {
     }
 }

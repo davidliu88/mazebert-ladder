@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jusecase.UsecaseExecutor;
+import org.jusecase.executors.manual.Factory;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -53,16 +54,24 @@ public class AbstractPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new AbstractPresenter() {};
-        presenter.servletRequest = servletRequest;
-        presenter.uriInfo = uriInfo;
-        presenter.usecaseExecutor = new UsecaseExecutor() {
+        givenPresenter(() -> new UsecaseExecutor() {
             @SuppressWarnings("unchecked")
             public <RequestType, ResponseType> ResponseType execute(RequestType request) {
                 sentRequests.add(request);
                 return (ResponseType) usecaseResponse;
             }
+        });
+    }
+
+    private void givenPresenter(final Factory<UsecaseExecutor> usecaseExecutorFactory) {
+        presenter = new AbstractPresenter() {
+            @Override
+            protected UsecaseExecutor getUsecaseExecutor() {
+                return usecaseExecutorFactory.create();
+            }
         };
+        presenter.servletRequest = servletRequest;
+        presenter.uriInfo = uriInfo;
     }
 
     @Test
@@ -113,11 +122,11 @@ public class AbstractPresenterTest {
 
     @Test
     public void secureRequest_clientSignatureIncorrect_actualRequestIsNotCalled() throws Exception {
-        presenter.usecaseExecutor = new UsecaseExecutor() {
+        givenPresenter(() -> new UsecaseExecutor() {
             public <RequestType, ResponseType> ResponseType execute(RequestType request) {
                 throw new Unauthorized("Invalid client signature.");
             }
-        };
+        });
 
         try {
             whenSecureRequestIsExecuted();

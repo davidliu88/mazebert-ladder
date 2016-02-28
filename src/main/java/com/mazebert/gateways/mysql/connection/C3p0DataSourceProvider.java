@@ -6,8 +6,10 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.flywaydb.core.Flyway;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.sql.DataSource;
 
+@Singleton
 public class C3p0DataSourceProvider implements DataSourceProvider, Provider<DataSource> {
     private final Credentials credentials;
     private ComboPooledDataSource dataSource;
@@ -19,16 +21,18 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
 
     @Override
     public DataSource get() {
-        return getDataSource();
+        return dataSource;
     }
 
-    public synchronized DataSource getDataSource() {
-        if (dataSource == null) {
-            createDataSource();
-            prepareDatabase();
-        }
+    @Override
+    public void prepare() {
+        createDataSource();
+        prepareDatabase();
+    }
 
-        return dataSource;
+    @Override
+    public void dispose() {
+        dataSource.close();
     }
 
     private void createDataSource() {

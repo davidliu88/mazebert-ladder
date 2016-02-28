@@ -14,6 +14,7 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
 
     private TestDataSourceProvider() {
         super(new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert"));
+        prepare();
     }
 
     private static String resolveHost() {
@@ -28,11 +29,9 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
     }
 
     @Override
-    public DataSource getDataSource() {
-        DataSource dataSource = super.getDataSource();
-
+    public DataSource get() {
+        DataSource dataSource = super.get();
         clearAllTables();
-
         return dataSource;
     }
 
@@ -48,9 +47,8 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
     }
 
     private void clearTable(String table) {
-        QueryRunner runner = new QueryRunner(super.getDataSource());
         try {
-            runner.update("TRUNCATE TABLE " + table + ";");
+            new QueryRunner(super.get()).update("TRUNCATE TABLE " + table + ";");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to clear table '" + table + "'", e);
         }

@@ -8,9 +8,9 @@ import org.junit.Before;
 public class MySqlBonusTimeGatewayTest extends BonusTimeGatewayTest {
     @Before
     public void setUp() throws Exception {
-        gateway = new MySqlBonusTimeGateway(TestDataSourceProvider.instance.getDataSource());
-        errorGateway = new MySqlBonusTimeGateway(TestErrorDataSourceProvider.instance.getDataSource());
+        gateway = new MySqlBonusTimeGateway(TestDataSourceProvider.instance.get());
+        errorGateway = new MySqlBonusTimeGateway(TestErrorDataSourceProvider.instance.get());
 
-        playerGateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.getDataSource());
+        playerGateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.get());
     }
 }

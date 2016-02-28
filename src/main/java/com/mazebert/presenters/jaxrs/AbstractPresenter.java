@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 public abstract class AbstractPresenter {
 
-    UsecaseExecutor usecaseExecutor = Logic.instance;
+    private final UsecaseExecutor usecaseExecutor;
 
     private final ObjectMapper objectMapper;
 
@@ -33,8 +33,14 @@ public abstract class AbstractPresenter {
     UriInfo uriInfo;
 
     protected AbstractPresenter() {
+        usecaseExecutor = getUsecaseExecutor();
+
         objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    }
+
+    protected UsecaseExecutor getUsecaseExecutor() {
+        return Logic.instance;
     }
 
     public <Request> Response execute(Request request) {

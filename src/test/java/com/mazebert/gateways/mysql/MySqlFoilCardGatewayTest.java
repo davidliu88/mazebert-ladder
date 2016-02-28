@@ -8,7 +8,7 @@ import org.junit.Before;
 public class MySqlFoilCardGatewayTest extends FoilCardGatewayTest {
     @Before
     public void setUp() throws Exception {
-        gateway = new MySqlFoilCardGateway(TestDataSourceProvider.instance.getDataSource());
-        errorGateway = new MySqlFoilCardGateway(TestErrorDataSourceProvider.instance.getDataSource());
+        gateway = new MySqlFoilCardGateway(TestDataSourceProvider.instance.get());
+        errorGateway = new MySqlFoilCardGateway(TestErrorDataSourceProvider.instance.get());
     }
 }

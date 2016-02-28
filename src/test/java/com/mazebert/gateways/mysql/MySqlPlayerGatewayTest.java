@@ -8,7 +8,7 @@ import org.junit.Before;
 public class MySqlPlayerGatewayTest extends PlayerGatewayTest {
     @Before
     public void setUp() throws Exception {
-        gateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.getDataSource());
-        errorGateway = new MySqlPlayerGateway(TestErrorDataSourceProvider.instance.getDataSource());
+        gateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.get());
+        errorGateway = new MySqlPlayerGateway(TestErrorDataSourceProvider.instance.get());
     }
 }

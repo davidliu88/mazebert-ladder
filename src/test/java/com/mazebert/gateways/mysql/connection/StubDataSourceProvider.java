@@ -9,7 +9,11 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-public class StubDataSourceProvider implements Provider<DataSource> {
+public class StubDataSourceProvider implements Provider<DataSource>, DataSourceProvider {
+    @Override
+    public void prepare() {
+    }
+
     @Override
     public DataSource get() {
         return new DataSource() {
@@ -56,5 +60,9 @@ public class StubDataSourceProvider implements Provider<DataSource> {
                 return false;
             }
         };
+    }
+
+    @Override
+    public void dispose() {
     }
 }
