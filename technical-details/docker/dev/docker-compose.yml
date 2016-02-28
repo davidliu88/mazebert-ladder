@@ -1,10 +1,21 @@
-mazebert-ladder:
-  container_name: mazebert-ladder
+mazebert-ladder-db-dev:
+  container_name: mazebert-ladder-db-dev
+  image: ladder-db:latest
+  environment:
+    - MYSQL_ROOT_PASSWORD=development
+
+mazebert-ladder-dev:
+  container_name: mazebert-ladder-dev
   image: tomcat:8.0.30-jre8
   environment:
     - JPDA_ADDRESS=8000
     - JPDA_TRANSPORT=dt_socket
+    - MAZEBERT_DB_USER=root
+    - MAZEBERT_DB_PASSWORD=development
+    - MAZEBERT_DB_URL=database/ladder_mazebert
   command: catalina.sh jpda run
+  links:
+    - mazebert-ladder-db-dev:database
   ports:
     - "8080:8080"
     - "8000:8000"

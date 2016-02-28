@@ -8,4 +8,4 @@ cd target
 
 echo "Deploying war file."
 
-docker cp mazebert-ladder-0.1.0.war mazebert-ladder:/usr/local/tomcat/webapps/ROOT.war
+docker cp mazebert-ladder-0.1.0.war mazebert-ladder-dev:/usr/local/tomcat/webapps/ROOT.war

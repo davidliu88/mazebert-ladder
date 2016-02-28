@@ -20,6 +20,8 @@
     <patterns>
       <pattern testClass="(.*?)GatewayTest(.*?)" />
     </patterns>
-    <method />
+    <method>
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_RunDb" />
+    </method>
   </configuration>
 </component>
