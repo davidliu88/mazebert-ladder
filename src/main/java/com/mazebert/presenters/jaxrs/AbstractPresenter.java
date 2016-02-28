@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mazebert.Logic;
+import com.mazebert.error.Error;
+import com.mazebert.error.InternalServerError;
+import com.mazebert.presenters.jaxrs.response.ErrorExceptionMapper;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
 import com.mazebert.presenters.jaxrs.response.stream.PlainResponse;
@@ -50,8 +53,16 @@ public abstract class AbstractPresenter {
             verifyRequest();
         }
 
-        Object response = usecaseExecutor.execute(request);
+        try {
+            return createResponse(request, usecaseExecutor.execute(request));
+        } catch (Error error) {
+            return createErrorResponse(request, error);
+        } catch (Throwable throwable) {
+            return createErrorResponse(request, new InternalServerError("Unexpected error: " + throwable.getMessage(), throwable));
+        }
+    }
 
+    private <Request> Response createResponse(Request request, Object response) {
         return Response
                 .status(Response.Status.OK)
                 .entity(createResponseStream(request, response))
@@ -64,6 +75,22 @@ public abstract class AbstractPresenter {
         } else {
             return createUnsignedResponseStream(request, response);
         }
+    }
+
+    private Response createErrorResponse(Object request, Error error) {
+        Response errorResponse = new ErrorExceptionMapper().toResponse(error);
+        return Response
+                .status(error.getStatusCode())
+                .entity(createErrorResponseStream(request, errorResponse))
+                .build();
+    }
+
+    private StreamingOutput createErrorResponseStream(Object request, Response errorResponse) {
+        StreamingOutput output = new PlainResponse(objectMapper.getFactory(), errorResponse.getEntity());
+        if (isSignatureRequired(request)) {
+            output = new SignedResponseStream(usecaseExecutor, output);
+        }
+        return output;
     }
 
     private StreamingOutput createSignedResponseStream(Object request, Object response) {

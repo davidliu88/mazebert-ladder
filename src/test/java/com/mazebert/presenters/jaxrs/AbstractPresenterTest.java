@@ -2,6 +2,7 @@ package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.Logic;
 import com.mazebert.error.Error;
+import com.mazebert.error.InternalServerError;
 import com.mazebert.error.Unauthorized;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
@@ -51,6 +52,7 @@ public class AbstractPresenterTest {
     private Object usecaseRequest;
     private Object usecaseResponse;
     private Response presenterResponse;
+    private RuntimeException error;
 
     @SecureRequest
     private class DummySecureRequest {
@@ -66,7 +68,11 @@ public class AbstractPresenterTest {
                 if (request instanceof SignServerResponse.Request) {
                     return Logic.instance.execute(request);
                 } else {
-                    return (ResponseType) usecaseResponse;
+                    if (error == null) {
+                        return (ResponseType) usecaseResponse;
+                    } else {
+                        throw error;
+                    }
                 }
             }
         });
@@ -200,12 +206,40 @@ public class AbstractPresenterTest {
         thenResponseJsonIs("0d9d8064916fe6b55a0f2659a49ff0230dace940c48e9144e4a81b44828f1bf8{\"status\":\"ok\",\"name\":\"test\"}");
     }
 
+    @Test
+    public void signedError() {
+        givenUsecaseRequest(new DummySignedRequest());
+        givenUsecaseError(new InternalServerError("Test error"));
+        whenRequestIsExecuted();
+        thenResponseJsonIs("99d24219d38911bf77fe4397f2557cb4550eb7b75bcb7c0219cba22174110aca{\"status\":\"error\",\"error\":\"Test error\"}");
+    }
+
+    @Test
+    public void regularError() {
+        givenUsecaseRequest(new DummyRequest());
+        givenUsecaseError(new InternalServerError("Test error"));
+        whenRequestIsExecuted();
+        thenResponseJsonIs("{\"status\":\"error\",\"error\":\"Test error\"}");
+    }
+
+    @Test
+    public void unexpectedError() {
+        givenUsecaseRequest(new DummyRequest());
+        givenUsecaseError(new RuntimeException("Test error"));
+        whenRequestIsExecuted();
+        thenResponseJsonIs("{\"status\":\"error\",\"error\":\"Unexpected error: Test error\"}");
+    }
+
     private void givenUsecaseRequest(Object usecaseRequest) {
         this.usecaseRequest = usecaseRequest;
     }
 
     private void givenUsecaseResponse(Object response) {
         this.usecaseResponse = response;
+    }
+
+    private void givenUsecaseError(RuntimeException error) {
+        this.error = error;
     }
 
     private void whenSecureRequestIsExecuted() {
@@ -246,6 +280,9 @@ public class AbstractPresenterTest {
         }
 
         return outputStream.toString();
+    }
+
+    private static class DummyRequest {
     }
 
     @SecureResponse

@@ -5,9 +5,12 @@ import com.mazebert.error.InternalServerError;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
 
-@Provider
+/**
+ * Currently this is not wired via @Provided annotation.
+ * Due to legacy from original PHP implementation,
+ * errors are mapped directly in @class{com.mazebert.presenters.jaxrs.AbstractPresenter}.
+ */
 public class ErrorExceptionMapper implements ExceptionMapper<Error> {
     @Override
     public Response toResponse(Error error) {
