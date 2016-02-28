@@ -5,7 +5,9 @@ import com.mazebert.error.InternalServerError;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
+@Provider
 public class ErrorExceptionMapper implements ExceptionMapper<Error> {
     @Override
     public Response toResponse(Error error) {
