@@ -6,7 +6,7 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.plugins.random.PlayerKeyGenerator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
-import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -72,7 +72,7 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
         }
     }
 
-    @SecureRequest
+    @VerifyRequest
     @StatusResponse
     public static class Request {
         public String name;

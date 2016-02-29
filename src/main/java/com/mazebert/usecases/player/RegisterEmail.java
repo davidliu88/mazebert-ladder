@@ -8,7 +8,7 @@ import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.validation.EmailValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
-import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -87,7 +87,7 @@ public class RegisterEmail implements Usecase<RegisterEmail.Request, RegisterEma
         return response;
     }
 
-    @SecureRequest
+    @VerifyRequest
     @StatusResponse
     public static class Request {
         public String email;

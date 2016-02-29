@@ -9,8 +9,8 @@ import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayer;
-import com.mazebert.usecases.security.SecureRequest;
-import com.mazebert.usecases.security.SecureResponse;
+import com.mazebert.usecases.security.VerifyRequest;
+import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
 import org.junit.Before;
@@ -54,7 +54,7 @@ public class AbstractPresenterTest {
     private Response presenterResponse;
     private RuntimeException error;
 
-    @SecureRequest
+    @VerifyRequest
     private class DummySecureRequest {
     }
 
@@ -285,7 +285,7 @@ public class AbstractPresenterTest {
     private static class DummyRequest {
     }
 
-    @SecureResponse
+    @SignResponse
     @StatusResponse
     private static class DummySignedRequest {
     }

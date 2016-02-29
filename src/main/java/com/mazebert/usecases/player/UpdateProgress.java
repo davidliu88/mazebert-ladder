@@ -6,7 +6,7 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
-import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -39,7 +39,7 @@ public class UpdateProgress implements Usecase<UpdateProgress.Request, UpdatePro
         return new Response();
     }
 
-    @SecureRequest
+    @VerifyRequest
     @StatusResponse
     public static class Request {
         public String key;

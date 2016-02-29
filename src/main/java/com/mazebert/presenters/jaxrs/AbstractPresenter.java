@@ -12,8 +12,8 @@ import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
 import com.mazebert.presenters.jaxrs.response.stream.PlainResponse;
 import com.mazebert.presenters.jaxrs.response.stream.SignedResponseStream;
 import com.mazebert.presenters.jaxrs.response.stream.WrapStatusAndResponse;
-import com.mazebert.usecases.security.SecureRequest;
-import com.mazebert.usecases.security.SecureResponse;
+import com.mazebert.usecases.security.SignResponse;
+import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.security.VerifyGameRequest;
 import org.jusecase.UsecaseExecutor;
 
@@ -114,11 +114,11 @@ public abstract class AbstractPresenter {
     }
 
     private boolean isSignatureRequired(Object request) {
-        return request.getClass().isAnnotationPresent(SecureResponse.class);
+        return request.getClass().isAnnotationPresent(SignResponse.class);
     }
 
     private boolean isVerificationRequired(Object request) {
-        return request.getClass().isAnnotationPresent(SecureRequest.class);
+        return request.getClass().isAnnotationPresent(VerifyRequest.class);
     }
 
     private void verifyRequest() {

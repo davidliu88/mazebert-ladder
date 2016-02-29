@@ -6,7 +6,7 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
-import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -52,7 +52,7 @@ public class ForgotSavecode implements Usecase<ForgotSavecode.Request, ForgotSav
         }
     }
 
-    @SecureRequest
+    @VerifyRequest
     @StatusResponse
     public static class Request {
         public String email;

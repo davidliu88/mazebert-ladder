@@ -11,8 +11,8 @@ import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
-import com.mazebert.usecases.security.SecureRequest;
-import com.mazebert.usecases.security.SecureResponse;
+import com.mazebert.usecases.security.VerifyRequest;
+import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
 import org.junit.Test;
@@ -102,12 +102,12 @@ public class LogicTest extends UsecaseExecutorTest {
 
     private void thenRequestIsVerified(Class<? extends Usecase> usecaseClass) {
         Class<?> requestClass = requestResolver.getRequestClass(usecaseClass);
-        assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @SecureRequest", requestClass.isAnnotationPresent(SecureRequest.class));
+        assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @VerifyRequest", requestClass.isAnnotationPresent(VerifyRequest.class));
     }
 
     private void thenResponseIsSigned(Class<? extends Usecase> usecaseClass) {
         Class<?> requestClass = requestResolver.getRequestClass(usecaseClass);
-        assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @SecureResponse", requestClass.isAnnotationPresent(SecureResponse.class));
+        assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @SignResponse", requestClass.isAnnotationPresent(SignResponse.class));
     }
 
     private static class ThrowingUsecase implements Usecase<ThrowingUsecase.Request, Void> {

@@ -9,7 +9,7 @@ import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeZoneParser;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
-import com.mazebert.usecases.security.SecureResponse;
+import com.mazebert.usecases.security.SignResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -154,7 +154,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     }
 
     @StatusResponse(field = "player")
-    @SecureResponse
+    @SignResponse
     public static class Request {
         public String key;
         public String appVersion;

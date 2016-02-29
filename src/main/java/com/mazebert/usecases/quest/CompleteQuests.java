@@ -8,7 +8,7 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
-import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -113,7 +113,7 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
         }
     }
 
-    @SecureRequest
+    @VerifyRequest
     @StatusResponse
     public static class Request {
         public String appVersion;
