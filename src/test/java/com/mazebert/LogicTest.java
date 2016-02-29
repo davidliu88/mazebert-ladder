@@ -12,6 +12,7 @@ import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
 import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.SecureResponse;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
 import org.junit.Test;
@@ -50,14 +51,20 @@ public class LogicTest extends UsecaseExecutorTest {
     }
 
     @Test
-    public void secureUsecases() {
-        thenUsecaseIsSecured(CreateAccount.class);
-        thenUsecaseIsSecured(UpdateProgress.class);
-        thenUsecaseIsSecured(ForgotSavecode.class);
-        thenUsecaseIsSecured(RegisterEmail.class);
-        thenUsecaseIsSecured(UpdateBonusTime.class);
-        thenUsecaseIsSecured(CompleteQuests.class);
-        thenUsecaseIsSecured(ReplaceQuest.class);
+    public void verifiedRequests() {
+        thenRequestIsVerified(CreateAccount.class);
+        thenRequestIsVerified(UpdateProgress.class);
+        thenRequestIsVerified(ForgotSavecode.class);
+        thenRequestIsVerified(RegisterEmail.class);
+        thenRequestIsVerified(UpdateBonusTime.class);
+        thenRequestIsVerified(CompleteQuests.class);
+        thenRequestIsVerified(ReplaceQuest.class);
+    }
+
+    @Test
+    public void signedResponses() {
+        thenResponseIsSigned(SynchronizePlayer.class);
+        thenResponseIsSigned(ReplaceQuest.class);
     }
 
     @Test
@@ -93,9 +100,14 @@ public class LogicTest extends UsecaseExecutorTest {
         return (Logic)executor;
     }
 
-    private void thenUsecaseIsSecured(Class<? extends Usecase> usecaseClass) {
+    private void thenRequestIsVerified(Class<? extends Usecase> usecaseClass) {
         Class<?> requestClass = requestResolver.getRequestClass(usecaseClass);
         assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @SecureRequest", requestClass.isAnnotationPresent(SecureRequest.class));
+    }
+
+    private void thenResponseIsSigned(Class<? extends Usecase> usecaseClass) {
+        Class<?> requestClass = requestResolver.getRequestClass(usecaseClass);
+        assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @SecureResponse", requestClass.isAnnotationPresent(SecureResponse.class));
     }
 
     private static class ThrowingUsecase implements Usecase<ThrowingUsecase.Request, Void> {

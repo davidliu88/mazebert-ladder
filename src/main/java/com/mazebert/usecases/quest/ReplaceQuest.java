@@ -15,6 +15,7 @@ import com.mazebert.plugins.time.TimeZoneParser;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SecureRequest;
+import com.mazebert.usecases.security.SecureResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -69,6 +70,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
 
     @SecureRequest
     @StatusResponse(field = "quest")
+    @SecureResponse
     public static class Request {
         public String appVersion;
         public String key;
