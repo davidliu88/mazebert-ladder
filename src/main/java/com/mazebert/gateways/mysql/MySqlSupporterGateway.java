@@ -5,11 +5,14 @@ import com.mazebert.gateways.SupporterGateway;
 import com.mazebert.gateways.error.GatewayError;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
 public class MySqlSupporterGateway extends MySqlGateway implements SupporterGateway {
+
+    @Inject
     public MySqlSupporterGateway(DataSource dataSource) {
         super(dataSource);
     }

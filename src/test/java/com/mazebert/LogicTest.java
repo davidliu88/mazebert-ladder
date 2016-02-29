@@ -15,6 +15,7 @@ import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
+import com.mazebert.usecases.supporters.GetSupporters;
 import org.junit.Test;
 import org.jusecase.Usecase;
 import org.jusecase.UsecaseExecutorTest;
@@ -48,6 +49,8 @@ public class LogicTest extends UsecaseExecutorTest {
 
         thenUsecaseCanBeExecuted(CompleteQuests.class);
         thenUsecaseCanBeExecuted(ReplaceQuest.class);
+
+        thenUsecaseCanBeExecuted(GetSupporters.class);
     }
 
     @Test

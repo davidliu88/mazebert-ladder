@@ -26,6 +26,7 @@ import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
+import com.mazebert.usecases.supporters.GetSupporters;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 import javax.sql.DataSource;
@@ -68,6 +69,7 @@ public class Logic extends GuiceUsecaseExecutor {
             bind(CardGateway.class).to(MySqlCardGateway.class);
             bind(VersionInfoGateway.class).to(MySqlVersionInfoGateway.class);
             bind(BonusTimeGateway.class).to(MySqlBonusTimeGateway.class);
+            bind(SupporterGateway.class).to(MySqlSupporterGateway.class);
         }
     }
 
@@ -93,6 +95,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addPlayerUsecases();
         addBonusTimeUsecases();
         addQuestUsecases();
+        addSupporterUsecases();
     }
 
     private void addSystemUsecases() {
@@ -120,6 +123,10 @@ public class Logic extends GuiceUsecaseExecutor {
     private void addQuestUsecases() {
         addUsecase(CompleteQuests.class);
         addUsecase(ReplaceQuest.class);
+    }
+
+    private void addSupporterUsecases() {
+        addUsecase(GetSupporters.class);
     }
 
     @Override
