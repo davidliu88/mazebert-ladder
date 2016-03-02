@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.date;
+import static org.jusecase.Builders.list;
 
 public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
     private Player player = a(player().casid());
@@ -160,6 +161,29 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
     public void addCompletedHiddenQuestId_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.addCompletedHiddenQuestId(player.getId(), 10));
         thenGatewayErrorIs("Failed to add a completed hidden quest to player.");
+    }
+
+    @Test
+    public void findQuestsByIds_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findQuestsByIds(a(list())));
+        thenGatewayErrorIs("Failed to find quests by ids in database.");
+    }
+
+    @Test
+    public void findQuestsByIds_propertiesAreMappedCorrectly() {
+        List<Quest> quests = gateway.findQuestsByIds(a(list(1L, 2L, 3L)));
+
+        assertEquals(3, quests.size());
+        assertEquals(1L, quests.get(0).getId());
+        assertEquals(2L, quests.get(1).getId());
+        assertEquals(3L, quests.get(2).getId());
+
+        Quest quest = quests.get(0);
+        assertEquals(7, quest.getRequiredAmount());
+        assertEquals(40, quest.getReward());
+        assertEquals(false, quest.isHidden());
+        assertEquals("1.0.0", quest.getSinceVersion());
+
     }
 
     private Quest findQuestWithId(long id, List<Quest> quests) {

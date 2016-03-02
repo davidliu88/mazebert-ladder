@@ -1,6 +1,7 @@
 package com.mazebert.gateways.mysql;
 
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Longs;
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.gateways.QuestGateway;
@@ -68,8 +69,13 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
 
     @Override
     public List<Quest> findQuestsByIds(List<Long> questIds) {
-        // TODO implement me!
-        return null;
+        try {
+            String sequence = Longs.join(",", Longs.toArray(questIds));
+            return getQueryRunner().query("SELECT id, reward, isHidden, sinceVersion, requiredAmount FROM Quest WHERE id IN(" + sequence + ");",
+                    new BeanListHandler<>(Quest.class));
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to find quests by ids in database.", e);
+        }
     }
 
     @Override
