@@ -42,6 +42,9 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
             dataSource.setJdbcUrl("jdbc:mysql://" + credentials.getUrl());
             dataSource.setUser(credentials.getUser());
             dataSource.setPassword(credentials.getPassword());
+            dataSource.setMinPoolSize(3);
+            dataSource.setMaxPoolSize(30);
+            dataSource.setAcquireIncrement(1);
         } catch (Throwable e) {
             throw new InternalServerError("Database connection pool could not be initialized", e);
         }
