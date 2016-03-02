@@ -168,6 +168,19 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals("anonymous@mazebert.com", updated.getEmail());
     }
 
+    @Test
+    public void getRelics_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.getRelics(1L));
+        thenGatewayErrorIs("Failed to get player relics from database");
+    }
+
+    @Test
+    public void getRelics_correctValueIsReturned() {
+        Player existing = gateway.addPlayer(a(player().casid()));
+        int relics = gateway.getRelics(existing.getId());
+        assertEquals(existing.getRelics(), relics);
+    }
+
     private void thenPlayerIsEqualTo(Player expected, Player actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());

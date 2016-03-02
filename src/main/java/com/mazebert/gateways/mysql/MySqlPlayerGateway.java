@@ -99,8 +99,13 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
 
     @Override
     public int getRelics(long playerId) {
-        // TODO implement me!
-        return 0;
+        try {
+            return getQueryRunner().query("SELECT relics FROM Player WHERE id=?",
+                    new ScalarHandler<>(),
+                    playerId);
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to get player relics from database", e);
+        }
     }
 
     @Override
