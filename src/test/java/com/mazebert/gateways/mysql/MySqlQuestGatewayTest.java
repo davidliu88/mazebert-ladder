@@ -10,5 +10,7 @@ public class MySqlQuestGatewayTest extends QuestGatewayTest {
     public void setUp() throws Exception {
         gateway = new MySqlQuestGateway(TestDataSourceProvider.instance.get());
         errorGateway = new MySqlQuestGateway(TestErrorDataSourceProvider.instance.get());
+
+        playerGateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.get());
     }
 }

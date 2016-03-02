@@ -16,6 +16,8 @@ import static org.jusecase.Builders.date;
 import static org.jusecase.Builders.list;
 
 public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
+    protected PlayerGateway playerGateway;
+
     private Player player = a(player().casid());
 
     @Test
@@ -205,14 +207,52 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
     public void removeDailyQuest_questIsRemoved() {
         gateway.addDailyQuest(player, a(quest().withId(4)), new Date());
         gateway.addDailyQuest(player, a(quest().withId(10)), new Date());
-        gateway.addDailyQuest(player, a(quest().withId(12)), new Date());
 
         gateway.removeDailyQuest(player, 10L);
 
         List<Quest> quests = gateway.findDailyQuests(player.getId());
-        assertEquals(2, quests.size());
+        assertEquals(1, quests.size());
         assertEquals(4, quests.get(0).getId());
-        assertEquals(12, quests.get(1).getId());
+    }
+
+    @Test
+    public void replaceDailyQuest_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.replaceDailyQuest(player.getId(), 1L, 2L, a(date())));
+        thenGatewayErrorIs("Failed to replace daily quest in database.");
+    }
+
+    @Test
+    public void replaceDailyQuest_questIsReplaced() {
+        gateway.addDailyQuest(player, a(quest().withId(4)), new Date());
+        gateway.addDailyQuest(player, a(quest().withId(10)), new Date());
+
+        gateway.replaceDailyQuest(player.getId(), 4L, 5L, a(date()));
+
+        List<Quest> quests = gateway.findDailyQuests(player.getId());
+        assertEquals(2, quests.size());
+        assertEquals(5L, quests.get(0).getId());
+    }
+
+    @Test
+    public void replaceDailyQuest_lastQuestCreationForPlayerIsUpdated() {
+        playerGateway.addPlayer(player);
+        gateway.addDailyQuest(player, a(quest().withId(4)), a(date()));
+
+        gateway.replaceDailyQuest(player.getId(), 4L, 5L, a(date().with("2015-10-10 10:15:22")));
+
+        thenLastQuestCreationForPlayerIs(a(date().with("2015-10-10 10:15:22")));
+    }
+
+    @Test
+    public void addDailyQuest_lastQuestCreationForPlayerIsUpdated() {
+        playerGateway.addPlayer(player);
+        gateway.addDailyQuest(player, a(quest().withId(4)), a(date().with("2015-10-10 10:15:22")));
+        thenLastQuestCreationForPlayerIs(a(date().with("2015-10-10 10:15:22")));
+    }
+
+    private void thenLastQuestCreationForPlayerIs(Date expected) {
+        Player p = playerGateway.findPlayerByKey(player.getKey());
+        assertEquals(expected, p.getLastQuestCreation());
     }
 
     private Quest findQuestWithId(long id, List<Quest> quests) {
