@@ -93,7 +93,13 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
 
     @Override
     public void removeDailyQuest(Player player, long questId) {
-        // TODO implement me!
+        try {
+            getQueryRunner().update("DELETE FROM PlayerDailyQuest WHERE playerId=? AND questId=?;",
+                    player.getId(),
+                    questId);
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to remove daily quest in database.", e);
+        }
     }
 
     @Override

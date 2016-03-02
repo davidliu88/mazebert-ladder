@@ -183,7 +183,36 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
         assertEquals(40, quest.getReward());
         assertEquals(false, quest.isHidden());
         assertEquals("1.0.0", quest.getSinceVersion());
+    }
 
+    @Test
+    public void removeDailyQuest_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.removeDailyQuest(player, 1L));
+        thenGatewayErrorIs("Failed to remove daily quest in database.");
+    }
+
+    @Test
+    public void removeDailyQuest_questDoesNotExist() {
+        gateway.addDailyQuest(player, a(quest().withId(4)), new Date());
+
+        gateway.removeDailyQuest(player, 10L);
+
+        List<Quest> quests = gateway.findDailyQuests(player.getId());
+        assertEquals(1, quests.size());
+    }
+
+    @Test
+    public void removeDailyQuest_questIsRemoved() {
+        gateway.addDailyQuest(player, a(quest().withId(4)), new Date());
+        gateway.addDailyQuest(player, a(quest().withId(10)), new Date());
+        gateway.addDailyQuest(player, a(quest().withId(12)), new Date());
+
+        gateway.removeDailyQuest(player, 10L);
+
+        List<Quest> quests = gateway.findDailyQuests(player.getId());
+        assertEquals(2, quests.size());
+        assertEquals(4, quests.get(0).getId());
+        assertEquals(12, quests.get(1).getId());
     }
 
     private Quest findQuestWithId(long id, List<Quest> quests) {
