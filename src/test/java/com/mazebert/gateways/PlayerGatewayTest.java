@@ -181,6 +181,26 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals(existing.getRelics(), relics);
     }
 
+    @Test
+    public void addRelics_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.addRelics(1L, 100));
+        thenGatewayErrorIs("Failed to add player relics to database");
+    }
+
+    @Test
+    public void addRelics_positiveAmount() {
+        Player existing = gateway.addPlayer(a(player().casid().withRelics(200)));
+        gateway.addRelics(existing.getId(), 40);
+        assertEquals(240, gateway.getRelics(existing.getId()));
+    }
+
+    @Test
+    public void addRelics_negativeAmount() {
+        Player existing = gateway.addPlayer(a(player().casid().withRelics(200)));
+        gateway.addRelics(existing.getId(), -100);
+        assertEquals(100, gateway.getRelics(existing.getId()));
+    }
+
     private void thenPlayerIsEqualTo(Player expected, Player actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());

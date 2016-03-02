@@ -85,7 +85,7 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
 
     public void updatePlayer(Player player) {
         try {
-            getQueryRunner().update("UPDATE Player SET level=?, experience=?, lastUpdate=?, email=? WHERE id=?",
+            getQueryRunner().update("UPDATE Player SET level=?, experience=?, lastUpdate=?, email=? WHERE id=?;",
                     player.getLevel(),
                     player.getExperience(),
                     player.getLastUpdate(),
@@ -100,7 +100,7 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
     @Override
     public int getRelics(long playerId) {
         try {
-            return getQueryRunner().query("SELECT relics FROM Player WHERE id=?",
+            return getQueryRunner().query("SELECT relics FROM Player WHERE id=?;",
                     new ScalarHandler<>(),
                     playerId);
         } catch (SQLException e) {
@@ -110,6 +110,12 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
 
     @Override
     public void addRelics(long playerId, int relics) {
-        // TODO implement me!
+        try {
+            getQueryRunner().update("UPDATE Player SET relics=relics+? WHERE id=?;",
+                    relics,
+                    playerId);
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to add player relics to database", e);
+        }
     }
 }
