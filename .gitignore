@@ -96,3 +96,4 @@ $RECYCLE.BIN/
 
 ### Project specific ###
 src/test/resources/integrationtest-database.properties
+src/test/resources/integrationtest-mail.properties

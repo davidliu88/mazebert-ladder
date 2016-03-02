@@ -11,8 +11,8 @@ import com.mazebert.gateways.mysql.connection.C3p0DataSourceProvider;
 import com.mazebert.gateways.mysql.connection.Credentials;
 import com.mazebert.gateways.mysql.connection.CredentialsProvider;
 import com.mazebert.gateways.mysql.connection.DataSourceProvider;
-import com.mazebert.plugins.message.EmailMessageFakePlugin;
 import com.mazebert.plugins.message.EmailMessagePlugin;
+import com.mazebert.plugins.message.MazebertMailMessagePluginProvider;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.plugins.security.GameContentVerifier;
@@ -77,7 +77,7 @@ public class Logic extends GuiceUsecaseExecutor {
         @Override
         protected void configure() {
             bind(RandomNumberGenerator.class).to(SecureRandomNumberGenerator.class);
-            bind(EmailMessagePlugin.class).to(EmailMessageFakePlugin.class);
+            bind(EmailMessagePlugin.class).toProvider(MazebertMailMessagePluginProvider.class).asEagerSingleton();
             bind(GameContentVerifier.class).asEagerSingleton();
             bind(ServerContentSigner.class).asEagerSingleton();
         }
@@ -136,5 +136,9 @@ public class Logic extends GuiceUsecaseExecutor {
         } catch (GatewayError gatewayError) {
             throw new InternalServerError(gatewayError.getMessage(), gatewayError.getCause());
         }
+    }
+
+    <T> T getInstance(Class<T> clazz) {
+        return getInjector().getInstance(clazz);
     }
 }

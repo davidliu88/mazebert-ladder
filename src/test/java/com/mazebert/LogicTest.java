@@ -4,6 +4,9 @@ import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.connection.StubDataSourceProvider;
+import com.mazebert.plugins.message.EmailMessagePlugin;
+import com.mazebert.plugins.security.GameContentVerifier;
+import com.mazebert.plugins.security.ServerContentSigner;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
@@ -71,6 +74,14 @@ public class LogicTest extends UsecaseExecutorTest {
     }
 
     @Test
+    public void singletons() {
+        givenTestLogic();
+        thenOnlyOneInstanceExists(GameContentVerifier.class);
+        thenOnlyOneInstanceExists(ServerContentSigner.class);
+        thenOnlyOneInstanceExists(EmailMessagePlugin.class);
+    }
+
+    @Test
     public void gatewayErrorInUsecase() {
         givenTestLogic();
         logic().addUsecase(ThrowingUsecase.class);
@@ -111,6 +122,10 @@ public class LogicTest extends UsecaseExecutorTest {
     private void thenResponseIsSigned(Class<? extends Usecase> usecaseClass) {
         Class<?> requestClass = requestResolver.getRequestClass(usecaseClass);
         assertTrue("Request for " + usecaseClass.getName() + " needs to be annotated with @SignResponse", requestClass.isAnnotationPresent(SignResponse.class));
+    }
+
+    private void thenOnlyOneInstanceExists(Class<?> clazz) {
+        assertSame(logic().getInstance(clazz), logic().getInstance(clazz));
     }
 
     private static class ThrowingUsecase implements Usecase<ThrowingUsecase.Request, Void> {
