@@ -45,7 +45,7 @@ public abstract class AbstractPresenter {
     }
 
     protected UsecaseExecutor getUsecaseExecutor() {
-        return Logic.instance;
+        return Logic.getInstance();
     }
 
     public <Request> Response execute(Request request) {

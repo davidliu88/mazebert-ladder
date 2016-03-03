@@ -8,11 +8,11 @@ import javax.servlet.ServletContextListener;
 public class WebApplicationLifecycle implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        Logic.instance.start();
+        Logic.getInstance().start();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        Logic.instance.shutdown();
+        Logic.getInstance().shutdown();
     }
 }

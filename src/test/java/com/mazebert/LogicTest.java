@@ -7,6 +7,8 @@ import com.mazebert.gateways.mysql.connection.StubDataSourceProvider;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.plugins.security.ServerContentSigner;
+import com.mazebert.plugins.system.SettingsPlugin;
+import com.mazebert.plugins.system.mocks.EnvironmentPluginStub;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
@@ -14,10 +16,10 @@ import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
 import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
-import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.supporters.GetSupporters;
 import org.junit.Test;
 import org.jusecase.Usecase;
@@ -29,6 +31,15 @@ import static org.junit.Assert.*;
 
 public class LogicTest extends UsecaseExecutorTest {
     private Error error;
+
+    private static Logic testLogic;
+
+    public static Logic getTestLogic() {
+        if (testLogic == null) {
+            testLogic = new Logic(StubDataSourceProvider.class, EnvironmentPluginStub.class);
+        }
+        return testLogic;
+    }
 
     @Test
     public void usecasesCanBeExecuted() {
@@ -76,6 +87,7 @@ public class LogicTest extends UsecaseExecutorTest {
     @Test
     public void singletons() {
         givenTestLogic();
+        thenOnlyOneInstanceExists(SettingsPlugin.class);
         thenOnlyOneInstanceExists(GameContentVerifier.class);
         thenOnlyOneInstanceExists(ServerContentSigner.class);
         thenOnlyOneInstanceExists(EmailMessagePlugin.class);
@@ -107,7 +119,7 @@ public class LogicTest extends UsecaseExecutorTest {
     }
 
     private void givenTestLogic() {
-        givenExecutor(new Logic(StubDataSourceProvider.class));
+        givenExecutor(getTestLogic());
     }
 
     private Logic logic() {

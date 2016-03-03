@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mazebert.error.InternalServerError;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class JsonSettingsPlugin extends AbstractSettingsPlugin {
 
     private static final String ENVIRONMENT_VARIABLE = "MAZEBERT_SETTINGS_FILE";
 
+    @Inject
     public JsonSettingsPlugin(EnvironmentPlugin environmentPlugin) {
         this.environmentPlugin = environmentPlugin;
         this.properties = loadProperties();

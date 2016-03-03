@@ -17,6 +17,10 @@ import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.random.SecureRandomNumberGenerator;
 import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.plugins.security.ServerContentSigner;
+import com.mazebert.plugins.system.EnvironmentPlugin;
+import com.mazebert.plugins.system.JsonSettingsPlugin;
+import com.mazebert.plugins.system.SettingsPlugin;
+import com.mazebert.plugins.system.SystemEnvironmentPlugin;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
@@ -32,8 +36,14 @@ import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 import javax.sql.DataSource;
 
 public class Logic extends GuiceUsecaseExecutor {
-    public static final Logic instance = new Logic(C3p0DataSourceProvider.class);
+    private static class LogicHolder {
+        public static Logic instance = new Logic(C3p0DataSourceProvider.class, SystemEnvironmentPlugin.class);
+    }
     private final Class<? extends DataSourceProvider> dataSourceProvider;
+
+    public static Logic getInstance() {
+        return LogicHolder.instance;
+    }
 
     public void start() {
         getDataSourceProvider().prepare();
@@ -74,8 +84,16 @@ public class Logic extends GuiceUsecaseExecutor {
     }
 
     private static class PluginModule extends AbstractModule {
+        private final Class<? extends EnvironmentPlugin> environmentPlugin;
+
+        public PluginModule(Class<? extends EnvironmentPlugin> environmentPlugin) {
+            this.environmentPlugin = environmentPlugin;
+        }
+
         @Override
         protected void configure() {
+            bind(EnvironmentPlugin.class).to(environmentPlugin).asEagerSingleton();
+            bind(SettingsPlugin.class).to(JsonSettingsPlugin.class).asEagerSingleton();
             bind(RandomNumberGenerator.class).to(SecureRandomNumberGenerator.class);
             bind(EmailMessagePlugin.class).toProvider(MazebertMailMessagePluginProvider.class).asEagerSingleton();
             bind(GameContentVerifier.class).asEagerSingleton();
@@ -83,10 +101,10 @@ public class Logic extends GuiceUsecaseExecutor {
         }
     }
 
-    public <T extends Provider<DataSource> & DataSourceProvider> Logic(Class<T> dataSourceProvider) {
+    public <T extends Provider<DataSource> & DataSourceProvider> Logic(Class<T> dataSourceProvider, Class<? extends EnvironmentPlugin> environmentPlugin) {
         super(Guice.createInjector(
                 new GatewayModule(dataSourceProvider),
-                new PluginModule()
+                new PluginModule(environmentPlugin)
         ));
 
         this.dataSourceProvider = dataSourceProvider;

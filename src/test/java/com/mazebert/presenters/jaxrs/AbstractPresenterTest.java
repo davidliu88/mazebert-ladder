@@ -1,6 +1,6 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.Logic;
+import com.mazebert.LogicTest;
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.error.Unauthorized;
@@ -9,10 +9,10 @@ import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayer;
-import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +66,7 @@ public class AbstractPresenterTest {
                 sentRequests.add(request);
 
                 if (request instanceof SignServerResponse.Request) {
-                    return Logic.instance.execute(request);
+                    return LogicTest.getTestLogic().execute(request);
                 } else {
                     if (error == null) {
                         return (ResponseType) usecaseResponse;

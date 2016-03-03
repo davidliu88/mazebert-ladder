@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-public class EnvironmentPluginTest {
-    private EnvironmentPlugin plugin = new EnvironmentPlugin();
+public class SystemEnvironmentPluginTest {
+    private EnvironmentPlugin plugin = new SystemEnvironmentPlugin();
 
     @Test
     public void sanityCheck() {
