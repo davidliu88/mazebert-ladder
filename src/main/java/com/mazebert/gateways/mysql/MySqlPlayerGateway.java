@@ -46,6 +46,12 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
         }
     }
 
+    @Override
+    public Player findPlayerById(long id) {
+        // TODO implement me!
+        return null;
+    }
+
     public Player findPlayerByKey(String key) {
         try {
             return getQueryRunner().query(FIND_PLAYER + " WHERE savekey=?;",

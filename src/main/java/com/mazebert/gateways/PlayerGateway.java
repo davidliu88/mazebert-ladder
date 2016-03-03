@@ -5,6 +5,7 @@ import com.mazebert.entities.Player;
 public interface PlayerGateway {
     Player addPlayer(Player player);
 
+    Player findPlayerById(long id);
     Player findPlayerByKey(String key);
     Player findPlayerByEmail(String email);
 

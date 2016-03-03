@@ -26,6 +26,11 @@ public class PlayerGatewayMock implements PlayerGateway {
         return player;
     }
 
+    @Override
+    public Player findPlayerById(long id) {
+        return playerById.get(id);
+    }
+
     public Player findPlayerByKey(String key) {
         return playerByKey.get(key);
     }
