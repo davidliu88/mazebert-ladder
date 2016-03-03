@@ -1,7 +1,8 @@
 package com.mazebert.plugins.message;
 
 import com.google.inject.Provider;
-import com.mazebert.plugins.system.mocks.EnvironmentPluginMock;
+import com.mazebert.plugins.system.SettingsPlugin;
+import com.mazebert.plugins.system.mocks.SettingsPluginMock;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,9 +32,9 @@ public class EmailMessagePluginTest {
     }
 
     private EmailMessagePlugin createPlugin() throws IOException {
-        EnvironmentPluginMock environmentPlugin = new EnvironmentPluginMock();
-        environmentPlugin.givenEnvironmentVariableExists("MAZEBERT_EMAIL_PASSWORD", getTestPassword());
-        Provider<EmailMessagePlugin> provider = new MazebertMailMessagePluginProvider(environmentPlugin);
+        SettingsPluginMock settings = new SettingsPluginMock();
+        settings.givenPropertyExists(SettingsPlugin.EMAIL_PASSWORD, getTestPassword());
+        Provider<EmailMessagePlugin> provider = new MazebertMailMessagePluginProvider(settings);
         return provider.get();
     }
 

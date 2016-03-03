@@ -1,14 +1,14 @@
 package com.mazebert.plugins.message;
 
-import com.mazebert.plugins.system.EnvironmentPlugin;
+import com.mazebert.plugins.system.SettingsPlugin;
 
 import javax.inject.Inject;
 
 public class MazebertMailMessagePluginProvider extends JavaMailSmtpMessagePluginProvider {
     @Inject
-    public MazebertMailMessagePluginProvider(EnvironmentPlugin environmentPlugin) {
+    public MazebertMailMessagePluginProvider(SettingsPlugin settings) {
         super("mail.your-server.de", 587,
-                "postmaster@mazebert.com", environmentPlugin.getEnvironmentVariable("MAZEBERT_EMAIL_PASSWORD"),
+                "postmaster@mazebert.com", settings.getRequiredProperty(SettingsPlugin.EMAIL_PASSWORD),
                 "postmaster@mazebert.com", "Mazebert TD");
     }
 }
