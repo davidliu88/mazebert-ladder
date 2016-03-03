@@ -1,0 +1,5 @@
+{
+  "DB_URL": "localhost/db",
+  "DB_USER": "user",
+  "DB_PASSWORD": "password"
+}
