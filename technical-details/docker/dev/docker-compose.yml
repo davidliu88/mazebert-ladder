@@ -10,9 +10,7 @@ mazebert-ladder-dev:
   environment:
     - JPDA_ADDRESS=8000
     - JPDA_TRANSPORT=dt_socket
-    - MAZEBERT_DB_USER=root
-    - MAZEBERT_DB_PASSWORD=development
-    - MAZEBERT_DB_URL=database/ladder_mazebert
+    - MAZEBERT_SETTINGS_FILE=/opt/mazebert/settings.json
   command: catalina.sh jpda run
   links:
     - mazebert-ladder-db-dev:database
