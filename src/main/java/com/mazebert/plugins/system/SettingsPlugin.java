@@ -5,6 +5,8 @@ public interface SettingsPlugin {
     String DB_PASSWORD = "DB_PASSWORD";
     String DB_URL = "DB_URL";
     String EMAIL_PASSWORD = "EMAIL_PASSWORD";
+    String PRIVATE_KEY = "PRIVATE_KEY";
+    String PRIVATE_KEY_PASSPHRASE = "PRIVATE_KEY_PASSPHRASE";
 
     String getProperty(String id);
     String getRequiredProperty(String id);

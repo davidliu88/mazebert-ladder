@@ -2,5 +2,7 @@
   "DB_URL": "localhost/db",
   "DB_USER": "user",
   "DB_PASSWORD": "password",
-  "EMAIL_PASSWORD": "password"
+  "EMAIL_PASSWORD": "password",
+  "PRIVATE_KEY": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: DES-EDE3-CBC,76244C066BE5CCE1\n\nfTXJn4rTsk57AxPyQg3QwI22LhX+pfcULBfG7E5OFuwglFu8VfjW53LEMUAvjvWh\nX22EtZ7gpwfo2VjHaKSJlINI59oH7mbd5AQHBVZVGYBmHQ0yD2rUqg7JdI08sMpg\nvfxUPnCVD0FCD+nmzN+beW2U+cCrQ/zDO53+Ncyvte4Ejb4pCl1rHxecFEH0nZK1\nrmoB0a7cvRQmfzUIJIk+GjYF6bjxv4HrT6ixHCzYwo0=\n-----END RSA PRIVATE KEY-----",
+  "PRIVATE_KEY_PASSPHRASE": "development"
 }
