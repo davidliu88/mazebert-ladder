@@ -1,5 +1,6 @@
 package com.mazebert.builders;
 
+import com.mazebert.entities.CardRarity;
 import com.mazebert.entities.Item;
 
 public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
@@ -13,6 +14,7 @@ public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
                 .blackMarketCard()
                 .withId(58)
                 .withName("The Dude")
+                .withRarity(CardRarity.LEGENDARY)
                 .withSinceVersion("1.2");
     }
 
@@ -21,6 +23,7 @@ public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
                 .blackMarketCard()
                 .withId(63)
                 .withName("Mjoelnir")
+                .withRarity(CardRarity.LEGENDARY)
                 .withSinceVersion("1.3");
     }
 
@@ -29,6 +32,7 @@ public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
                 .normalCard()
                 .withId(4)
                 .withName("Baby Sword")
+                .withRarity(CardRarity.COMMON)
                 .withSinceVersion("0.2");
     }
 
@@ -37,6 +41,7 @@ public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
                 .normalCard()
                 .withId(29)
                 .withName("Scepter of Time")
+                .withRarity(CardRarity.UNIQUE)
                 .withSinceVersion("0.8");
     }
 }

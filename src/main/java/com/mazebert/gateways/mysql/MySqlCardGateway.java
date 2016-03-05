@@ -34,20 +34,17 @@ public class MySqlCardGateway extends MySqlGateway implements CardGateway {
 
     @Override
     public List<Hero> findAllHeroes() {
-        // TODO implement me!
-        return null;
+        return findAll(CardType.HERO);
     }
 
     @Override
     public List<Item> findAllItems() {
-        // TODO implement me!
-        return null;
+        return findAll(CardType.ITEM);
     }
 
     @Override
     public List<Potion> findAllPotions() {
-        // TODO implement me!
-        return null;
+        return findAll(CardType.POTION);
     }
 
     @Override
@@ -61,7 +58,7 @@ public class MySqlCardGateway extends MySqlGateway implements CardGateway {
             return getQueryRunner().query(FIND_CARD_QUERY + getTableName(cardType),
                     new BeanListHandler<>((Class<T>)getCardClass(cardType)));
         } catch (SQLException e) {
-            throw new GatewayError("Failed to find all cards in table 'TOWER'.", e);
+            throw new GatewayError("Failed to find all cards in table '" + getTableName(cardType) + "'.", e);
         }
     }
 

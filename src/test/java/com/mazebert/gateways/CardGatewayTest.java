@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.mazebert.builders.BuilderFactory.tower;
+import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -84,12 +84,27 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
     @Test
     public void findAllTowers_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.findAllTowers());
-        thenGatewayErrorIs("Failed to find all cards in table 'TOWER'.");
+        thenGatewayErrorIs("Failed to find all cards in table 'Tower'.");
     }
 
     @Test
     public void findAllTowers() {
         thenPropertiesAreMappedCorrectly(a(tower().herbWitch()), gateway.findAllTowers());
+    }
+
+    @Test
+    public void findAllHeroes() {
+        thenPropertiesAreMappedCorrectly(a(hero().littlefinger()), gateway.findAllHeroes());
+    }
+
+    @Test
+    public void findAllPotions() {
+        thenPropertiesAreMappedCorrectly(a(potion().angelicElixir()), gateway.findAllPotions());
+    }
+
+    @Test
+    public void findAllItems() {
+        thenPropertiesAreMappedCorrectly(a(item().babySword()), gateway.findAllItems());
     }
 
     private void thenCardIsOfType(Card card, Class<? extends Card> expectedClass, int expectedType) {
