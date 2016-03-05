@@ -1,9 +1,6 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.usecases.player.ForgotSavecode;
-import com.mazebert.usecases.player.GetPlayer;
-import com.mazebert.usecases.player.RegisterEmail;
-import com.mazebert.usecases.player.SynchronizePlayer;
+import com.mazebert.usecases.player.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -48,6 +45,15 @@ public class PlayerPresenter extends AbstractPresenter {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerEmail(RegisterEmail.Request request) {
+        return execute(request);
+    }
+
+    @GET
+    @Path("/profile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProfile(@QueryParam("id") long id) {
+        GetPlayerProfile.Request request = new GetPlayerProfile.Request();
+        request.id = id;
         return execute(request);
     }
 }

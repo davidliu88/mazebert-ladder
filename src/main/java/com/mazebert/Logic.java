@@ -131,6 +131,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(SynchronizePlayer.class);
         addUsecase(ForgotSavecode.class);
         addUsecase(RegisterEmail.class);
+        addUsecase(GetPlayerProfile.class);
     }
 
     private void addBonusTimeUsecases() {

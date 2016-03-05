@@ -8,8 +8,10 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeDeltaFormatter;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,7 @@ public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPl
     private static final String NOW_PLAYING = "Now playing";
     private static final int NOW_PLAYING_THRESHOLD_IN_MINUTES = 10;
 
+    @Inject
     public GetPlayerProfile(PlayerGateway playerGateway, CardGateway cardGateway, FoilCardGateway foilCardGateway, CurrentDatePlugin currentDatePlugin) {
         this.playerGateway = playerGateway;
         this.cardGateway = cardGateway;
@@ -119,6 +122,7 @@ public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPl
         return delta;
     }
 
+    @StatusResponse(field = "profile")
     public static class Request {
         public long id;
     }
