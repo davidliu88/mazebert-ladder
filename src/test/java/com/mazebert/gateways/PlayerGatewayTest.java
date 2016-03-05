@@ -60,6 +60,19 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
     }
 
     @Test
+    public void findPlayerById_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findPlayerById(0));
+        thenGatewayErrorIs("Failed to find player by id in database");
+    }
+
+    @Test
+    public void findPlayerById_valuesAreReturned() {
+        Player expected = gateway.addPlayer(a(player().casid()));
+        Player actual = gateway.findPlayerById(expected.getId());
+        thenPlayerIsEqualTo(expected, actual);
+    }
+
+    @Test
     public void findPlayerByKey_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.findPlayerByKey("?"));
         thenGatewayErrorIs("Failed to find player by key in database");

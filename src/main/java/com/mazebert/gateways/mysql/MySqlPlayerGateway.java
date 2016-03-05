@@ -48,8 +48,13 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
 
     @Override
     public Player findPlayerById(long id) {
-        // TODO implement me!
-        return null;
+        try {
+            return getQueryRunner().query(FIND_PLAYER + " WHERE id=?;",
+                    new BeanHandler<>(Player.class),
+                    id);
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to find player by id in database", e);
+        }
     }
 
     public Player findPlayerByKey(String key) {
