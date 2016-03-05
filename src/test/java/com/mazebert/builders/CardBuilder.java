@@ -30,6 +30,12 @@ public abstract class CardBuilder<BuilderType extends CardBuilder, CardType exte
                 .withIsBlackMarketOffer(true);
     }
 
+    public BuilderType supporterCard() {
+        return (BuilderType) this
+                .withIsForgeable(false)
+                .withIsBlackMarketOffer(false);
+    }
+
     public BuilderType withId(long value) {
         card.setId(value);
         return (BuilderType) this;

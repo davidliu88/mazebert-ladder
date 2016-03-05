@@ -58,16 +58,19 @@ public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPl
 
         List<FoilCard> foilHeroes = new ArrayList<>();
         List<FoilCard> foilItems = new ArrayList<>();
+        List<FoilCard> foilPotions = new ArrayList<>();
 
         foilCards.stream().forEach(foilCard -> {
             switch (foilCard.getCardType()) {
                 case CardType.HERO: foilHeroes.add(foilCard); break;
                 case CardType.ITEM: foilItems.add(foilCard); break;
+                case CardType.POTION: foilPotions.add(foilCard); break;
             }
         });
 
         addFoilCards(response, "foilHeroProgress", "foilHeroes", foilHeroes, cardGateway.findAllHeroes());
         addFoilCards(response, "foilItemProgress", "foilItems", foilItems, cardGateway.findAllItems());
+        addFoilCards(response, "foilPotionProgress", "foilPotions", foilPotions, cardGateway.findAllPotions());
     }
 
     private void addFoilCards(Response response, String progressField, String cardsField, List<FoilCard> foilCards, List<? extends Card> allCards) {
@@ -127,8 +130,10 @@ public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPl
         public String lastPlayed;
         public String foilHeroProgress;
         public String foilItemProgress;
+        public String foilPotionProgress;
         public List<FoilCardInfo> foilHeroes;
         public List<FoilCardInfo> foilItems;
+        public List<FoilCardInfo> foilPotions;
     }
 
     public static class FoilCardInfo {

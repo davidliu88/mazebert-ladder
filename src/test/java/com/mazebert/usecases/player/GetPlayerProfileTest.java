@@ -170,7 +170,19 @@ public class GetPlayerProfileTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void foilPotions() {
-        // TODO implement me!
+        cardGateway.givenCardsExist(a(list(
+                a(potion().angelicElixir()),
+                a(potion().tearsOfTheGods())
+        )));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
+                a(foilCard().withCard(a(potion().angelicElixir())))
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("1/2", response.foilPotionProgress);
+        assertEquals(1, response.foilPotions.size());
     }
 
     @Test

@@ -49,6 +49,10 @@ public class BuilderFactory {
         return new HeroBuilder();
     }
 
+    public static PotionBuilder potion() {
+        return new PotionBuilder();
+    }
+
     public static VersionInfoBuilder versionInfo() {
         return new VersionInfoBuilder();
     }

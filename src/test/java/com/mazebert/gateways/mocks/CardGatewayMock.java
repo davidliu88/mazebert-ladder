@@ -3,6 +3,7 @@ package com.mazebert.gateways.mocks;
 import com.mazebert.entities.Card;
 import com.mazebert.entities.Hero;
 import com.mazebert.entities.Item;
+import com.mazebert.entities.Potion;
 import com.mazebert.gateways.CardGateway;
 
 import java.util.ArrayList;
@@ -33,6 +34,13 @@ public class CardGatewayMock implements CardGateway {
         List<Item> items = new ArrayList<>();
         cards.stream().filter(card -> card instanceof Item).forEach(card -> items.add((Item) card));
         return items;
+    }
+
+    @Override
+    public List<Potion> findAllPotions() {
+        List<Potion> potions = new ArrayList<>();
+        cards.stream().filter(card -> card instanceof Potion).forEach(card -> potions.add((Potion) card));
+        return potions;
     }
 
     @Override
