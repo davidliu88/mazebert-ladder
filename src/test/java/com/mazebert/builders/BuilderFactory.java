@@ -53,6 +53,10 @@ public class BuilderFactory {
         return new PotionBuilder();
     }
 
+    public static TowerBuilder tower() {
+        return new TowerBuilder();
+    }
+
     public static VersionInfoBuilder versionInfo() {
         return new VersionInfoBuilder();
     }

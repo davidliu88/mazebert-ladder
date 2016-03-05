@@ -187,7 +187,19 @@ public class GetPlayerProfileTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void foilTowers() {
-        // TODO implement me!
+        cardGateway.givenCardsExist(a(list(
+                a(tower().herbWitch()),
+                a(tower().huliTheMonkey())
+        )));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
+                a(foilCard().withCard(a(tower().herbWitch())))
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("1/2", response.foilTowerProgress);
+        assertEquals(1, response.foilTowers.size());
     }
 
     private RequestBuilder request() {
