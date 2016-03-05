@@ -52,8 +52,17 @@ public class MySqlCardGateway extends MySqlGateway implements CardGateway {
 
     @Override
     public List<Tower> findAllTowers() {
-        // TODO implement me!
-        return null;
+        return findAll(CardType.TOWER);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Card> List<T> findAll(int cardType) {
+        try {
+            return getQueryRunner().query(FIND_CARD_QUERY + getTableName(cardType),
+                    new BeanListHandler<>((Class<T>)getCardClass(cardType)));
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to find all cards in table 'TOWER'.", e);
+        }
     }
 
     private String getTableName(int cardType) {

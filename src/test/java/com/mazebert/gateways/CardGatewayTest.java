@@ -5,8 +5,11 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.mazebert.builders.BuilderFactory.tower;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+import static org.jusecase.Builders.a;
 
 public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
     @Test
@@ -78,8 +81,33 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
         }
     }
 
+    @Test
+    public void findAllTowers_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.findAllTowers());
+        thenGatewayErrorIs("Failed to find all cards in table 'TOWER'.");
+    }
+
+    @Test
+    public void findAllTowers() {
+        thenPropertiesAreMappedCorrectly(a(tower().herbWitch()), gateway.findAllTowers());
+    }
+
     private void thenCardIsOfType(Card card, Class<? extends Card> expectedClass, int expectedType) {
         assertEquals(expectedClass, card.getClass());
         assertEquals(expectedType, card.getType());
+    }
+
+    private void thenPropertiesAreMappedCorrectly(Card expected, List<? extends Card> cards) {
+        for (Card card : cards) {
+            if (card.getId() == expected.getId()) {
+                assertEquals(expected.getType(), card.getType());
+                assertEquals(expected.getName(), card.getName());
+                assertEquals(expected.getRarity(), card.getRarity());
+                assertEquals(expected.getSinceVersion(), card.getSinceVersion());
+                return;
+            }
+        }
+
+        fail("Expected card '" + expected.getName() + "' was not found in card list fetched from database.");
     }
 }
