@@ -4,6 +4,7 @@ public abstract class Card {
     private long id;
     private String sinceVersion;
     private String name;
+    private int rarity;
     private boolean blackMarketOffer;
     private boolean forgeable;
 
@@ -32,6 +33,14 @@ public abstract class Card {
 
     public String getName() {
         return name;
+    }
+
+    public int getRarity() {
+        return rarity;
+    }
+
+    public void setRarity(int rarity) {
+        this.rarity = rarity;
     }
 
     public boolean isBlackMarketOffer() {

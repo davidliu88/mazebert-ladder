@@ -1,6 +1,8 @@
 package com.mazebert.gateways.mocks;
 
 import com.mazebert.entities.Card;
+import com.mazebert.entities.Hero;
+import com.mazebert.entities.Item;
 import com.mazebert.gateways.CardGateway;
 
 import java.util.ArrayList;
@@ -17,6 +19,20 @@ public class CardGatewayMock implements CardGateway {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public List<Hero> findAllHeroes() {
+        List<Hero> heroes = new ArrayList<>();
+        cards.stream().filter(card -> card instanceof Hero).forEach(card -> heroes.add((Hero)card));
+        return heroes;
+    }
+
+    @Override
+    public List<Item> findAllItems() {
+        List<Item> items = new ArrayList<>();
+        cards.stream().filter(card -> card instanceof Item).forEach(card -> items.add((Item) card));
+        return items;
     }
 
     @Override

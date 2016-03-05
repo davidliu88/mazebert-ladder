@@ -32,6 +32,18 @@ public class MySqlCardGateway extends MySqlGateway implements CardGateway {
         }
     }
 
+    @Override
+    public List<Hero> findAllHeroes() {
+        // TODO implement me!
+        return null;
+    }
+
+    @Override
+    public List<Item> findAllItems() {
+        // TODO implement me!
+        return null;
+    }
+
     private String getTableName(int cardType) {
         switch (cardType) {
             case CardType.ITEM: return "Item";

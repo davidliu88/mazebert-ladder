@@ -1,21 +1,32 @@
 package com.mazebert.usecases.player;
 
-import com.mazebert.entities.Player;
+import com.mazebert.entities.*;
+import com.mazebert.error.InternalServerError;
 import com.mazebert.error.NotFound;
+import com.mazebert.gateways.CardGateway;
+import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeDeltaFormatter;
 import org.jusecase.Usecase;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPlayerProfile.Response> {
     private final PlayerGateway playerGateway;
+    private final CardGateway cardGateway;
+    private final FoilCardGateway foilCardGateway;
     private final CurrentDatePlugin currentDatePlugin;
     private final TimeDeltaFormatter timeDeltaFormatter;
     private static final String NOW_PLAYING = "Now playing";
     private static final int NOW_PLAYING_THRESHOLD_IN_MINUTES = 10;
 
-    public GetPlayerProfile(PlayerGateway playerGateway, CurrentDatePlugin currentDatePlugin) {
+    public GetPlayerProfile(PlayerGateway playerGateway, CardGateway cardGateway, FoilCardGateway foilCardGateway, CurrentDatePlugin currentDatePlugin) {
         this.playerGateway = playerGateway;
+        this.cardGateway = cardGateway;
+        this.foilCardGateway = foilCardGateway;
         this.currentDatePlugin = currentDatePlugin;
         timeDeltaFormatter = new TimeDeltaFormatter(60 * NOW_PLAYING_THRESHOLD_IN_MINUTES, NOW_PLAYING);
     }
@@ -28,6 +39,7 @@ public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPl
 
         Response response = new Response();
         addPlayerInformationToResponse(player, response);
+        addFoilCardInformationToResonse(player, response);
         return response;
     }
 
@@ -39,6 +51,58 @@ public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPl
         response.relics = player.getRelics();
         response.rank = playerGateway.findPlayerRank(player.getId());
         response.lastPlayed = createLastPlayed(player);
+    }
+
+    private void addFoilCardInformationToResonse(Player player, Response response) {
+        List<FoilCard> foilCards = foilCardGateway.getFoilCardsForPlayerId(player.getId());
+
+        List<FoilCard> foilHeroes = new ArrayList<>();
+        List<FoilCard> foilItems = new ArrayList<>();
+
+        foilCards.stream().forEach(foilCard -> {
+            switch (foilCard.getCardType()) {
+                case CardType.HERO: foilHeroes.add(foilCard); break;
+                case CardType.ITEM: foilItems.add(foilCard); break;
+            }
+        });
+
+        addFoilCards(response, "foilHeroProgress", "foilHeroes", foilHeroes, cardGateway.findAllHeroes());
+        addFoilCards(response, "foilItemProgress", "foilItems", foilItems, cardGateway.findAllItems());
+    }
+
+    private void addFoilCards(Response response, String progressField, String cardsField, List<FoilCard> foilCards, List<? extends Card> allCards) {
+        List<FoilCardInfo> cards = new ArrayList<>();
+        for (FoilCard foilHero : foilCards) {
+            Card card = findCardById(foilHero.getCardId(), allCards);
+            if (card != null) {
+                cards.add(createFoilCardInfo(foilHero, card));
+            }
+        }
+
+        setResponseField(response, progressField, cards.size() + "/" + allCards.size());
+        setResponseField(response, cardsField, cards);
+    }
+
+    private void setResponseField(Response response, String fieldName, Object value) {
+        try {
+            response.getClass().getField(fieldName).set(response, value);
+        } catch (Throwable e) {
+            throw new InternalServerError("Adjust response field '" + fieldName + "' after refactoring!");
+        }
+    }
+
+    private FoilCardInfo createFoilCardInfo(FoilCard foilCard, Card card) {
+        FoilCardInfo info = new FoilCardInfo();
+        info.id = card.getId();
+        info.name = card.getName();
+        info.rarity = card.getRarity();
+        info.amount = foilCard.getAmount();
+        return info;
+    }
+
+    private Card findCardById(long cardId, List<? extends Card> cards) {
+        Optional<? extends Card> result = cards.stream().filter(card -> card.getId() == cardId).findFirst();
+        return result.isPresent() ? result.get() : null;
     }
 
     private String createLastPlayed(Player player) {
@@ -61,5 +125,16 @@ public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPl
         public int relics;
         public int rank;
         public String lastPlayed;
+        public String foilHeroProgress;
+        public String foilItemProgress;
+        public List<FoilCardInfo> foilHeroes;
+        public List<FoilCardInfo> foilItems;
+    }
+
+    public static class FoilCardInfo {
+        public long id;
+        public String name;
+        public int rarity;
+        public int amount;
     }
 }

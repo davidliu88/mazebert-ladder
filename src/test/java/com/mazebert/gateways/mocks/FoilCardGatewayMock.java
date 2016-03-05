@@ -18,7 +18,11 @@ public class FoilCardGatewayMock implements FoilCardGateway {
 
     @Override
     public List<FoilCard> getFoilCardsForPlayerId(long playerId) {
-        return foilCardsForPlayer.get(playerId);
+        List<FoilCard> cards = foilCardsForPlayer.get(playerId);
+        if (cards == null) {
+            cards = new ArrayList<>();
+        }
+        return cards;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.mazebert.builders;
 
-import com.mazebert.entities.CardType;
-import com.mazebert.entities.FoilCard;
+import com.mazebert.entities.*;
 import org.jusecase.builders.Builder;
 
 public class FoilCardBuilder implements Builder<FoilCard> {
@@ -9,6 +8,24 @@ public class FoilCardBuilder implements Builder<FoilCard> {
 
     public FoilCardBuilder one() {
         return this.withAmount(1);
+    }
+
+    public FoilCardBuilder withCard(Card card) {
+        return getBuilderForCard(card)
+                .withCardId(card.getId());
+    }
+
+    private FoilCardBuilder getBuilderForCard(Card card) {
+        if (card instanceof Tower) {
+            return tower();
+        } else if (card instanceof Potion) {
+            return potion();
+        } else if (card instanceof Item) {
+            return item();
+        } else if (card instanceof Hero) {
+            return hero();
+        }
+        return this;
     }
 
     public FoilCardBuilder tower() {

@@ -1,6 +1,9 @@
 package com.mazebert.usecases.player;
 
+import com.mazebert.entities.Player;
 import com.mazebert.error.NotFound;
+import com.mazebert.gateways.mocks.CardGatewayMock;
+import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.player.GetPlayerProfile.Request;
@@ -10,20 +13,23 @@ import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
 
-import static com.mazebert.builders.BuilderFactory.player;
+import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.Builders.a;
-import static org.jusecase.Builders.date;
+import static org.jusecase.Builders.*;
 
 public class GetPlayerProfileTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
+    private CardGatewayMock cardGateway = new CardGatewayMock();
+    private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
+
+    private Player player = a(player().casid());
 
     @Before
     public void setUp() {
-        usecase = new GetPlayerProfile(playerGateway, currentDatePlugin);
+        usecase = new GetPlayerProfile(playerGateway, cardGateway, foilCardGateway, currentDatePlugin);
 
-        playerGateway.givenPlayerExists(a(player().casid()));
+        playerGateway.givenPlayerExists(player);
     }
 
     @Test
@@ -79,7 +85,96 @@ public class GetPlayerProfileTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void emptyFoilHeroes() {
+    public void emptyFoilHeroes_noCards() {
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("0/0", response.foilHeroProgress);
+        assertEquals(0, response.foilHeroes.size());
+    }
+
+    @Test
+    public void emptyFoilHeroes_twoHeroCards() {
+        cardGateway.givenCardsExist(a(list(
+                a(hero()),
+                a(hero()),
+                a(item())
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("0/2", response.foilHeroProgress);
+        assertEquals(0, response.foilHeroes.size());
+    }
+
+    @Test
+    public void foilHeroes_foilCardDoesNotExist() throws Throwable {
+        cardGateway.givenCardsExist(a(list(
+                // no cards!
+        )));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
+                a(foilCard().withCard(a(hero().littlefinger())))
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("0/0", response.foilHeroProgress);
+        assertEquals(0, response.foilHeroes.size());
+    }
+
+    @Test
+    public void foilHeroes() throws Throwable {
+        cardGateway.givenCardsExist(a(list(
+                a(hero().littlefinger()),
+                a(item().bowlingBall())
+        )));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
+                a(foilCard().withCard(a(hero().littlefinger())).withAmount(10)),
+                a(foilCard().bowlingBall())
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("1/1", response.foilHeroProgress);
+        assertEquals(1, response.foilHeroes.size());
+        assertEquals(1, response.foilHeroes.get(0).id);
+        assertEquals("Sir Littlefinger", response.foilHeroes.get(0).name);
+        assertEquals(1, response.foilHeroes.get(0).rarity);
+        assertEquals(10, response.foilHeroes.get(0).amount);
+    }
+
+    @Test
+    public void foilItems() {
+        cardGateway.givenCardsExist(a(list(
+                a(item().bowlingBall()),
+                a(item().mjoelnir()),
+                a(item().babySword()),
+                a(item().scepterOfTime())
+        )));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
+                a(foilCard().withCard(a(item().babySword()))),
+                a(foilCard().withCard(a(item().mjoelnir()))),
+                a(foilCard().withCard(a(item().scepterOfTime())))
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("3/4", response.foilItemProgress);
+        assertEquals(3, response.foilItems.size());
+    }
+
+    @Test
+    public void foilPotions() {
+        // TODO implement me!
+    }
+
+    @Test
+    public void foilTowers() {
         // TODO implement me!
     }
 

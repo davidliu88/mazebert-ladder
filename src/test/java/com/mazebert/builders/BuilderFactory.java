@@ -45,6 +45,10 @@ public class BuilderFactory {
         return new ItemBuilder();
     }
 
+    public static HeroBuilder hero() {
+        return new HeroBuilder();
+    }
+
     public static VersionInfoBuilder versionInfo() {
         return new VersionInfoBuilder();
     }
