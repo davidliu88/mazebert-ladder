@@ -151,15 +151,8 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         thenPlayerRelicsAre(180);
-    }
-
-    @Test
-    public void trade_duplicatesOfCards() {
-        givenRequest(a(request()));
-
-        whenRequestIsExecuted();
-
-
+        assertEquals(1, response.foilTowers.size());
+        assertEquals(1, response.foilTowers.get(0).amount);
     }
 
     private void thenOfferTotalIs(int expected) {

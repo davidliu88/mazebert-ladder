@@ -49,6 +49,11 @@ public class FoilCardGatewayMock implements FoilCardGateway {
         cards.add(foilCard);
     }
 
+    @Override
+    public void setAmountOfAllPlayerFoilCards(long playerId, int amount) {
+        getFoilCardsForPlayerId(playerId).stream().forEach(foilCard -> foilCard.setAmount(amount));
+    }
+
     public void givenFoilCardsForPlayer(Player player, List<FoilCard> foilCards) {
         foilCardsForPlayer.put(player.getId(), foilCards);
     }

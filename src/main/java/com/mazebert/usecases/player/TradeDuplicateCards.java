@@ -10,6 +10,7 @@ import com.mazebert.gateways.CardGateway;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.usecases.player.response.FoilCardsResponse;
 import org.jusecase.Usecase;
 
 import java.util.List;
@@ -74,15 +75,20 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
     }
 
     private Response createTradeResponse(Player player) {
-
-        Offer offer = createOffer(player);
-
         Response response = new Response();
-        playerGateway.addRelics(player.getId(), offer.total);
-        response.relics = playerGateway.getRelics(player.getId());
-
+        doTradeCardsTransaction(player, response);
         return response;
     }
+
+    private void doTradeCardsTransaction(Player player, Response response) {
+        Offer offer = createOffer(player);
+        foilCardGateway.setAmountOfAllPlayerFoilCards(player.getId(), 1);
+        playerGateway.addRelics(player.getId(), offer.total);
+
+        response.addFoilCards(player, foilCardGateway);
+        response.relics = playerGateway.getRelics(player.getId());
+    }
+
 
     private void validateRequest(Request request) {
         versionValidator.validate(request.appVersion);
@@ -97,7 +103,7 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
         public boolean isOffer;
     }
 
-    public static class Response {
+    public static class Response extends FoilCardsResponse {
         public Offer offer;
         public int relics;
     }

@@ -55,4 +55,9 @@ public class MySqlFoilCardGateway extends MySqlGateway implements FoilCardGatewa
             throw new GatewayError("Failed to add foil card to player.", e);
         }
     }
+
+    @Override
+    public void setAmountOfAllPlayerFoilCards(long playerId, int amount) {
+        // TODO implement me!
+    }
 }
