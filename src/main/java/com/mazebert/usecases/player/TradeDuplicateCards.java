@@ -9,6 +9,7 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.CardGateway;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
+import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.usecases.player.response.FoilCardsResponse;
 import org.jusecase.Usecase;
@@ -16,13 +17,15 @@ import org.jusecase.Usecase;
 import java.util.List;
 
 public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request, TradeDuplicateCards.Response> {
+    private final TransactionRunner transactionRunner;
     private final PlayerGateway playerGateway;
     private final CardGateway cardGateway;
     private final FoilCardGateway foilCardGateway;
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
 
 
-    public TradeDuplicateCards(PlayerGateway playerGateway, CardGateway cardGateway, FoilCardGateway foilCardGateway) {
+    public TradeDuplicateCards(TransactionRunner transactionRunner, PlayerGateway playerGateway, CardGateway cardGateway, FoilCardGateway foilCardGateway) {
+        this.transactionRunner = transactionRunner;
         this.playerGateway = playerGateway;
         this.cardGateway = cardGateway;
         this.foilCardGateway = foilCardGateway;
@@ -81,12 +84,14 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
     }
 
     private void doTradeCardsTransaction(Player player, Response response) {
-        Offer offer = createOffer(player);
-        foilCardGateway.setAmountOfAllPlayerFoilCards(player.getId(), 1);
-        playerGateway.addRelics(player.getId(), offer.total);
+        transactionRunner.runAsTransaction(() -> {
+            Offer offer = createOffer(player);
+            foilCardGateway.setAmountOfAllPlayerFoilCards(player.getId(), 1);
+            playerGateway.addRelics(player.getId(), offer.total);
 
-        response.addFoilCards(player, foilCardGateway);
-        response.relics = playerGateway.getRelics(player.getId());
+            response.addFoilCards(player, foilCardGateway);
+            response.relics = playerGateway.getRelics(player.getId());
+        });
     }
 
 

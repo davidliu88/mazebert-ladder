@@ -7,6 +7,8 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.mocks.CardGatewayMock;
 import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
+import com.mazebert.gateways.transaction.TransactionRunner;
+import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.usecases.player.TradeDuplicateCards.OfferPart;
 import com.mazebert.usecases.player.TradeDuplicateCards.Request;
 import com.mazebert.usecases.player.TradeDuplicateCards.Response;
@@ -21,6 +23,7 @@ import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.list;
 
 public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
+    private TransactionRunner transactionRunner = new TransactionRunnerMock();
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
     private CardGatewayMock cardGateway = new CardGatewayMock();
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
@@ -28,7 +31,7 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
 
     @Before
     public void setUp() {
-        usecase = new TradeDuplicateCards(playerGateway, cardGateway, foilCardGateway);
+        usecase = new TradeDuplicateCards(transactionRunner, playerGateway, cardGateway, foilCardGateway);
 
         playerGateway.givenPlayerExists(player);
     }
