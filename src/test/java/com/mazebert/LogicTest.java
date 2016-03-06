@@ -4,6 +4,8 @@ import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.connection.StubDataSourceProvider;
+import com.mazebert.gateways.transaction.TransactionManager;
+import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.plugins.security.ServerContentSigner;
@@ -92,6 +94,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenOnlyOneInstanceExists(GameContentVerifier.class);
         thenOnlyOneInstanceExists(ServerContentSigner.class);
         thenOnlyOneInstanceExists(EmailMessagePlugin.class);
+        thenOnlyOneInstanceExists(TransactionManager.class, DataSourceTransactionManager.class);
     }
 
     @Test
@@ -139,6 +142,12 @@ public class LogicTest extends UsecaseExecutorTest {
 
     private void thenOnlyOneInstanceExists(Class<?> clazz) {
         assertSame(logic().getInstance(clazz), logic().getInstance(clazz));
+    }
+
+    private void thenOnlyOneInstanceExists(Class<?> clazz1, Class<?> clazz2) {
+        assertSame(logic().getInstance(clazz1), logic().getInstance(clazz1));
+        assertSame(logic().getInstance(clazz2), logic().getInstance(clazz2));
+        assertSame(logic().getInstance(clazz1), logic().getInstance(clazz2));
     }
 
     private static class ThrowingUsecase implements Usecase<ThrowingUsecase.Request, Void> {

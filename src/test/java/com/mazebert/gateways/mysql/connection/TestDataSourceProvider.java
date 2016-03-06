@@ -1,5 +1,6 @@
 package com.mazebert.gateways.mysql.connection;
 
+import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import org.apache.commons.dbutils.QueryRunner;
 
 import javax.sql.DataSource;
@@ -13,7 +14,7 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
     public static final TestDataSourceProvider instance = new TestDataSourceProvider();
 
     private TestDataSourceProvider() {
-        super(new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert"));
+        super(new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert"), new DataSourceTransactionManager());
         prepare();
     }
 

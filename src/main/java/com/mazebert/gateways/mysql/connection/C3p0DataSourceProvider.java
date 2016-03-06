@@ -2,6 +2,9 @@ package com.mazebert.gateways.mysql.connection;
 
 import com.google.inject.Provider;
 import com.mazebert.error.InternalServerError;
+import com.mazebert.gateways.transaction.TransactionManager;
+import com.mazebert.gateways.transaction.datasource.DataSourceProxy;
+import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.flywaydb.core.Flyway;
 
@@ -12,16 +15,19 @@ import javax.sql.DataSource;
 @Singleton
 public class C3p0DataSourceProvider implements DataSourceProvider, Provider<DataSource> {
     private final Credentials credentials;
+    private final DataSourceTransactionManager transactionManager;
     private ComboPooledDataSource dataSource;
+    private DataSourceProxy dataSourceProxy;
 
     @Inject
-    public C3p0DataSourceProvider(Credentials credentials) {
+    public C3p0DataSourceProvider(Credentials credentials, DataSourceTransactionManager transactionManager) {
         this.credentials = credentials;
+        this.transactionManager = transactionManager;
     }
 
     @Override
     public DataSource get() {
-        return dataSource;
+        return dataSourceProxy;
     }
 
     @Override
@@ -45,6 +51,9 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
             dataSource.setMinPoolSize(3);
             dataSource.setMaxPoolSize(30);
             dataSource.setAcquireIncrement(1);
+
+            transactionManager.setDataSource(dataSource);
+            dataSourceProxy = new DataSourceProxy(dataSource, transactionManager);
         } catch (Throwable e) {
             throw new InternalServerError("Database connection pool could not be initialized", e);
         }
@@ -54,5 +63,9 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         flyway.migrate();
+    }
+
+    public TransactionManager getTransactionManager() {
+        return transactionManager;
     }
 }
