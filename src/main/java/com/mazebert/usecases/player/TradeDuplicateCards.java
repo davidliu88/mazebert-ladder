@@ -11,7 +11,10 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.player.response.FoilCardsResponse;
+import com.mazebert.usecases.security.SignResponse;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -104,6 +107,9 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
         }
     }
 
+    @VerifyRequest
+    @SignResponse
+    @StatusResponse
     public static class Request {
         public String appVersion;
         public String key;

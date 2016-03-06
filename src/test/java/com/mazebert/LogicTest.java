@@ -81,12 +81,14 @@ public class LogicTest extends UsecaseExecutorTest {
         thenRequestIsVerified(UpdateBonusTime.class);
         thenRequestIsVerified(CompleteQuests.class);
         thenRequestIsVerified(ReplaceQuest.class);
+        thenRequestIsVerified(TradeDuplicateCards.class);
     }
 
     @Test
     public void signedResponses() {
         thenResponseIsSigned(SynchronizePlayer.class);
         thenResponseIsSigned(ReplaceQuest.class);
+        thenResponseIsSigned(TradeDuplicateCards.class);
     }
 
     @Test
