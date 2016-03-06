@@ -7,6 +7,8 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.gateways.mocks.QuestGatewayMock;
+import com.mazebert.gateways.transaction.TransactionManager;
+import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.usecases.quest.CompleteQuests.Request;
 import com.mazebert.usecases.quest.CompleteQuests.Response;
 import org.junit.Before;
@@ -22,14 +24,14 @@ import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.list;
 
 public class CompleteQuestsTest extends UsecaseTest<Request, Response> {
-
+    private TransactionRunnerMock transactionRunner = new TransactionRunnerMock();
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
     private QuestGatewayMock questGateway = new QuestGatewayMock();
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
 
     @Before
     public void setUp() {
-        usecase = new CompleteQuests(playerGateway, questGateway, foilCardGateway);
+        usecase = new CompleteQuests(transactionRunner, playerGateway, questGateway, foilCardGateway);
     }
 
     @Test

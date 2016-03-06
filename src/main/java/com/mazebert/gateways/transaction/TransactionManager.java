@@ -1,8 +1,6 @@
 package com.mazebert.gateways.transaction;
 
-public interface TransactionManager {
-    void runAsTransaction(Runnable runnable);
-
+public interface TransactionManager extends TransactionRunner {
     Transaction startTransaction();
     Transaction getCurrent();
     void setCurrent(Transaction transaction);

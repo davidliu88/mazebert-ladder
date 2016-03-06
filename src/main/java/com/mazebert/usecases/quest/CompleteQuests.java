@@ -1,11 +1,15 @@
 package com.mazebert.usecases.quest;
 
-import com.mazebert.entities.*;
+import com.mazebert.entities.CardType;
+import com.mazebert.entities.FoilCard;
+import com.mazebert.entities.Player;
+import com.mazebert.entities.Quest;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
+import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.VerifyRequest;
@@ -16,12 +20,14 @@ import java.util.List;
 
 public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQuests.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
+    private final TransactionRunner transactionRunner;
     private final PlayerGateway playerGateway;
     private final QuestGateway questGateway;
     private final FoilCardGateway foilCardGateway;
 
     @Inject
-    public CompleteQuests(PlayerGateway playerGateway, QuestGateway questGateway, FoilCardGateway foilCardGateway) {
+    public CompleteQuests(TransactionRunner transactionRunner, PlayerGateway playerGateway, QuestGateway questGateway, FoilCardGateway foilCardGateway) {
+        this.transactionRunner = transactionRunner;
         this.playerGateway = playerGateway;
         this.questGateway = questGateway;
         this.foilCardGateway = foilCardGateway;
@@ -47,16 +53,18 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
     }
 
     private void doQuestTransactions(Request request, Player player) {
-        List<Quest> quests = questGateway.findQuestsByIds(request.questTransactionIds);
-        List<Long> hiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
-        List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
+        transactionRunner.runAsTransaction(() -> {
+            List<Quest> quests = questGateway.findQuestsByIds(request.questTransactionIds);
+            List<Long> hiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
+            List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
 
-        int reward = 0;
-        for (Quest quest : quests) {
-            reward += completeQuest(player, hiddenQuestIds, dailyQuestIds, quest);
-        }
+            int reward = 0;
+            for (Quest quest : quests) {
+                reward += completeQuest(player, hiddenQuestIds, dailyQuestIds, quest);
+            }
 
-        playerGateway.addRelics(player.getId(), reward);
+            playerGateway.addRelics(player.getId(), reward);
+        });
     }
 
     private Response createResponse(Player player) {

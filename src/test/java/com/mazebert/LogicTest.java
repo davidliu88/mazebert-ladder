@@ -4,7 +4,7 @@ import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.connection.StubDataSourceProvider;
-import com.mazebert.gateways.transaction.TransactionManager;
+import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.security.GameContentVerifier;
@@ -94,7 +94,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenOnlyOneInstanceExists(GameContentVerifier.class);
         thenOnlyOneInstanceExists(ServerContentSigner.class);
         thenOnlyOneInstanceExists(EmailMessagePlugin.class);
-        thenOnlyOneInstanceExists(TransactionManager.class, DataSourceTransactionManager.class);
+        thenOnlyOneInstanceExists(TransactionRunner.class, DataSourceTransactionManager.class);
     }
 
     @Test

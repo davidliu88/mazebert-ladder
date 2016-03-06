@@ -11,7 +11,7 @@ import com.mazebert.gateways.mysql.connection.C3p0DataSourceProvider;
 import com.mazebert.gateways.mysql.connection.Credentials;
 import com.mazebert.gateways.mysql.connection.CredentialsProvider;
 import com.mazebert.gateways.mysql.connection.DataSourceProvider;
-import com.mazebert.gateways.transaction.TransactionManager;
+import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.message.MazebertMailMessagePluginProvider;
@@ -69,7 +69,7 @@ public class Logic extends GuiceUsecaseExecutor {
         @Override
         protected void configure() {
             bind(DataSource.class).toProvider(dataSourceProvider);
-            bind(TransactionManager.class).to(DataSourceTransactionManager.class);
+            bind(TransactionRunner.class).to(DataSourceTransactionManager.class);
             bind(Credentials.class).toProvider(CredentialsProvider.class);
 
             bind(PlayerGateway.class).to(MySqlPlayerGateway.class);
