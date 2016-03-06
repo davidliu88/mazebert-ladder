@@ -58,4 +58,20 @@ public abstract class Card {
     public boolean isForgeable() {
         return forgeable;
     }
+
+    public int getTradeValue() {
+        switch (rarity) {
+            case CardRarity.COMMON:
+                return 2;
+            case CardRarity.UNCOMMON:
+                return 4;
+            case CardRarity.RARE:
+                return 8;
+            case CardRarity.UNIQUE:
+                return 16;
+            case CardRarity.LEGENDARY:
+                return 40;
+        }
+        return 0;
+    }
 }
