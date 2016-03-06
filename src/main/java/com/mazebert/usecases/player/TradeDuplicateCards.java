@@ -14,6 +14,7 @@ import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.usecases.player.response.FoilCardsResponse;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request, TradeDuplicateCards.Response> {
@@ -23,8 +24,9 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
     private final FoilCardGateway foilCardGateway;
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
 
-
-    public TradeDuplicateCards(TransactionRunner transactionRunner, PlayerGateway playerGateway, CardGateway cardGateway, FoilCardGateway foilCardGateway) {
+    @Inject
+    public TradeDuplicateCards(TransactionRunner transactionRunner, PlayerGateway playerGateway,
+                               CardGateway cardGateway, FoilCardGateway foilCardGateway) {
         this.transactionRunner = transactionRunner;
         this.playerGateway = playerGateway;
         this.cardGateway = cardGateway;

@@ -61,6 +61,8 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(RegisterEmail.class);
         thenUsecaseCanBeExecuted(GetPlayerProfile.class);
 
+        thenUsecaseCanBeExecuted(TradeDuplicateCards.class);
+
         thenUsecaseCanBeExecuted(GetBonusTimes.class);
         thenUsecaseCanBeExecuted(UpdateBonusTime.class);
 

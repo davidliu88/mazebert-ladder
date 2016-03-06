@@ -114,6 +114,7 @@ public class Logic extends GuiceUsecaseExecutor {
 
         addSystemUsecases();
         addPlayerUsecases();
+        addTradeUsecases();
         addBonusTimeUsecases();
         addQuestUsecases();
         addSupporterUsecases();
@@ -135,6 +136,10 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(ForgotSavecode.class);
         addUsecase(RegisterEmail.class);
         addUsecase(GetPlayerProfile.class);
+    }
+
+    private void addTradeUsecases() {
+        addUsecase(TradeDuplicateCards.class);
     }
 
     private void addBonusTimeUsecases() {
