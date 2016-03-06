@@ -1,6 +1,7 @@
 package com.mazebert.usecases.player;
 
 import com.mazebert.entities.CardRarity;
+import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.mocks.CardGatewayMock;
@@ -23,10 +24,13 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
     private CardGatewayMock cardGateway = new CardGatewayMock();
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
+    private Player player = a(player().casid());
 
     @Before
     public void setUp() {
         usecase = new TradeDuplicateCards(playerGateway, cardGateway, foilCardGateway);
+
+        playerGateway.givenPlayerExists(player);
     }
 
     @Test
@@ -59,7 +63,6 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void offer_noFoilCards() {
-        playerGateway.givenPlayerExists(a(player().casid()));
         givenRequest(a(request().offer()));
 
         whenRequestIsExecuted();
@@ -69,8 +72,7 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void offer_noDuplicateFoilCards() {
-        playerGateway.givenPlayerExists(a(player().casid()));
-        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
                 a(foilCard().withCard(a(tower().huliTheMonkey())).withAmount(1)),
                 a(foilCard().withCard(a(item().babySword())).withAmount(1)),
                 a(foilCard().withCard(a(potion().tearsOfTheGods())).withAmount(1)),
@@ -85,8 +87,7 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void offer_cardDoesNotExist() {
-        playerGateway.givenPlayerExists(a(player().casid()));
-        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
                 a(foilCard().withCard(a(hero().littlefinger())).withAmount(2))
         )));
         givenRequest(a(request().offer()));
@@ -98,7 +99,6 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void offer_duplicateFoilCard() {
-        playerGateway.givenPlayerExists(a(player().casid()));
         cardGateway.givenCardsExist(a(list(
                 a(tower().huliTheMonkey()),
                 a(tower().herbWitch()),
@@ -107,7 +107,7 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
                 a(potion().tearsOfTheGods()),
                 a(hero().littlefinger())
         )));
-        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
                 a(foilCard().withCard(a(tower().huliTheMonkey())).withAmount(11)),
                 a(foilCard().withCard(a(tower().herbWitch())).withAmount(3)),
                 a(foilCard().withCard(a(item().babySword())).withAmount(2)),
@@ -125,6 +125,41 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
         thenOfferForRarityIs(CardRarity.RARE, 10, 80);
         thenOfferForRarityIs(CardRarity.UNIQUE, 1, 16);
         thenOfferForRarityIs(CardRarity.LEGENDARY, 1, 40);
+    }
+
+    @Test
+    public void trade_noCards() {
+        playerGateway.givenPlayerExists(a(player().casid().withRelics(100)));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        thenPlayerRelicsAre(100);
+    }
+
+    @Test
+    public void trade_duplicatesOfCard() {
+        playerGateway.givenPlayerExists(a(player().casid().withRelics(100)));
+        cardGateway.givenCardsExist(a(list(
+                a(tower().huliTheMonkey())
+        )));
+        foilCardGateway.givenFoilCardsForPlayer(a(player().casid()), a(list(
+                a(foilCard().withCard(a(tower().huliTheMonkey())).withAmount(11))
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        thenPlayerRelicsAre(180);
+    }
+
+    @Test
+    public void trade_duplicatesOfCards() {
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+
     }
 
     private void thenOfferTotalIs(int expected) {
@@ -145,6 +180,11 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
             assertEquals(0, rarities[i].amount);
             assertEquals(0, rarities[i].reward);
         }
+    }
+
+    private void thenPlayerRelicsAre(int relics) {
+        assertEquals(relics, response.relics);
+        assertEquals(relics, playerGateway.getRelics(player.getId()));
     }
 
     private RequestBuilder request() {

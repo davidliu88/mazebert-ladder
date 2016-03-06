@@ -7,7 +7,6 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.gateways.mocks.QuestGatewayMock;
-import com.mazebert.gateways.transaction.TransactionManager;
 import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.usecases.quest.CompleteQuests.Request;
 import com.mazebert.usecases.quest.CompleteQuests.Response;

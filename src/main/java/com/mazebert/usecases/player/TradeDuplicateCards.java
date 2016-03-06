@@ -38,7 +38,7 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
         if (request.isOffer) {
             return createOfferResponse(player);
         } else {
-            return null;
+            return createTradeResponse(player);
         }
     }
 
@@ -73,6 +73,17 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
         }
     }
 
+    private Response createTradeResponse(Player player) {
+
+        Offer offer = createOffer(player);
+
+        Response response = new Response();
+        playerGateway.addRelics(player.getId(), offer.total);
+        response.relics = playerGateway.getRelics(player.getId());
+
+        return response;
+    }
+
     private void validateRequest(Request request) {
         versionValidator.validate(request.appVersion);
         if (request.key == null) {
@@ -88,6 +99,7 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
 
     public static class Response {
         public Offer offer;
+        public int relics;
     }
 
     public static class Offer {
