@@ -8,6 +8,7 @@ import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.player.SynchronizePlayer.Request;
 import com.mazebert.usecases.player.SynchronizePlayer.Response;
+import com.mazebert.usecases.player.response.FoilCardsResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -421,8 +422,8 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         return new RequestBuilder().golden();
     }
 
-    private ResponseCardBuilder card() {
-        return new ResponseCardBuilder();
+    private FoilCardsResponse.CardBuilder card() {
+        return new FoilCardsResponse.CardBuilder();
     }
 
     private static class RequestBuilder implements Builder<Request> {
@@ -457,25 +458,6 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
         public RequestBuilder withAppStore(String value) {
             request.appStore = value;
             return this;
-        }
-    }
-
-    private static class ResponseCardBuilder implements Builder<Response.Card> {
-        private Response.Card card = new Response.Card();
-
-        public ResponseCardBuilder withId(long value) {
-            card.id = value;
-            return this;
-        }
-
-        public ResponseCardBuilder withAmount(int value) {
-            card.amount = value;
-            return this;
-        }
-
-        @Override
-        public Response.Card build() {
-            return card;
         }
     }
 }

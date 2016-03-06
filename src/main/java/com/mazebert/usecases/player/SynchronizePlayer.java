@@ -9,11 +9,11 @@ import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.time.TimeZoneParser;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
+import com.mazebert.usecases.player.response.FoilCardsResponse;
 import com.mazebert.usecases.security.SignResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -114,35 +114,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     }
 
     private void addFoilCardsToResponse(Player player, Response response) {
-        response.foilTowers = new ArrayList<>();
-        response.foilItems = new ArrayList<>();
-        response.foilPotions = new ArrayList<>();
-        response.foilHeroes = new ArrayList<>();
-
-        List<FoilCard> foilCards = foilCardGateway.getFoilCardsForPlayerId(player.getId());
-        if (foilCards != null) {
-            for (FoilCard foilCard : foilCards) {
-                addFoilCardToResponse(foilCard, response);
-            }
-        }
-    }
-
-    private void addFoilCardToResponse(FoilCard foilCard, Response response) {
-        Response.Card card = createCard(foilCard);
-
-        switch (foilCard.getCardType()) {
-            case CardType.TOWER: response.foilTowers.add(card);
-            case CardType.ITEM: response.foilItems.add(card);
-            case CardType.POTION: response.foilPotions.add(card);
-            case CardType.HERO: response.foilHeroes.add(card);
-        }
-    }
-
-    private Response.Card createCard(FoilCard foilCard) {
-        Response.Card card = new Response.Card();
-        card.id = foilCard.getCardId();
-        card.amount = foilCard.getAmount();
-        return card;
+        response.addFoilCards(player, foilCardGateway);
     }
 
     private void addPlayerToResponse(Player player, Response response) {
@@ -162,16 +134,12 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public String appStore;
     }
 
-    public static class Response {
+    public static class Response extends FoilCardsResponse {
         public long id;
         public String name;
         public int level;
         public long experience;
         public int relics;
-        public List<Card> foilTowers;
-        public List<Card> foilItems;
-        public List<Card> foilPotions;
-        public List<Card> foilHeroes;
         public List<Long> completedHiddenQuestIds;
         public List<Quest> dailyQuests;
         public boolean canReplaceDailyQuest;
@@ -180,10 +148,5 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public int blackMarketPrice;
         public BlackMarketOffer blackMarketPurchase;
         public VersionInfo appUpdate;
-
-        public static class Card {
-            public long id;
-            public int amount;
-        }
     }
 }
