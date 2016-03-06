@@ -52,11 +52,9 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
         Offer offer = new Offer();
 
         List<FoilCard> foilCards = foilCardGateway.getFoilCardsForPlayerId(player.getId());
-        for (FoilCard foilCard : foilCards) {
-            if (foilCard.getAmount() > 1) {
-                addFoilCardToOffer(offer, foilCard);
-            }
-        }
+        foilCards.stream()
+                .filter(foilCard -> foilCard.getAmount() > 1)
+                .forEach(foilCard -> addFoilCardToOffer(offer, foilCard));
 
         return offer;
     }
