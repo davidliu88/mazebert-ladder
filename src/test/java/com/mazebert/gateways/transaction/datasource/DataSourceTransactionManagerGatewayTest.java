@@ -149,6 +149,16 @@ public class DataSourceTransactionManagerGatewayTest {
         assertNull(transactionManager.getCurrent());
     }
 
+    @Test
+    public void readChangedValueDuringTransaction() {
+        transactionManager.runAsTransaction(() -> {
+            playerGateway.addRelics(player.getId(), 1000);
+            assertEquals(2000, playerGateway.getRelics(player.getId()));
+            playerGateway.addRelics(player.getId(), 1000);
+            assertEquals(3000, playerGateway.getRelics(player.getId()));
+        });
+    }
+
     private void addRelicsAndFoilCard() {
         playerGateway.addRelics(player.getId(), 1000);
         playerGateway.addRelics(player.getId(), 2000);
