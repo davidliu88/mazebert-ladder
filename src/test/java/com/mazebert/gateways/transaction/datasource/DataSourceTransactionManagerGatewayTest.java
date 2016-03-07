@@ -61,6 +61,26 @@ public class DataSourceTransactionManagerGatewayTest {
         assertEquals(0, foilCardGateway.getFoilCardsForPlayerId(player.getId()).size());
     }
 
+    @Test
+    public void transactionTaskIsCommitted() {
+        int relics = transactionManager.runAsTransaction(this::addRelicsAndFoilCardAndReturnRelics);
+
+        assertEquals(4600, relics);
+        assertEquals(1, foilCardGateway.getFoilCardsForPlayerId(player.getId()).size());
+    }
+
+    @Test
+    public void transactionTaskIsRolledBack() {
+        try {
+            transactionManager.runAsTransaction(this::addRelicsAndFoilCardAndReturnRelicsAndThrowException);
+        } catch (InternalServerError error) {
+            assertEquals("Something bad happened!", error.getMessage());
+        }
+
+        assertEquals(1000, playerGateway.getRelics(player.getId()));
+        assertEquals(0, foilCardGateway.getFoilCardsForPlayerId(player.getId()).size());
+    }
+
     @Test(expected = TransactionError.class)
     public void nestedTransactionsAreNotSupported() {
         transactionManager.runAsTransaction(() -> transactionManager.runAsTransaction(this::addRelicsAndFoilCard));
@@ -136,5 +156,18 @@ public class DataSourceTransactionManagerGatewayTest {
         playerGateway.addRelics(player.getId(), 100);
 
         foilCardGateway.addFoilCardToPlayer(player.getId(), a(foilCard().bowlingBall()));
+    }
+
+    private int addRelicsAndFoilCardAndReturnRelics() {
+        addRelicsAndFoilCard();
+        return playerGateway.getRelics(player.getId());
+    }
+
+    private int addRelicsAndFoilCardAndReturnRelicsAndThrowException() {
+        return addRelicsAndFoilCardAndReturnRelics() + throwException();
+    }
+
+    private int throwException() {
+        throw new InternalServerError("Something bad happened!");
     }
 }

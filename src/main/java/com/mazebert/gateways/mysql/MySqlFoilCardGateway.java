@@ -54,6 +54,8 @@ public class MySqlFoilCardGateway extends MySqlGateway implements FoilCardGatewa
         } catch (SQLException e) {
             throw new GatewayError("Failed to add foil card to player.", e);
         }
+
+        // TODO update instead of insert if foil card already exists! (catch unique constraint exception internally)
     }
 
     @Override

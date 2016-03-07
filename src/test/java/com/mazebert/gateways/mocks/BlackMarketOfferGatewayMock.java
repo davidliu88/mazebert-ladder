@@ -9,6 +9,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class BlackMarketOfferGatewayMock implements BlackMarketOfferGateway {
     private BlackMarketOffer latestOffer;
@@ -62,5 +63,9 @@ public class BlackMarketOfferGatewayMock implements BlackMarketOfferGateway {
 
     public void thenNoOfferWasCreated() {
         assertNull(lastAddedOffer);
+    }
+
+    public void thenOfferIsPurchasedByPlayer(BlackMarketOffer offer, Player player) {
+        assertTrue(isOfferPurchased(offer, player));
     }
 }

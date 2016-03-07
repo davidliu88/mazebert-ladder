@@ -39,4 +39,12 @@ public class BlackMarketOffer {
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
+
+    public FoilCard createFoilCard() {
+        FoilCard foilCard = new FoilCard();
+        foilCard.setCardId(cardId);
+        foilCard.setCardType(cardType);
+        foilCard.setAmount(1);
+        return foilCard;
+    }
 }

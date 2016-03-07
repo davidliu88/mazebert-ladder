@@ -1,8 +1,6 @@
 package com.mazebert.gateways.transaction.datasource;
 
-import com.mazebert.gateways.transaction.Transaction;
-import com.mazebert.gateways.transaction.TransactionError;
-import com.mazebert.gateways.transaction.TransactionManager;
+import com.mazebert.gateways.transaction.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,11 +17,24 @@ public class DataSourceTransactionManager implements TransactionManager {
     }
 
     @Override
-    public void runAsTransaction(Runnable runnable) {
+    public void runAsTransaction(Runnable task) {
         Transaction transaction = startTransaction();
         try {
-            runnable.run();
+            task.run();
             transaction.commit();
+        } catch (Throwable throwable) {
+            transaction.rollback();
+            throw throwable;
+        }
+    }
+
+    @Override
+    public <Value> Value runAsTransaction(TransactionTask<Value> task) {
+        Transaction transaction = startTransaction();
+        try {
+            Value result = task.run();
+            transaction.commit();
+            return result;
         } catch (Throwable throwable) {
             transaction.rollback();
             throw throwable;
