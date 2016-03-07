@@ -2,6 +2,7 @@ package com.mazebert.usecases.blackmarket;
 
 import com.mazebert.entities.BlackMarket;
 import com.mazebert.entities.BlackMarketOffer;
+import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
@@ -48,11 +49,12 @@ public class BuyBlackMarketOffer implements Usecase<BuyBlackMarketOffer.Request,
                 throw new ServiceUnavailable("Come back when you got my " + price + " relics!");
             }
 
-            foilCardGateway.addFoilCardToPlayer(player.getId(), offer.createFoilCard());
+            FoilCard foilCard = offer.createFoilCard();
+            foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
             playerGateway.addRelics(player.getId(), -price);
             blackMarketOfferGateway.markOfferAsPurchased(offer, player);
 
-            return createResponse(offer);
+            return createResponse(foilCard, player);
         });
     }
 
@@ -76,10 +78,12 @@ public class BuyBlackMarketOffer implements Usecase<BuyBlackMarketOffer.Request,
         return offer;
     }
 
-    private Response createResponse(BlackMarketOffer offer) {
+    private Response createResponse(FoilCard foilCard, Player player) {
         Response response = new Response();
-        response.id = offer.getCardId();
-        response.type = offer.getCardType();
+        response.id = foilCard.getCardId();
+        response.type = foilCard.getCardType();
+        response.relics = playerGateway.getRelics(player.getId());
+        response.amount = foilCardGateway.getFoilCardAmount(player.getId(), response.id, response.type);
         return response;
     }
 
@@ -98,5 +102,7 @@ public class BuyBlackMarketOffer implements Usecase<BuyBlackMarketOffer.Request,
     public static class Response {
         public long id;
         public int type;
+        public int relics;
+        public int amount;
     }
 }

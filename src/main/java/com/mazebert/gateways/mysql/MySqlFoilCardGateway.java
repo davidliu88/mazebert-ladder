@@ -29,6 +29,12 @@ public class MySqlFoilCardGateway extends MySqlGateway implements FoilCardGatewa
     }
 
     @Override
+    public int getFoilCardAmount(long playerId, long cardId, int cardType) {
+        // TODO implement me!
+        return 0;
+    }
+
+    @Override
     public boolean isFoilCardOwnedByPlayer(long playerId, long cardId, int cardType) {
         try {
             Integer count = getQueryRunner().query("SELECT amount FROM PlayerFoilCard WHERE playerId=? AND cardId=? AND cardType=?;",

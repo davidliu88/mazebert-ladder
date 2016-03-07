@@ -26,32 +26,44 @@ public class FoilCardGatewayMock implements FoilCardGateway {
     }
 
     @Override
-    public boolean isFoilCardOwnedByPlayer(long playerId, long cardId, int cardType) {
-        List<FoilCard> cards = foilCardsForPlayer.get(playerId);
-        if (cards != null) {
-            for (FoilCard card : cards) {
-                if (card.getCardId() == cardId && card.getCardType() == cardType) {
-                    return true;
-                }
-            }
-        }
+    public int getFoilCardAmount(long playerId, long cardId, int cardType) {
+        FoilCard card = findFoilCard(playerId, cardId, cardType);
+        return card == null ? 0 : card.getAmount();
+    }
 
-        return false;
+    @Override
+    public boolean isFoilCardOwnedByPlayer(long playerId, long cardId, int cardType) {
+        return findFoilCard(playerId, cardId, cardType) != null;
     }
 
     @Override
     public void addFoilCardToPlayer(long playerId, FoilCard foilCard) {
-        List<FoilCard> cards = foilCardsForPlayer.get(playerId);
-        if (cards == null) {
-            cards = new ArrayList<>();
+        FoilCard card = findFoilCard(playerId, foilCard.getCardId(), foilCard.getCardType());
+        if (card == null) {
+            List<FoilCard> cards = new ArrayList<>();
             foilCardsForPlayer.put(playerId, cards);
+            cards.add(foilCard);
+        } else {
+            card.setAmount(card.getAmount() + foilCard.getAmount());
         }
-        cards.add(foilCard);
     }
 
     @Override
     public void setAmountOfAllPlayerFoilCards(long playerId, int amount) {
         getFoilCardsForPlayerId(playerId).stream().forEach(foilCard -> foilCard.setAmount(amount));
+    }
+
+    private FoilCard findFoilCard(long playerId, long cardId, int cardType) {
+        List<FoilCard> cards = foilCardsForPlayer.get(playerId);
+        if (cards != null) {
+            for (FoilCard card : cards) {
+                if (card.getCardId() == cardId && card.getCardType() == cardType) {
+                    return card;
+                }
+            }
+        }
+
+        return null;
     }
 
     public void givenFoilCardsForPlayer(Player player, List<FoilCard> foilCards) {

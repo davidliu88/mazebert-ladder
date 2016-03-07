@@ -20,6 +20,7 @@ import org.jusecase.builders.Builder;
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.list;
 
 public class BuyBlackMarketOfferTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
@@ -121,10 +122,26 @@ public class BuyBlackMarketOfferTest extends UsecaseTest<Request, Response> {
         blackMarketOfferGateway.thenOfferIsPurchasedByPlayer(currentOffer, player);
         assertEquals(58, response.id);
         assertEquals(CardType.ITEM, response.type);
+        assertEquals(1, response.amount);
+    }
+
+    @Test
+    public void newFoilCardAmountIsReturned() {
+        BlackMarketOffer currentOffer = a(blackMarketOffer().withCard(item().bowlingBall()));
+        blackMarketOfferGateway.givenLatestOffer(currentOffer);
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
+                a(foilCard().withCard(a(item().bowlingBall())).withAmount(10))
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals(11, response.amount);
     }
 
     private void thenPlayerRelicsAre(int relics) {
         assertEquals(relics, playerGateway.getRelics(player.getId()));
+        assertEquals(relics, response.relics);
     }
 
     private RequestBuilder request() {
