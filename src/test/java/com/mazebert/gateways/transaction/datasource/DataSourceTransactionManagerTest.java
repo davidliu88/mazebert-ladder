@@ -1,5 +1,6 @@
 package com.mazebert.gateways.transaction.datasource;
 
+import com.mazebert.categories.IntegrationTest;
 import com.mazebert.entities.Player;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.FoilCardGateway;
@@ -10,6 +11,7 @@ import com.mazebert.gateways.mysql.connection.TestDataSourceProvider;
 import com.mazebert.gateways.transaction.TransactionError;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,7 +24,8 @@ import static org.junit.Assert.assertNull;
 import static org.jusecase.Builders.a;
 import static org.mockito.Mockito.*;
 
-public class DataSourceTransactionManagerGatewayTest {
+@Category(IntegrationTest.class)
+public class DataSourceTransactionManagerTest {
     private DataSourceTransactionManager transactionManager;
     private PlayerGateway playerGateway;
     private FoilCardGateway foilCardGateway;

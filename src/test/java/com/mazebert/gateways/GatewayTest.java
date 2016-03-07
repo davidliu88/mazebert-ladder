@@ -1,10 +1,13 @@
 package com.mazebert.gateways;
 
+import com.mazebert.categories.IntegrationTest;
 import com.mazebert.gateways.error.GatewayError;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@Category(IntegrationTest.class)
 public class GatewayTest<Gateway> {
     protected Gateway gateway;
     protected Gateway errorGateway;

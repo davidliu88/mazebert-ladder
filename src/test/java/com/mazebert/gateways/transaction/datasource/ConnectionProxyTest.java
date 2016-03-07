@@ -1,8 +1,10 @@
 package com.mazebert.gateways.transaction.datasource;
 
+import com.mazebert.categories.IntegrationTest;
 import com.mysql.jdbc.Statement;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,7 +15,8 @@ import java.util.Properties;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
-public class ConnectionProxyGatewayTest {
+@Category(IntegrationTest.class)
+public class ConnectionProxyTest {
 
     private ConnectionProxy connectionProxy;
     private Connection connection;

@@ -1,6 +1,7 @@
 package com.mazebert.presenters.jaxrs;
 
 import com.mazebert.LogicTest;
+import com.mazebert.categories.IntegrationTest;
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.error.Unauthorized;
@@ -15,6 +16,7 @@ import com.mazebert.usecases.security.VerifyGameRequest;
 import com.mazebert.usecases.security.VerifyRequest;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.jusecase.UsecaseExecutor;
 import org.jusecase.executors.manual.Factory;
@@ -41,6 +43,7 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Category(IntegrationTest.class)
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractPresenterTest {
     private AbstractPresenter presenter;

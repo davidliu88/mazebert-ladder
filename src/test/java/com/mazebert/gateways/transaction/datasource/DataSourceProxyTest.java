@@ -1,15 +1,18 @@
 package com.mazebert.gateways.transaction.datasource;
 
+import com.mazebert.categories.IntegrationTest;
 import com.mazebert.gateways.transaction.TransactionManager;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-public class DataSourceProxyGatewayTest {
+@Category(IntegrationTest.class)
+public class DataSourceProxyTest {
 
     private DataSourceProxy dataSourceProxy;
     private DataSource dataSource;

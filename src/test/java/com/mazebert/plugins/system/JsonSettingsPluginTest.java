@@ -1,12 +1,15 @@
 package com.mazebert.plugins.system;
 
+import com.mazebert.categories.IntegrationTest;
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.plugins.system.mocks.EnvironmentPluginMock;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(IntegrationTest.class)
 public class JsonSettingsPluginTest {
     private JsonSettingsPlugin settings;
     private EnvironmentPluginMock environmentPlugin = new EnvironmentPluginMock();
