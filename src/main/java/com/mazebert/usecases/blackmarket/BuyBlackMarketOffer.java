@@ -12,7 +12,12 @@ import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
+import com.mazebert.usecases.security.SignResponse;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
+
+import javax.inject.Inject;
 
 public class BuyBlackMarketOffer implements Usecase<BuyBlackMarketOffer.Request, BuyBlackMarketOffer.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.1.0");
@@ -22,6 +27,7 @@ public class BuyBlackMarketOffer implements Usecase<BuyBlackMarketOffer.Request,
     private final FoilCardGateway foilCardGateway;
     private final BlackMarket blackMarket;
 
+    @Inject
     public BuyBlackMarketOffer(PlayerGateway playerGateway, BlackMarketOfferGateway blackMarketOfferGateway,
                                CurrentDatePlugin currentDatePlugin, BlackMarketSettingsGateway blackMarketSettingsGateway,
                                CardGateway cardGateway, RandomNumberGenerator randomNumberGenerator,
@@ -94,6 +100,9 @@ public class BuyBlackMarketOffer implements Usecase<BuyBlackMarketOffer.Request,
         }
     }
 
+    @VerifyRequest
+    @StatusResponse
+    @SignResponse
     public static class Request {
         public String appVersion;
         public String key;

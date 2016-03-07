@@ -13,6 +13,7 @@ import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.mocks.EnvironmentPluginStub;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
+import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
@@ -63,6 +64,8 @@ public class LogicTest extends UsecaseExecutorTest {
 
         thenUsecaseCanBeExecuted(TradeDuplicateCards.class);
 
+        thenUsecaseCanBeExecuted(BuyBlackMarketOffer.class);
+
         thenUsecaseCanBeExecuted(GetBonusTimes.class);
         thenUsecaseCanBeExecuted(UpdateBonusTime.class);
 
@@ -82,6 +85,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenRequestIsVerified(CompleteQuests.class);
         thenRequestIsVerified(ReplaceQuest.class);
         thenRequestIsVerified(TradeDuplicateCards.class);
+        thenRequestIsVerified(BuyBlackMarketOffer.class);
     }
 
     @Test
@@ -89,6 +93,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenResponseIsSigned(SynchronizePlayer.class);
         thenResponseIsSigned(ReplaceQuest.class);
         thenResponseIsSigned(TradeDuplicateCards.class);
+        thenResponseIsSigned(BuyBlackMarketOffer.class);
     }
 
     @Test

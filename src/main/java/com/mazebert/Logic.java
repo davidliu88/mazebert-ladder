@@ -25,6 +25,7 @@ import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.SystemEnvironmentPlugin;
 import com.mazebert.usecases.GetStatus;
 import com.mazebert.usecases.GetVersion;
+import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.*;
@@ -115,6 +116,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addSystemUsecases();
         addPlayerUsecases();
         addTradeUsecases();
+        addBlackMarketUsecases();
         addBonusTimeUsecases();
         addQuestUsecases();
         addSupporterUsecases();
@@ -140,6 +142,10 @@ public class Logic extends GuiceUsecaseExecutor {
 
     private void addTradeUsecases() {
         addUsecase(TradeDuplicateCards.class);
+    }
+
+    private void addBlackMarketUsecases() {
+        addUsecase(BuyBlackMarketOffer.class);
     }
 
     private void addBonusTimeUsecases() {
