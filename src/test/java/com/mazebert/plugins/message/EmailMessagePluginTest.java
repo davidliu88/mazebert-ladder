@@ -1,11 +1,13 @@
 package com.mazebert.plugins.message;
 
 import com.google.inject.Provider;
+import com.mazebert.categories.IntegrationTest;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.mocks.SettingsPluginMock;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -13,6 +15,7 @@ import java.util.Properties;
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.inputStream;
 
+@Category(IntegrationTest.class)
 @Ignore
 public class EmailMessagePluginTest {
     private EmailMessagePlugin emailMessagePlugin;
