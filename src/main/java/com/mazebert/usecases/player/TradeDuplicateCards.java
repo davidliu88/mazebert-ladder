@@ -89,14 +89,13 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
     }
 
     private void doTradeCardsTransaction(Player player, Response response) {
+        Offer offer = createOffer(player);
         transactionRunner.runAsTransaction(() -> {
-            Offer offer = createOffer(player);
             foilCardGateway.setAmountOfAllPlayerFoilCards(player.getId(), 1);
             playerGateway.addRelics(player.getId(), offer.total);
-
-            response.addFoilCards(player, foilCardGateway);
-            response.relics = playerGateway.getRelics(player.getId());
         });
+        response.addFoilCards(player, foilCardGateway);
+        response.relics = playerGateway.getRelics(player.getId());
     }
 
 

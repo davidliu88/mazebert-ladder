@@ -53,11 +53,11 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
     }
 
     private void doQuestTransactions(Request request, Player player) {
-        transactionRunner.runAsTransaction(() -> {
-            List<Quest> quests = questGateway.findQuestsByIds(request.questTransactionIds);
-            List<Long> hiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
-            List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
+        List<Quest> quests = questGateway.findQuestsByIds(request.questTransactionIds);
+        List<Long> hiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
+        List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
 
+        transactionRunner.runAsTransaction(() -> {
             int reward = 0;
             for (Quest quest : quests) {
                 reward += completeQuest(player, hiddenQuestIds, dailyQuestIds, quest);

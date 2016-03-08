@@ -46,22 +46,23 @@ public class BuyBlackMarketOffer implements Usecase<BuyBlackMarketOffer.Request,
     }
 
     private Response doTransaction(Request request) {
-        return transactionRunner.runAsTransaction(() -> {
-            Player player = getPlayer(request);
-            BlackMarketOffer offer = getCurrentOffer(player);
+        Player player = getPlayer(request);
+        BlackMarketOffer offer = getCurrentOffer(player);
 
-            int price = blackMarket.getPrice();
-            if (player.getRelics() < price) {
-                throw new ServiceUnavailable("Come back when you got my " + price + " relics!");
-            }
+        int price = blackMarket.getPrice();
+        if (player.getRelics() < price) {
+            throw new ServiceUnavailable("Come back when you got my " + price + " relics!");
+        }
 
-            FoilCard foilCard = offer.createFoilCard();
+        FoilCard foilCard = offer.createFoilCard();
+
+        transactionRunner.runAsTransaction(() -> {
             foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
             playerGateway.addRelics(player.getId(), -price);
             blackMarketOfferGateway.markOfferAsPurchased(offer, player);
-
-            return createResponse(foilCard, player);
         });
+
+        return createResponse(foilCard, player);
     }
 
     private Player getPlayer(Request request) {
