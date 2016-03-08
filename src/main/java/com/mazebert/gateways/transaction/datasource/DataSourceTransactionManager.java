@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 public class DataSourceTransactionManager implements TransactionManager {
     private DataSource dataSource;
     private final ThreadLocal<Transaction> transactions;
+    private int maxTransactionAttempts = 5;
 
     @Inject
     public DataSourceTransactionManager() {
@@ -27,15 +28,19 @@ public class DataSourceTransactionManager implements TransactionManager {
 
     @Override
     public <Value> Value runAsTransaction(final TransactionTask<Value> task) {
+        return runAsTransaction(task, maxTransactionAttempts - 1);
+    }
+
+    private <Value> Value runAsTransaction(final TransactionTask<Value> task, int attemptsLeft) {
         Transaction transaction = startTransaction();
         try {
             Value result = task.run();
             transaction.commit();
             return result;
         } catch (GatewayError gatewayError){
-            if (gatewayError.isTransactionError()) {
+            if (gatewayError.isTransactionError() && attemptsLeft > 0) {
                 transaction.rollback();
-                return runAsTransaction(task);
+                return runAsTransaction(task, attemptsLeft - 1);
             } else {
                 transaction.rollback();
                 throw gatewayError;
@@ -69,5 +74,13 @@ public class DataSourceTransactionManager implements TransactionManager {
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public int getMaxTransactionAttempts() {
+        return maxTransactionAttempts;
+    }
+
+    public void setMaxTransactionAttempts(int maxTransactionAttempts) {
+        this.maxTransactionAttempts = maxTransactionAttempts;
     }
 }

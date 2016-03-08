@@ -1,6 +1,8 @@
 package com.mazebert.gateways.transaction.datasource;
 
 import com.mazebert.error.InternalServerError;
+import com.mazebert.gateways.error.GatewayError;
+import com.mazebert.gateways.mysql.MySqlErrorCode;
 import com.mazebert.gateways.transaction.TransactionError;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +13,7 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.*;
 
@@ -19,7 +22,7 @@ public class DataSourceTransactionManagerTest {
     private DataSource dataSource;
     private Connection connection;
 
-    private TransactionError transactionError;
+    private Throwable error;
 
     @Before
     public void setUp() throws Exception {
@@ -81,6 +84,21 @@ public class DataSourceTransactionManagerTest {
         verify(connection).setAutoCommit(true);
     }
 
+    @Test
+    public void maxTransactionAttempts_initialValue() {
+        assertEquals(5, transactionManager.getMaxTransactionAttempts());
+    }
+
+    @Test
+    public void maxTransactionAttempts_areConsidered() {
+        transactionManager.setMaxTransactionAttempts(3);
+        LockedTransaction lockedTransaction = new LockedTransaction();
+
+        whenTransactionIsExecuted(lockedTransaction);
+
+        assertEquals(3, lockedTransaction.getAttempts());
+    }
+
     private void whenTransactionIsExecuted() {
         whenTransactionIsExecuted(() -> {
         });
@@ -89,13 +107,14 @@ public class DataSourceTransactionManagerTest {
     private void whenTransactionIsExecuted(Runnable runnable) {
         try {
             transactionManager.runAsTransaction(runnable);
-        } catch (TransactionError error) {
-            transactionError = error;
+        } catch (Throwable error) {
+            this.error = error;
         }
     }
 
     private void thenTransactionFailsWithErrorMessage(String expected) {
-        assertEquals(expected, transactionError.getMessage());
+        assertTrue(error instanceof TransactionError);
+        assertEquals(expected, error.getMessage());
         assertNull(transactionManager.getCurrent());
     }
 
@@ -109,5 +128,19 @@ public class DataSourceTransactionManagerTest {
 
     private void thenTransactionIsRolledBack() throws SQLException {
         verify(connection, times(1)).rollback();
+    }
+
+    private static class LockedTransaction implements Runnable {
+        private int attempts;
+
+        @Override
+        public void run() {
+            ++attempts;
+            throw new GatewayError("", new SQLException("", "", MySqlErrorCode.COULD_NOT_GET_LOCK));
+        }
+
+        public int getAttempts() {
+            return attempts;
+        }
     }
 }
