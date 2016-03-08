@@ -33,6 +33,11 @@ public class MySqlCardGateway extends MySqlGateway implements CardGateway {
     }
 
     @Override
+    public List<Card> findAllCards() {
+        return null; // TODO implement me!
+    }
+
+    @Override
     public List<Hero> findAllHeroes() {
         return findAll(CardType.HERO);
     }

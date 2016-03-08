@@ -20,6 +20,11 @@ public class CardGatewayMock implements CardGateway {
     }
 
     @Override
+    public List<Card> findAllCards() {
+        return cards;
+    }
+
+    @Override
     public List<Hero> findAllHeroes() {
         List<Hero> heroes = new ArrayList<>();
         cards.stream().filter(card -> card instanceof Hero).forEach(card -> heroes.add((Hero)card));

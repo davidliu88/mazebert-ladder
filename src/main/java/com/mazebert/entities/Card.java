@@ -74,4 +74,12 @@ public abstract class Card {
         }
         return 0;
     }
+
+    public FoilCard createFoilCard() {
+        FoilCard foilCard = new FoilCard();
+        foilCard.setCardId(id);
+        foilCard.setCardType(getType());
+        foilCard.setAmount(1);
+        return foilCard;
+    }
 }

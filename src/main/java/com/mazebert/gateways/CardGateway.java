@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface CardGateway {
     Card findCard(long cardId, int cardType);
+    List<Card> findAllCards();
     List<Hero> findAllHeroes();
     List<Item> findAllItems();
     List<Potion> findAllPotions();
