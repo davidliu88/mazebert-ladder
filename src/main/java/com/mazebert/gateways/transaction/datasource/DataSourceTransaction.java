@@ -11,11 +11,13 @@ import java.sql.SQLException;
 public class DataSourceTransaction implements Transaction {
     private final TransactionManager transactionManager;
     private final ConnectionProxy connectionProxy;
+    private final boolean initialAutoCommitEnabled;
 
     public DataSourceTransaction(TransactionManager transactionManager, DataSource dataSource) {
         this.transactionManager = transactionManager;
         try {
             connectionProxy = new ConnectionProxy(dataSource.getConnection());
+            initialAutoCommitEnabled = connectionProxy.getAutoCommit();
             connectionProxy.setAutoCommit(false);
         } catch (SQLException e) {
             closeConnectionQuietly();
@@ -50,10 +52,14 @@ public class DataSourceTransaction implements Transaction {
     }
 
     private void closeConnectionQuietly() {
-        try {
-            connectionProxy.getConnection().close();
-        } catch (SQLException e) {
-            // Connection is closed quietly.
+        if (connectionProxy != null) {
+            try {
+                try (Connection connection = connectionProxy.getConnection()) {
+                    connection.setAutoCommit(initialAutoCommitEnabled);
+                }
+            } catch (SQLException e) {
+                // Connection is closed quietly.
+            }
         }
     }
 
