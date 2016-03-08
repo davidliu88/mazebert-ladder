@@ -11,7 +11,7 @@ import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer.Request;
-import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer.Response;
+import com.mazebert.usecases.player.AbstractBuyCard.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
