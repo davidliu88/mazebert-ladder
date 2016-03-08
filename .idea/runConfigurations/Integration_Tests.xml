@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Integration Tests" type="JUnit" factoryName="JUnit">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-    <module name="mazebert-ladder" />
+    <module name="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PACKAGE_NAME" value="com.mazebert" />
-    <option name="MAIN_CLASS_NAME" value="com.mazebert.IntegrationTestSuite" />
+    <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="class" />
+    <option name="TEST_OBJECT" value="pattern" />
     <option name="VM_PARAMETERS" value="-ea" />
     <option name="PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
@@ -18,7 +18,7 @@
     </option>
     <envs />
     <patterns>
-      <pattern testClass="(.*?)GatewayTest(.*?)" />
+      <pattern testClass="(.*?)IntegrationTestSuite(.*?)" />
     </patterns>
     <method>
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_RunDb" />

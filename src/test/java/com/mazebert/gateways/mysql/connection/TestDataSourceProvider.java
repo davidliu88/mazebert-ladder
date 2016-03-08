@@ -3,7 +3,6 @@ package com.mazebert.gateways.mysql.connection;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import org.apache.commons.dbutils.QueryRunner;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -29,25 +28,7 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
         }
     }
 
-    @Override
-    public DataSource get() {
-        DataSource dataSource = super.get();
-        clearAllTables();
-        return dataSource;
-    }
-
-    private void clearAllTables() {
-        clearTable("Player");
-        clearTable("PlayerPurchasedProduct");
-        clearTable("PlayerFoilCard");
-        clearTable("PlayerDailyQuest");
-        clearTable("PlayerHiddenQuest");
-        clearTable("BlackMarketOffer");
-        clearTable("PlayerPurchasedBlackMarketOffer");
-        clearTable("BonusTime");
-    }
-
-    private void clearTable(String table) {
+    public void clearTable(String table) {
         try {
             new QueryRunner(super.get()).update("TRUNCATE TABLE " + table + ";");
         } catch (SQLException e) {

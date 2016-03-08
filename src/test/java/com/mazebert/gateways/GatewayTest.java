@@ -1,18 +1,24 @@
 package com.mazebert.gateways;
 
-import com.mazebert.categories.IntegrationTest;
+import com.mazebert.categories.ParallelIntegrationTest;
 import com.mazebert.gateways.error.GatewayError;
+import com.mazebert.gateways.mysql.connection.TestDataSourceProvider;
+import com.mazebert.gateways.transaction.RunAsTransactionAndRollback;
+import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@Category(IntegrationTest.class)
+@Category(ParallelIntegrationTest.class)
 public class GatewayTest<Gateway> {
     protected Gateway gateway;
     protected Gateway errorGateway;
 
     protected GatewayError error;
+
+    @Rule
+    public RunAsTransactionAndRollback runAsTransactionAndRollback = new RunAsTransactionAndRollback(TestDataSourceProvider.instance.getTransactionManager());
 
     protected void whenGatewayErrorIsForced(Runnable runnable) {
         try {

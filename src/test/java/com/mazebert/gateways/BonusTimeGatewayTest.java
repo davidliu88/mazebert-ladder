@@ -18,6 +18,7 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     protected PlayerGateway playerGateway;
 
     private List<PlayerBonusTime> bonusTimes;
+    private long playerId;
 
     @Test
     public void findBonusTimes_gatewayError() {
@@ -37,7 +38,7 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
                 .withName("Lonely Wolf")
         ));
         givenBonusTimeExists(a(updateRequest()
-                .withPlayerId(1)
+                .withPlayerId(playerId)
                 .withSecondsSurvived(2531)
         ));
 
@@ -45,7 +46,7 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
 
         assertEquals(1, bonusTimes.size());
         PlayerBonusTime entry = bonusTimes.get(0);
-        assertEquals(1, entry.getId());
+        assertEquals(playerId, entry.getId());
         assertEquals("Lonely Wolf", entry.getName());
         assertEquals(2531, entry.getBonusTime());
     }
@@ -94,12 +95,13 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     @Test
     public void findBonusTimes_sameTime_orderedByPlayerId() {
         givenPlayerExists(a(player().casid().withKey("a").withName("1st signed up")));
-        givenPlayerExists(a(player().casid().withKey("b").withName("2nd signed up")));
-        givenPlayerExists(a(player().casid().withKey("c").withName("3rd signed up")));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withSecondsSurvived(100)));
 
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withSecondsSurvived(100)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(2).withSecondsSurvived(100)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(3).withSecondsSurvived(100)));
+        givenPlayerExists(a(player().casid().withKey("b").withName("2nd signed up")));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withSecondsSurvived(100)));
+
+        givenPlayerExists(a(player().casid().withKey("c").withName("3rd signed up")));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withSecondsSurvived(100)));
 
         whenFindingBonusTimes(a(findRequest()));
 
@@ -111,9 +113,9 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     @Test
     public void findBonusTimes_maxBonusTimeIsCalculatedCorrectly() {
         givenPlayerExists(a(player().casid()));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(2).withSecondsSurvived(100)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(0).withSecondsSurvived(400)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(1).withSecondsSurvived(200)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(2).withSecondsSurvived(100)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(0).withSecondsSurvived(400)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(1).withSecondsSurvived(200)));
 
         whenFindingBonusTimes(a(findRequest()));
 
@@ -124,8 +126,8 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     @Test
     public void findBonusTimes_difficulty_bonusTimeForDifficultyIsCalculatedCorrectly_0() {
         givenPlayerExists(a(player().casid()));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(0).withSecondsSurvived(100)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(1).withSecondsSurvived(400)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(0).withSecondsSurvived(100)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(1).withSecondsSurvived(400)));
 
         whenFindingBonusTimes(a(findRequest().withDifficultyType("0")));
 
@@ -136,9 +138,9 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     @Test
     public void findBonusTimes_difficulty_bonusTimeForDifficultyIsCalculatedCorrectly_1() {
         givenPlayerExists(a(player().casid()));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(0).withSecondsSurvived(100)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(1).withSecondsSurvived(400)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withDifficultyType(1).withSecondsSurvived(50)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(0).withSecondsSurvived(100)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(1).withSecondsSurvived(400)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withDifficultyType(1).withSecondsSurvived(50)));
 
         whenFindingBonusTimes(a(findRequest().withDifficultyType("1")));
 
@@ -149,8 +151,8 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     @Test
     public void findBonusTimes_wave_bonusTimeForWaveIsCalculatedCorrectly_0() {
         givenPlayerExists(a(player().casid()));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withWaveAmountType(0).withSecondsSurvived(100)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withWaveAmountType(1).withSecondsSurvived(400)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withWaveAmountType(0).withSecondsSurvived(100)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withWaveAmountType(1).withSecondsSurvived(400)));
 
         whenFindingBonusTimes(a(findRequest().withWaveAmountType("0")));
 
@@ -161,9 +163,9 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     @Test
     public void findBonusTimes_wave_bonusTimeForDifficultyIsCalculatedCorrectly_1() {
         givenPlayerExists(a(player().casid()));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withWaveAmountType(0).withSecondsSurvived(100)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withWaveAmountType(1).withSecondsSurvived(400)));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withWaveAmountType(1).withSecondsSurvived(50)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withWaveAmountType(0).withSecondsSurvived(100)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withWaveAmountType(1).withSecondsSurvived(400)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withWaveAmountType(1).withSecondsSurvived(50)));
 
         whenFindingBonusTimes(a(findRequest().withWaveAmountType("1")));
 
@@ -174,7 +176,7 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     @Test
     public void findBonusTimes_waveAndDifficulty() {
         givenPlayerExists(a(player().casid()));
-        givenBonusTimeExists(a(updateRequest().withPlayerId(1).withWaveAmountType(1).withDifficultyType(2).withSecondsSurvived(100)));
+        givenBonusTimeExists(a(updateRequest().withPlayerId(playerId).withWaveAmountType(1).withDifficultyType(2).withSecondsSurvived(100)));
 
         whenFindingBonusTimes(a(findRequest().withWaveAmountType("1").withDifficultyType("2")));
 
@@ -237,7 +239,7 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
     }
 
     private void givenPlayerExists(Player player) {
-        playerGateway.addPlayer(player);
+        playerId = playerGateway.addPlayer(player).getId();
     }
 
     private void givenDefaultEntriesAndPlayers() {
@@ -245,25 +247,26 @@ public abstract class BonusTimeGatewayTest extends GatewayTest<BonusTimeGateway>
                 .withName("Casual")
                 .withKey("a")
         ));
+        givenBonusTimeExists(a(updateRequest()
+                .withPlayerId(playerId)
+                .withSecondsSurvived(12)
+        ));
+
         givenPlayerExists(a(player().casid()
                 .withName("Pro")
                 .withKey("b")
         ));
+        givenBonusTimeExists(a(updateRequest()
+                .withPlayerId(playerId)
+                .withSecondsSurvived(9200)
+        ));
+
         givenPlayerExists(a(player().casid()
                 .withName("Advanced")
                 .withKey("c")
         ));
-
         givenBonusTimeExists(a(updateRequest()
-                .withPlayerId(1)
-                .withSecondsSurvived(12)
-        ));
-        givenBonusTimeExists(a(updateRequest()
-                .withPlayerId(2)
-                .withSecondsSurvived(9200)
-        ));
-        givenBonusTimeExists(a(updateRequest()
-                .withPlayerId(3)
+                .withPlayerId(playerId)
                 .withSecondsSurvived(240)
         ));
     }

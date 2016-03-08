@@ -12,7 +12,6 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -81,15 +80,13 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
 
     @Override
     public void addDailyQuest(Player player, Quest quest, Date creationDate) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(false);
-            getQueryRunner().insert(connection, "INSERT INTO PlayerDailyQuest (playerId, questId, creationDate) VALUES(?, ?, ?);",
+        try {
+            getQueryRunner().insert("INSERT INTO PlayerDailyQuest (playerId, questId, creationDate) VALUES(?, ?, ?);",
                     new ScalarHandler<>(),
                     player.getId(),
                     quest.getId(),
                     creationDate);
-            updateLastQuestCreation(player.getId(), creationDate, connection);
-            connection.commit();
+            updateLastQuestCreation(player.getId(), creationDate);
         } catch (SQLException e) {
             throw new GatewayError("Failed to add daily quest to player.", e);
         }
@@ -108,22 +105,20 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
 
     @Override
     public void replaceDailyQuest(long playerId, long oldQuestId, long newQuestId, Date creationDate) {
-        try(Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(false);
-            getQueryRunner().update(connection, "UPDATE PlayerDailyQuest SET questId=?, creationDate=? WHERE playerId=? AND questId=?;",
+        try {
+            getQueryRunner().update("UPDATE PlayerDailyQuest SET questId=?, creationDate=? WHERE playerId=? AND questId=?;",
                     newQuestId,
                     creationDate,
                     playerId,
                     oldQuestId);
-            updateLastQuestCreation(playerId, creationDate, connection);
-            connection.commit();
+            updateLastQuestCreation(playerId, creationDate);
         } catch (SQLException e) {
             throw new GatewayError("Failed to replace daily quest in database.", e);
         }
     }
 
-    private void updateLastQuestCreation(long playerId, Date creationDate, Connection connection) throws SQLException {
-        getQueryRunner().update(connection, "UPDATE Player SET lastQuestCreation=? WHERE id=?;", creationDate, playerId);
+    private void updateLastQuestCreation(long playerId, Date creationDate) throws SQLException {
+        getQueryRunner().update("UPDATE Player SET lastQuestCreation=? WHERE id=?;", creationDate, playerId);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.mazebert.gateways.transaction.datasource;
 
+import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.transaction.*;
 
 import javax.inject.Inject;
@@ -17,24 +18,28 @@ public class DataSourceTransactionManager implements TransactionManager {
     }
 
     @Override
-    public void runAsTransaction(Runnable task) {
-        Transaction transaction = startTransaction();
-        try {
+    public void runAsTransaction(final Runnable task) {
+        runAsTransaction((TransactionTask<Void>) () -> {
             task.run();
-            transaction.commit();
-        } catch (Throwable throwable) {
-            transaction.rollback();
-            throw throwable;
-        }
+            return null;
+        });
     }
 
     @Override
-    public <Value> Value runAsTransaction(TransactionTask<Value> task) {
+    public <Value> Value runAsTransaction(final TransactionTask<Value> task) {
         Transaction transaction = startTransaction();
         try {
             Value result = task.run();
             transaction.commit();
             return result;
+        } catch (GatewayError gatewayError){
+            if (gatewayError.isTransactionError()) {
+                transaction.rollback();
+                return runAsTransaction(task);
+            } else {
+                transaction.rollback();
+                throw gatewayError;
+            }
         } catch (Throwable throwable) {
             transaction.rollback();
             throw throwable;

@@ -13,6 +13,8 @@ import static org.jusecase.Builders.a;
 public abstract class SupporterGatewayTest extends GatewayTest<SupporterGateway> {
     protected PlayerGateway playerGateway;
 
+    private long playerId;
+
     @Test
     public void findAllSupporters_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.findAllSupporters());
@@ -39,7 +41,7 @@ public abstract class SupporterGatewayTest extends GatewayTest<SupporterGateway>
         List<Supporter> supporters = gateway.findAllSupporters();
 
         assertEquals(1, supporters.size());
-        assertEquals(1, supporters.get(0).getId());
+        assertEquals(playerId, supporters.get(0).getId());
         assertEquals("Name", supporters.get(0).getName());
         assertEquals(7, supporters.get(0).getSupporterLevel());
     }
@@ -73,6 +75,6 @@ public abstract class SupporterGatewayTest extends GatewayTest<SupporterGateway>
     }
 
     private void givenPlayerExists(Player player) {
-        playerGateway.addPlayer(player);
+        playerId = playerGateway.addPlayer(player).getId();
     }
 }

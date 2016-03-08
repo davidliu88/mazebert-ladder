@@ -5,4 +5,5 @@ package com.mazebert.gateways.mysql;
  */
 public class MySqlErrorCode {
     public static final int DUPLICATE_ENTRY = 1062;
+    public static final int COULD_NOT_GET_LOCK = 1213;
 }

@@ -9,7 +9,9 @@ import com.mazebert.gateways.mysql.MySqlFoilCardGateway;
 import com.mazebert.gateways.mysql.MySqlPlayerGateway;
 import com.mazebert.gateways.mysql.connection.TestDataSourceProvider;
 import com.mazebert.gateways.transaction.TransactionError;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -32,6 +34,11 @@ public class DataSourceTransactionManagerTest {
 
     private Player player;
 
+    @BeforeClass
+    public static void prepareTest() throws Exception {
+        clearData();
+    }
+
     @Before
     public void setUp() throws Exception {
         transactionManager = (DataSourceTransactionManager) TestDataSourceProvider.instance.getTransactionManager();
@@ -39,6 +46,16 @@ public class DataSourceTransactionManagerTest {
         foilCardGateway = new MySqlFoilCardGateway(TestDataSourceProvider.instance.get());
 
         player = playerGateway.addPlayer(a(player().casid().withRelics(1000)));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        clearData();
+    }
+
+    private static void clearData() {
+        TestDataSourceProvider.instance.clearTable("Player");
+        TestDataSourceProvider.instance.clearTable("PlayerFoilCard");
     }
 
     @Test

@@ -12,7 +12,6 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,28 +97,28 @@ public class MySqlBonusTimeGateway extends MySqlGateway implements BonusTimeGate
 
     @Override
     public void updateBonusTime(UpdateBonusTime.Request request) {
-        try(Connection connection = dataSource.getConnection()) {
-            CurrentBonusTime currentBonusTime = findCurrentBonusTime(connection, request);
+        try {
+            CurrentBonusTime currentBonusTime = findCurrentBonusTime(request);
             if (currentBonusTime != null) {
-                updateBonusTime(connection, currentBonusTime, request);
+                updateBonusTime(currentBonusTime, request);
             } else {
-                insertBonusTime(connection, request);
+                insertBonusTime(request);
             }
         } catch (SQLException e) {
             throw new GatewayError("Could not update bonus time in database.", e);
         }
     }
 
-    private CurrentBonusTime findCurrentBonusTime(Connection connection, UpdateBonusTime.Request request) throws SQLException {
-        return getQueryRunner().query(connection,
+    private CurrentBonusTime findCurrentBonusTime(UpdateBonusTime.Request request) throws SQLException {
+        return getQueryRunner().query(
                 "SELECT id, bonusTimeMax, " + getBonusTimeColumnName(request) + " AS bonusTime FROM BonusTime WHERE playerId=? AND mapId=?;",
                 new BeanHandler<>(CurrentBonusTime.class),
                 request.playerId,
                 request.mapId);
     }
 
-    private void insertBonusTime(Connection connection, UpdateBonusTime.Request request) throws SQLException {
-        getQueryRunner().insert(connection, "INSERT INTO BonusTime (playerId, mapId, bonusTimeMax, " + getBonusTimeColumnName(request) + ") VALUES(?, ?, ?, ?);",
+    private void insertBonusTime(UpdateBonusTime.Request request) throws SQLException {
+        getQueryRunner().insert("INSERT INTO BonusTime (playerId, mapId, bonusTimeMax, " + getBonusTimeColumnName(request) + ") VALUES(?, ?, ?, ?);",
                 new ScalarHandler<>(),
                 request.playerId,
                 request.mapId,
@@ -127,8 +126,8 @@ public class MySqlBonusTimeGateway extends MySqlGateway implements BonusTimeGate
                 request.secondsSurvived);
     }
 
-    private void updateBonusTime(Connection connection, CurrentBonusTime currentBonusTime, UpdateBonusTime.Request request) throws SQLException {
-        getQueryRunner().update(connection, "UPDATE BonusTime SET bonusTimeMax=?, " + getBonusTimeColumnName(request) + "=? WHERE id=?;",
+    private void updateBonusTime(CurrentBonusTime currentBonusTime, UpdateBonusTime.Request request) throws SQLException {
+        getQueryRunner().update("UPDATE BonusTime SET bonusTimeMax=?, " + getBonusTimeColumnName(request) + "=? WHERE id=?;",
                 Math.max(currentBonusTime.getBonusTimeMax(), request.secondsSurvived),
                 Math.max(currentBonusTime.getBonusTime(), request.secondsSurvived),
                 currentBonusTime.getId());
