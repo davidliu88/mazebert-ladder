@@ -178,7 +178,7 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
         try {
             return super.execute(request);
         } catch (GatewayError gatewayError) {
-            throw new InternalServerError(gatewayError.getMessage(), gatewayError.getCause());
+            throw new InternalServerError(gatewayError.getMessage() + " (" + gatewayError.getCause().getMessage() + ")", gatewayError.getCause());
         }
     }
 

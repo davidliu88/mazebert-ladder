@@ -164,7 +164,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
 
         assertNotNull(error);
         assertEquals(InternalServerError.class, error.getClass());
-        assertEquals("Something went wrong down here in the gateway.", error.getMessage());
+        assertEquals("Something went wrong down here in the gateway. (SQL error details.)", error.getMessage());
         assertEquals(SQLException.class, error.getCause().getClass());
     }
 
@@ -209,7 +209,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
 
         @Override
         public Void execute(Request request) {
-            throw new GatewayError("Something went wrong down here in the gateway.", new SQLException());
+            throw new GatewayError("Something went wrong down here in the gateway.", new SQLException("SQL error details."));
         }
     }
 
