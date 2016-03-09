@@ -72,6 +72,18 @@ public abstract class FoilCardGatewayTest extends GatewayTest<FoilCardGateway> {
     }
 
     @Test
+    public void addFoilCardToPlayer_continuousAddition() {
+        gateway.addFoilCardToPlayer(1, a(foilCard().bowlingBall().withAmount(3)));
+        assertEquals(3, gateway.getFoilCardAmount(1, 58, CardType.ITEM));
+
+        gateway.addFoilCardToPlayer(1, a(foilCard().bowlingBall().withAmount(1)));
+        assertEquals(4, gateway.getFoilCardAmount(1, 58, CardType.ITEM));
+
+        gateway.addFoilCardToPlayer(1, a(foilCard().bowlingBall().withAmount(10)));
+        assertEquals(14, gateway.getFoilCardAmount(1, 58, CardType.ITEM));
+    }
+
+    @Test
     public void getFoilCardAmount_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.getFoilCardAmount(1, 1, CardType.TOWER));
         thenGatewayErrorIs("Failed to get foil card amount.");

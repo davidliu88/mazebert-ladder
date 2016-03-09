@@ -59,17 +59,22 @@ public class MySqlFoilCardGateway extends MySqlGateway implements FoilCardGatewa
     @Override
     public void addFoilCardToPlayer(long playerId, FoilCard foilCard) {
         try {
-            getQueryRunner().insert("INSERT INTO PlayerFoilCard (playerId, cardId, cardType, amount) VALUES (?, ?, ?, ?);",
-                    new ScalarHandler<>(),
+            int rows = getQueryRunner().update("UPDATE PlayerFoilCard SET amount=amount+? WHERE playerId=? AND cardId=? AND cardType=?;",
+                    foilCard.getAmount(),
                     playerId,
                     foilCard.getCardId(),
-                    foilCard.getCardType(),
-                    foilCard.getAmount());
+                    foilCard.getCardType());
+            if (rows < 1) {
+                getQueryRunner().insert("INSERT INTO PlayerFoilCard (playerId, cardId, cardType, amount) VALUES (?, ?, ?, ?);",
+                        new ScalarHandler<>(),
+                        playerId,
+                        foilCard.getCardId(),
+                        foilCard.getCardType(),
+                        foilCard.getAmount());
+            }
         } catch (SQLException e) {
             throw new GatewayError("Failed to add foil card to player.", e);
         }
-
-        // TODO update instead of insert if foil card already exists! (catch unique constraint exception internally)
     }
 
     @Override
