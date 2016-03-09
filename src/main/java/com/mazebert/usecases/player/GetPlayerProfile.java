@@ -12,10 +12,12 @@ import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Singleton
 public class GetPlayerProfile implements Usecase<GetPlayerProfile.Request, GetPlayerProfile.Response> {
     private final PlayerGateway playerGateway;
     private final CardGateway cardGateway;

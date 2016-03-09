@@ -11,7 +11,9 @@ import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PrepareShopTransaction implements Usecase<PrepareShopTransaction.Request, PrepareShopTransaction.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;

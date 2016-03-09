@@ -23,8 +23,8 @@ import com.mazebert.plugins.system.EnvironmentPlugin;
 import com.mazebert.plugins.system.JsonSettingsPlugin;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.SystemEnvironmentPlugin;
-import com.mazebert.usecases.GetStatus;
-import com.mazebert.usecases.GetVersion;
+import com.mazebert.usecases.system.GetStatus;
+import com.mazebert.usecases.system.GetVersion;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
@@ -115,6 +115,7 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
         this.dataSourceProvider = dataSourceProvider;
 
         addSystemUsecases();
+        addSecurityUsecases();
         addPlayerUsecases();
         addTradeUsecases();
         addBlackMarketUsecases();
@@ -125,10 +126,13 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
     }
 
     private void addSystemUsecases() {
-        addUsecase(VerifyGameRequest.class);
-        addUsecase(SignServerResponse.class);
         addUsecase(GetVersion.class);
         addUsecase(GetStatus.class);
+    }
+
+    private void addSecurityUsecases() {
+        addUsecase(VerifyGameRequest.class);
+        addUsecase(SignServerResponse.class);
     }
 
     private void addPlayerUsecases() {

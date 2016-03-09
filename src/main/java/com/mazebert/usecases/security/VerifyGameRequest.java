@@ -5,8 +5,10 @@ import com.mazebert.plugins.security.GameContentVerifier;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.InputStream;
 
+@Singleton
 public class VerifyGameRequest implements Usecase<VerifyGameRequest.Request, Void> {
     private final GameContentVerifier gameContentVerifier;
 

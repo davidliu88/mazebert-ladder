@@ -11,8 +11,8 @@ import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.plugins.security.ServerContentSigner;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.mocks.EnvironmentPluginStub;
-import com.mazebert.usecases.GetStatus;
-import com.mazebert.usecases.GetVersion;
+import com.mazebert.usecases.system.GetStatus;
+import com.mazebert.usecases.system.GetVersion;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
@@ -50,6 +50,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         givenTestLogic();
 
         thenSystemUsecasesCanBeExecuted();
+        thenSecurityUsecasesCanBeExecuted();
         thenPlayerUsecasesCanBeExecuted();
         thenTradeUsecasesCanBeExecuted();
         thenBlackMarketUsecasesCanBeExecuted();
@@ -60,10 +61,13 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
     }
 
     private void thenSystemUsecasesCanBeExecuted() {
-        thenUsecaseCanBeExecuted(VerifyGameRequest.class);
-        thenUsecaseCanBeExecuted(SignServerResponse.class);
         thenUsecaseCanBeExecuted(GetVersion.class);
         thenUsecaseCanBeExecuted(GetStatus.class);
+    }
+
+    private void thenSecurityUsecasesCanBeExecuted() {
+        thenUsecaseCanBeExecuted(VerifyGameRequest.class);
+        thenUsecaseCanBeExecuted(SignServerResponse.class);
     }
 
     private void thenPlayerUsecasesCanBeExecuted() {
@@ -102,6 +106,14 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
 
     private void thenShopUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(PrepareShopTransaction.class);
+    }
+
+    @Override
+    public void thenUsecaseCanBeExecuted(Class<?> usecaseClass) {
+        super.thenUsecaseCanBeExecuted(usecaseClass);
+
+        // Usecases are stateless anyways. So we can register them as singletons.
+        thenOnlyOneInstanceExists(usecaseClass);
     }
 
     @Test

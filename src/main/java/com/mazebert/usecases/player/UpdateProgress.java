@@ -10,7 +10,9 @@ import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class UpdateProgress implements Usecase<UpdateProgress.Request, UpdateProgress.Response> {
     private final PlayerGateway playerGateway;
     private final CurrentDatePlugin currentDatePlugin;

@@ -5,8 +5,10 @@ import com.mazebert.gateways.SupporterGateway;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class GetSupporters implements Usecase<GetSupporters.Request, GetSupporters.Response> {
     private final SupporterGateway supporterGateway;
 

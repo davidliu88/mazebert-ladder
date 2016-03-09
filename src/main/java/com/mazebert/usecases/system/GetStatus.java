@@ -1,4 +1,4 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.system;
 
 import com.mazebert.entities.PlayerRow;
 import com.mazebert.gateways.PlayerRowGateway;
@@ -7,9 +7,11 @@ import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Date;
 import java.util.List;
 
+@Singleton
 public class GetStatus implements Usecase<GetStatus.Request, GetStatus.Response> {
     private final PlayerRowGateway playerRowGateway;
     private final CurrentDatePlugin currentDatePlugin;

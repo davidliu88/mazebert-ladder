@@ -6,8 +6,10 @@ import com.mazebert.gateways.PlayerRowGateway;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class GetPlayers implements Usecase<GetPlayers.Request, List<PlayerRow>> {
     private final PlayerRowGateway playerRowGateway;
 

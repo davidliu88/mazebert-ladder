@@ -18,8 +18,10 @@ import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request, TradeDuplicateCards.Response> {
     private final TransactionRunner transactionRunner;
     private final PlayerGateway playerGateway;

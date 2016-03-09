@@ -1,6 +1,6 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.usecases.GetVersion;
+import com.mazebert.usecases.system.GetVersion;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -15,7 +15,9 @@ import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.VerifyRequest;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class BuyBlackMarketOffer extends AbstractBuyCard<BuyBlackMarketOffer.Request, AbstractBuyCard.Response> {
     private final TransactionRunner transactionRunner;
     private final BlackMarketOfferGateway blackMarketOfferGateway;

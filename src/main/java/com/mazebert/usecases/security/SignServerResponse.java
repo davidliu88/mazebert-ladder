@@ -4,8 +4,10 @@ import com.mazebert.plugins.security.ServerContentSigner;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.InputStream;
 
+@Singleton
 public class SignServerResponse implements Usecase<SignServerResponse.Request, SignServerResponse.Response> {
     private final ServerContentSigner contentSigner;
 

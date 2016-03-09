@@ -8,7 +8,9 @@ import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class GetPlayer implements Usecase<GetPlayer.Request, Player> {
     private final PlayerGateway playerGateway;
 

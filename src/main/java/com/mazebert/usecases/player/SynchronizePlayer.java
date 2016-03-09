@@ -14,9 +14,11 @@ import com.mazebert.usecases.security.SignResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.TimeZone;
 
+@Singleton
 public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, SynchronizePlayer.Response> {
     private final PlayerGateway playerGateway;
     private final FoilCardGateway foilCardGateway;

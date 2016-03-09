@@ -19,8 +19,10 @@ import com.mazebert.usecases.security.SignResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;

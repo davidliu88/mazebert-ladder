@@ -12,7 +12,9 @@ import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateBonusTime.Response> {
     private final BonusTimeGateway bonusTimeGateway;
     private final PlayerGateway playerGateway;

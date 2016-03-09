@@ -16,8 +16,10 @@ import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQuests.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final TransactionRunner transactionRunner;

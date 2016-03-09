@@ -6,8 +6,10 @@ import com.mazebert.gateways.BonusTimeGateway;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class GetBonusTimes implements Usecase<GetBonusTimes.Request, List<PlayerBonusTime>> {
     private final BonusTimeGateway bonusTimeGateway;
 

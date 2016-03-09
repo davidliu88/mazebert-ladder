@@ -12,7 +12,9 @@ import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class RegisterEmail implements Usecase<RegisterEmail.Request, RegisterEmail.Response> {
     private final PlayerGateway playerGateway;
     private final EmailMessagePlugin emailMessagePlugin;

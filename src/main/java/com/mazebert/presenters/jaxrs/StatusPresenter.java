@@ -1,6 +1,6 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.usecases.GetStatus;
+import com.mazebert.usecases.system.GetStatus;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

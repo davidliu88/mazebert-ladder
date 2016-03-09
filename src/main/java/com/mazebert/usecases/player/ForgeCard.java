@@ -12,10 +12,12 @@ import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.VerifyRequest;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Singleton
 public class ForgeCard extends AbstractBuyCard<ForgeCard.Request, AbstractBuyCard.Response> {
     private static final int requiredRelics = 20;
     private final TransactionRunner transactionRunner;
