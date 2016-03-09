@@ -61,6 +61,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(ForgotSavecode.class);
         thenUsecaseCanBeExecuted(RegisterEmail.class);
         thenUsecaseCanBeExecuted(GetPlayerProfile.class);
+        thenUsecaseCanBeExecuted(ForgeCard.class);
 
         thenUsecaseCanBeExecuted(TradeDuplicateCards.class);
 
@@ -86,6 +87,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenRequestIsVerified(ReplaceQuest.class);
         thenRequestIsVerified(TradeDuplicateCards.class);
         thenRequestIsVerified(BuyBlackMarketOffer.class);
+        thenRequestIsVerified(ForgeCard.class);
     }
 
     @Test
@@ -94,6 +96,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenResponseIsSigned(ReplaceQuest.class);
         thenResponseIsSigned(TradeDuplicateCards.class);
         thenResponseIsSigned(BuyBlackMarketOffer.class);
+        thenResponseIsSigned(ForgeCard.class);
     }
 
     @Test

@@ -7,7 +7,11 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.random.RandomNumberGenerator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
+import com.mazebert.usecases.security.SignResponse;
+import com.mazebert.usecases.security.VerifyRequest;
 
+import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +27,7 @@ public class ForgeCard extends AbstractBuyCard<ForgeCard.Request, AbstractBuyCar
     private static final double LAST_RARE_ROLL = 0.9;
     private static final double LAST_UNIQUE_ROLL = 0.98;
 
+    @Inject
     public ForgeCard(TransactionRunner transactionRunner, FoilCardGateway foilCardGateway, PlayerGateway playerGateway,
                      CardGateway cardGateway, RandomNumberGenerator randomNumberGenerator) {
         super(playerGateway, foilCardGateway);
@@ -104,6 +109,9 @@ public class ForgeCard extends AbstractBuyCard<ForgeCard.Request, AbstractBuyCar
         return "1.0.0";
     }
 
+    @VerifyRequest
+    @StatusResponse
+    @SignResponse
     public static class Request extends AbstractBuyCard.Request {
     }
 }

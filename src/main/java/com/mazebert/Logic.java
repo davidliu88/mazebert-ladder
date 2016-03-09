@@ -138,6 +138,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addUsecase(ForgotSavecode.class);
         addUsecase(RegisterEmail.class);
         addUsecase(GetPlayerProfile.class);
+        addUsecase(ForgeCard.class);
     }
 
     private void addTradeUsecases() {
