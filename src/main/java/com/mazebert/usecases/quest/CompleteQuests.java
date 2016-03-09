@@ -109,6 +109,7 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
             FoilCard foilCard = new FoilCard();
             foilCard.setCardId(29);
             foilCard.setCardType(CardType.ITEM);
+            foilCard.setAmount(1);
             foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
         }
     }

@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FoilCardGatewayMock implements FoilCardGateway {
     private Map<Long, List<FoilCard>> foilCardsForPlayer = new HashMap<>();
@@ -71,7 +70,9 @@ public class FoilCardGatewayMock implements FoilCardGateway {
     }
 
     public void thenFoilCardWasAddedToPlayer(Player player, Card expected) {
-        assertTrue(isFoilCardOwnedByPlayer(player.getId(), expected.getId(), expected.getType()));
+        FoilCard foilCard = findFoilCard(player.getId(), expected.getId(), expected.getType());
+        assertNotNull(foilCard);
+        assertEquals("Gateway expects +1 here so that the total amount is increased.", 1, foilCard.getAmount());
     }
 
     public void thenNoFoilCardsWereAddedToPlayer(Player player) {
