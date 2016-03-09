@@ -30,8 +30,16 @@ public class MySqlFoilCardGateway extends MySqlGateway implements FoilCardGatewa
 
     @Override
     public int getFoilCardAmount(long playerId, long cardId, int cardType) {
-        // TODO implement me!
-        return 0;
+        try {
+            Integer amount = getQueryRunner().query("SELECT amount FROM PlayerFoilCard WHERE playerId=? AND cardId=? AND cardType=?;",
+                    new ScalarHandler<>(),
+                    playerId,
+                    cardId,
+                    cardType);
+            return amount == null ? 0 : amount;
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to get foil card amount.", e);
+        }
     }
 
     @Override
