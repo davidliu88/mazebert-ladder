@@ -27,6 +27,15 @@ public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
                 .withSinceVersion("1.3");
     }
 
+    public ItemBuilder seelenreisser() {
+        return this
+                .normalCard()
+                .withId(53)
+                .withName("Seelenreisser")
+                .withRarity(CardRarity.LEGENDARY)
+                .withSinceVersion("1.0");
+    }
+
     public ItemBuilder babySword() {
         return this
                 .normalCard()

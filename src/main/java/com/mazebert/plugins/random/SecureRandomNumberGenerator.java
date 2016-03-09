@@ -7,6 +7,11 @@ public class SecureRandomNumberGenerator implements RandomNumberGenerator {
         return getRandom().nextInt(min, max + 1);
     }
 
+    @Override
+    public double randomDouble() {
+        return getRandom().nextDouble();
+    }
+
     private ThreadLocalRandom getRandom() {
         return ThreadLocalRandom.current();
     }
