@@ -90,4 +90,25 @@ public abstract class FoilCardGatewayTest extends GatewayTest<FoilCardGateway> {
 
         assertEquals(8, gateway.getFoilCardAmount(1, 10, CardType.ITEM));
     }
+
+    @Test
+    public void setAmountOfAllPlayerFoilCards_gatewayError() {
+        whenGatewayErrorIsForced(() -> errorGateway.setAmountOfAllPlayerFoilCards(1, 100));
+        thenGatewayErrorIs("Failed to set amount of all player foil cards.");
+    }
+
+    @Test
+    public void setAmountOfAllPlayerFoilCards_amountIsChanged() {
+        gateway.addFoilCardToPlayer(1, a(foilCard().withCardId(10).withCardType(CardType.ITEM).withAmount(8)));
+        gateway.addFoilCardToPlayer(1, a(foilCard().withCardId(20).withCardType(CardType.ITEM).withAmount(1)));
+        gateway.addFoilCardToPlayer(1, a(foilCard().withCardId(10).withCardType(CardType.TOWER).withAmount(4)));
+        gateway.addFoilCardToPlayer(2, a(foilCard().withCardId(10).withCardType(CardType.TOWER).withAmount(4)));
+
+        gateway.setAmountOfAllPlayerFoilCards(1, 1);
+
+        assertEquals(1, gateway.getFoilCardAmount(1, 10, CardType.ITEM));
+        assertEquals(1, gateway.getFoilCardAmount(1, 20, CardType.ITEM));
+        assertEquals(1, gateway.getFoilCardAmount(1, 10, CardType.TOWER));
+        assertEquals("Other players are not affected", 4, gateway.getFoilCardAmount(2, 10, CardType.TOWER));
+    }
 }

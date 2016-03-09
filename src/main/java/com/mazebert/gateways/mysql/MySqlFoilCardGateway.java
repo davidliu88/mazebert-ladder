@@ -74,6 +74,10 @@ public class MySqlFoilCardGateway extends MySqlGateway implements FoilCardGatewa
 
     @Override
     public void setAmountOfAllPlayerFoilCards(long playerId, int amount) {
-        // TODO implement me!
+        try {
+            getQueryRunner().update("UPDATE PlayerFoilCard SET amount=? WHERE playerId=?;", amount, playerId);
+        } catch (SQLException e) {
+            throw new GatewayError("Failed to set amount of all player foil cards.", e);
+        }
     }
 }
