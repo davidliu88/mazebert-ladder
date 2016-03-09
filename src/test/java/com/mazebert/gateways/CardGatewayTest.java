@@ -107,6 +107,15 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
         thenPropertiesAreMappedCorrectly(a(item().babySword()), gateway.findAllItems());
     }
 
+    @Test
+    public void findAllCards() {
+        List<Card> allCards = gateway.findAllCards();
+        thenPropertiesAreMappedCorrectly(a(tower().herbWitch()), allCards);
+        thenPropertiesAreMappedCorrectly(a(hero().littlefinger()), allCards);
+        thenPropertiesAreMappedCorrectly(a(potion().angelicElixir()), allCards);
+        thenPropertiesAreMappedCorrectly(a(item().babySword()), allCards);
+    }
+
     private void thenCardIsOfType(Card card, Class<? extends Card> expectedClass, int expectedType) {
         assertEquals(expectedClass, card.getClass());
         assertEquals(expectedType, card.getType());
@@ -114,7 +123,7 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
 
     private void thenPropertiesAreMappedCorrectly(Card expected, List<? extends Card> cards) {
         for (Card card : cards) {
-            if (card.getId() == expected.getId()) {
+            if (card.getId() == expected.getId() && card.getType() == expected.getType()) {
                 assertEquals(expected.getType(), card.getType());
                 assertEquals(expected.getName(), card.getName());
                 assertEquals(expected.getRarity(), card.getRarity());

@@ -34,7 +34,12 @@ public class MySqlCardGateway extends MySqlGateway implements CardGateway {
 
     @Override
     public List<Card> findAllCards() {
-        return null; // TODO implement me!
+        List<Card> allCards = new ArrayList<>();
+        allCards.addAll(findAllTowers());
+        allCards.addAll(findAllItems());
+        allCards.addAll(findAllPotions());
+        allCards.addAll(findAllHeroes());
+        return allCards;
     }
 
     @Override
