@@ -33,6 +33,7 @@ import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
+import com.mazebert.usecases.shop.PrepareShopTransaction;
 import com.mazebert.usecases.supporters.GetSupporters;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
@@ -120,6 +121,7 @@ public class Logic extends GuiceUsecaseExecutor {
         addBonusTimeUsecases();
         addQuestUsecases();
         addSupporterUsecases();
+        addShopUsecases();
     }
 
     private void addSystemUsecases() {
@@ -161,6 +163,10 @@ public class Logic extends GuiceUsecaseExecutor {
 
     private void addSupporterUsecases() {
         addUsecase(GetSupporters.class);
+    }
+
+    private void addShopUsecases() {
+        addUsecase(PrepareShopTransaction.class);
     }
 
     @Override

@@ -5,12 +5,18 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
+import com.mazebert.usecases.security.SignResponse;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
+
+import javax.inject.Inject;
 
 public class PrepareShopTransaction implements Usecase<PrepareShopTransaction.Request, PrepareShopTransaction.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;
 
+    @Inject
     public PrepareShopTransaction(PlayerGateway playerGateway) {
         this.playerGateway = playerGateway;
     }
@@ -55,6 +61,9 @@ public class PrepareShopTransaction implements Usecase<PrepareShopTransaction.Re
         }
     }
 
+    @VerifyRequest
+    @StatusResponse
+    @SignResponse
     public static class Request {
         public String appVersion;
         public String key;

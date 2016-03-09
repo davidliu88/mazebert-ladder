@@ -23,6 +23,7 @@ import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
 import com.mazebert.usecases.security.VerifyRequest;
+import com.mazebert.usecases.shop.PrepareShopTransaction;
 import com.mazebert.usecases.supporters.GetSupporters;
 import org.junit.Test;
 import org.jusecase.Usecase;
@@ -55,6 +56,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenBonusTimeUsecasesCanBeExecuted();
         thenQuestUsecasesCanBeExecuted();
         thenSupporterUsecasesCanBeExecuted();
+        thenShopUsecasesCanBeExecuted();
     }
 
     private void thenSystemUsecasesCanBeExecuted() {
@@ -98,6 +100,10 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(GetSupporters.class);
     }
 
+    private void thenShopUsecasesCanBeExecuted() {
+        thenUsecaseCanBeExecuted(PrepareShopTransaction.class);
+    }
+
     @Test
     public void verifiedRequests() {
         thenRequestIsVerified(CreateAccount.class);
@@ -110,6 +116,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenRequestIsVerified(TradeDuplicateCards.class);
         thenRequestIsVerified(BuyBlackMarketOffer.class);
         thenRequestIsVerified(ForgeCard.class);
+        thenRequestIsVerified(PrepareShopTransaction.class);
     }
 
     @Test
@@ -119,6 +126,7 @@ public class LogicTest extends UsecaseExecutorTest {
         thenResponseIsSigned(TradeDuplicateCards.class);
         thenResponseIsSigned(BuyBlackMarketOffer.class);
         thenResponseIsSigned(ForgeCard.class);
+        thenResponseIsSigned(PrepareShopTransaction.class);
     }
 
     @Test
