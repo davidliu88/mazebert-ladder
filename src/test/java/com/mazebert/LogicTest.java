@@ -48,11 +48,23 @@ public class LogicTest extends UsecaseExecutorTest {
     public void usecasesCanBeExecuted() {
         givenTestLogic();
 
+        thenSystemUsecasesCanBeExecuted();
+        thenPlayerUsecasesCanBeExecuted();
+        thenTradeUsecasesCanBeExecuted();
+        thenBlackMarketUsecasesCanBeExecuted();
+        thenBonusTimeUsecasesCanBeExecuted();
+        thenQuestUsecasesCanBeExecuted();
+        thenSupporterUsecasesCanBeExecuted();
+    }
+
+    private void thenSystemUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(VerifyGameRequest.class);
         thenUsecaseCanBeExecuted(SignServerResponse.class);
         thenUsecaseCanBeExecuted(GetVersion.class);
         thenUsecaseCanBeExecuted(GetStatus.class);
+    }
 
+    private void thenPlayerUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(CreateAccount.class);
         thenUsecaseCanBeExecuted(UpdateProgress.class);
         thenUsecaseCanBeExecuted(GetPlayers.class);
@@ -62,17 +74,27 @@ public class LogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(RegisterEmail.class);
         thenUsecaseCanBeExecuted(GetPlayerProfile.class);
         thenUsecaseCanBeExecuted(ForgeCard.class);
+    }
 
+    private void thenTradeUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(TradeDuplicateCards.class);
+    }
 
+    private void thenBlackMarketUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(BuyBlackMarketOffer.class);
+    }
 
+    private void thenBonusTimeUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(GetBonusTimes.class);
         thenUsecaseCanBeExecuted(UpdateBonusTime.class);
+    }
 
+    private void thenQuestUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(CompleteQuests.class);
         thenUsecaseCanBeExecuted(ReplaceQuest.class);
+    }
 
+    private void thenSupporterUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(GetSupporters.class);
     }
 
