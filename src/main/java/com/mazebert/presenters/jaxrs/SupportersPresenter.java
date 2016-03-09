@@ -13,7 +13,7 @@ public class SupportersPresenter extends AbstractPresenter {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSupporters(GetSupporters.Request request) {
-        return execute(request);
+    public Response getSupporters() {
+        return execute(new GetSupporters.Request());
     }
 }
