@@ -56,4 +56,12 @@ public class PlayerPresenter extends AbstractPresenter {
         request.id = id;
         return execute(request);
     }
+
+    @POST
+    @Path("/forge-card")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response forgeCard(ForgeCard.Request request) {
+        return execute(request);
+    }
 }
