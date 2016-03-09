@@ -9,7 +9,6 @@ import javax.ws.rs.core.Response;
 @Path("/player")
 public class PlayerPresenter extends AbstractPresenter {
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPlayer(@QueryParam("key") String key) {
         GetPlayer.Request request = new GetPlayer.Request();

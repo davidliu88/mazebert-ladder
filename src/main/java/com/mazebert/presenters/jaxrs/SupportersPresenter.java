@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 @Path("/supporters")
 public class SupportersPresenter extends AbstractPresenter {
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSupporters() {
         return execute(new GetSupporters.Request());

@@ -12,7 +12,6 @@ import javax.ws.rs.core.Response;
 public class PlayersPresenter extends AbstractPresenter {
 
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPlayers(@QueryParam("start") int start, @QueryParam("limit") int limit) {
         GetPlayers.Request request = new GetPlayers.Request();
