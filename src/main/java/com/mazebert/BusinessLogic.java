@@ -39,13 +39,13 @@ import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 import javax.sql.DataSource;
 
-public class Logic extends GuiceUsecaseExecutor {
+public class BusinessLogic extends GuiceUsecaseExecutor {
     private static class LogicHolder {
-        public static Logic instance = new Logic(C3p0DataSourceProvider.class, SystemEnvironmentPlugin.class);
+        public static BusinessLogic instance = new BusinessLogic(C3p0DataSourceProvider.class, SystemEnvironmentPlugin.class);
     }
     private final Class<? extends DataSourceProvider> dataSourceProvider;
 
-    public static Logic getInstance() {
+    public static BusinessLogic getInstance() {
         return LogicHolder.instance;
     }
 
@@ -106,7 +106,7 @@ public class Logic extends GuiceUsecaseExecutor {
         }
     }
 
-    public <T extends Provider<DataSource> & DataSourceProvider> Logic(Class<T> dataSourceProvider, Class<? extends EnvironmentPlugin> environmentPlugin) {
+    public <T extends Provider<DataSource> & DataSourceProvider> BusinessLogic(Class<T> dataSourceProvider, Class<? extends EnvironmentPlugin> environmentPlugin) {
         super(Guice.createInjector(
                 new GatewayModule(dataSourceProvider),
                 new PluginModule(environmentPlugin)

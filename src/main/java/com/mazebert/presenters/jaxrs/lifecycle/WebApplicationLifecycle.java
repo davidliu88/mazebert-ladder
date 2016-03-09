@@ -1,6 +1,6 @@
 package com.mazebert.presenters.jaxrs.lifecycle;
 
-import com.mazebert.Logic;
+import com.mazebert.BusinessLogic;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -8,11 +8,11 @@ import javax.servlet.ServletContextListener;
 public class WebApplicationLifecycle implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        Logic.getInstance().start();
+        BusinessLogic.getInstance().start();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        Logic.getInstance().shutdown();
+        BusinessLogic.getInstance().shutdown();
     }
 }

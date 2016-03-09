@@ -1,6 +1,6 @@
 package com.mazebert.presenters.jaxrs;
 
-import com.mazebert.LogicTest;
+import com.mazebert.BusinessLogicTest;
 import com.mazebert.categories.IntegrationTest;
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
@@ -69,7 +69,7 @@ public class AbstractPresenterTest {
                 sentRequests.add(request);
 
                 if (request instanceof SignServerResponse.Request) {
-                    return LogicTest.getTestLogic().execute(request);
+                    return BusinessLogicTest.getTestBusinessLogic().execute(request);
                 } else {
                     if (error == null) {
                         return (ResponseType) usecaseResponse;

@@ -3,7 +3,7 @@ package com.mazebert.presenters.jaxrs;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.mazebert.Logic;
+import com.mazebert.BusinessLogic;
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.presenters.jaxrs.response.ErrorExceptionMapper;
@@ -45,7 +45,7 @@ public abstract class AbstractPresenter {
     }
 
     protected UsecaseExecutor getUsecaseExecutor() {
-        return Logic.getInstance();
+        return BusinessLogic.getInstance();
     }
 
     public <Request> Response execute(Request request) {

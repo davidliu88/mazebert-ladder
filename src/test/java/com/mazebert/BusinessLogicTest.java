@@ -33,16 +33,16 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
-public class LogicTest extends UsecaseExecutorTest {
+public class BusinessLogicTest extends UsecaseExecutorTest {
     private Error error;
 
-    private static Logic testLogic;
+    private static BusinessLogic testBusinessLogic;
 
-    public static Logic getTestLogic() {
-        if (testLogic == null) {
-            testLogic = new Logic(StubDataSourceProvider.class, EnvironmentPluginStub.class);
+    public static BusinessLogic getTestBusinessLogic() {
+        if (testBusinessLogic == null) {
+            testBusinessLogic = new BusinessLogic(StubDataSourceProvider.class, EnvironmentPluginStub.class);
         }
-        return testLogic;
+        return testBusinessLogic;
     }
 
     @Test
@@ -142,10 +142,10 @@ public class LogicTest extends UsecaseExecutorTest {
     @Test
     public void gatewayErrorInUsecase() {
         givenTestLogic();
-        logic().addUsecase(ThrowingUsecase.class);
+        businessLogic().addUsecase(ThrowingUsecase.class);
 
         try {
-            logic().execute(new ThrowingUsecase.Request());
+            businessLogic().execute(new ThrowingUsecase.Request());
         } catch (Error e) {
             error = e;
         }
@@ -159,17 +159,17 @@ public class LogicTest extends UsecaseExecutorTest {
     @Test
     public void noErrorInUsecase() {
         givenTestLogic();
-        logic().addUsecase(GoodUsecase.class);
+        businessLogic().addUsecase(GoodUsecase.class);
 
-        assertEquals("ok", logic().execute(new GoodUsecase.Request()));
+        assertEquals("ok", businessLogic().execute(new GoodUsecase.Request()));
     }
 
     private void givenTestLogic() {
-        givenExecutor(getTestLogic());
+        givenExecutor(getTestBusinessLogic());
     }
 
-    private Logic logic() {
-        return (Logic)executor;
+    private BusinessLogic businessLogic() {
+        return (BusinessLogic)executor;
     }
 
     private void thenRequestIsVerified(Class<? extends Usecase> usecaseClass) {
@@ -183,13 +183,13 @@ public class LogicTest extends UsecaseExecutorTest {
     }
 
     private void thenOnlyOneInstanceExists(Class<?> clazz) {
-        assertSame(logic().getInstance(clazz), logic().getInstance(clazz));
+        assertSame(businessLogic().getInstance(clazz), businessLogic().getInstance(clazz));
     }
 
     private void thenOnlyOneInstanceExists(Class<?> clazz1, Class<?> clazz2) {
-        assertSame(logic().getInstance(clazz1), logic().getInstance(clazz1));
-        assertSame(logic().getInstance(clazz2), logic().getInstance(clazz2));
-        assertSame(logic().getInstance(clazz1), logic().getInstance(clazz2));
+        assertSame(businessLogic().getInstance(clazz1), businessLogic().getInstance(clazz1));
+        assertSame(businessLogic().getInstance(clazz2), businessLogic().getInstance(clazz2));
+        assertSame(businessLogic().getInstance(clazz1), businessLogic().getInstance(clazz2));
     }
 
     private static class ThrowingUsecase implements Usecase<ThrowingUsecase.Request, Void> {
