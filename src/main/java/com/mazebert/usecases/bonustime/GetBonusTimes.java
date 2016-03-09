@@ -3,6 +3,7 @@ package com.mazebert.usecases.bonustime;
 import com.mazebert.entities.PlayerBonusTime;
 import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.BonusTimeGateway;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -34,6 +35,7 @@ public class GetBonusTimes implements Usecase<GetBonusTimes.Request, List<Player
         if (request.limit < 0) throw new BadRequest("Limit must not be negative.");
     }
 
+    @StatusResponse
     public static class Request {
         public int mapId;
         public String difficultyType;

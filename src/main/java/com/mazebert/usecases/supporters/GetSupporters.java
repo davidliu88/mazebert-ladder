@@ -2,6 +2,7 @@ package com.mazebert.usecases.supporters;
 
 import com.mazebert.entities.Supporter;
 import com.mazebert.gateways.SupporterGateway;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ public class GetSupporters implements Usecase<GetSupporters.Request, GetSupporte
         return response;
     }
 
+    @StatusResponse
     public static class Request {
     }
 
