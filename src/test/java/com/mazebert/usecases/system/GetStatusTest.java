@@ -1,9 +1,8 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.system;
 
 import com.mazebert.entities.PlayerRow;
 import com.mazebert.gateways.mocks.PlayerRowGatewayMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
-import com.mazebert.usecases.system.GetStatus;
 import com.mazebert.usecases.system.GetStatus.Request;
 import com.mazebert.usecases.system.GetStatus.Response;
 import org.junit.Before;

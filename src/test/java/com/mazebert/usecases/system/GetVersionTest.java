@@ -1,6 +1,5 @@
-package com.mazebert.usecases;
+package com.mazebert.usecases.system;
 
-import com.mazebert.usecases.system.GetVersion;
 import com.mazebert.usecases.system.GetVersion.Request;
 import com.mazebert.usecases.system.GetVersion.Response;
 import org.junit.Before;
