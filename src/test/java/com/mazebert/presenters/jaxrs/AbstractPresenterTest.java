@@ -6,7 +6,6 @@ import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.error.Unauthorized;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
-import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
 import com.mazebert.usecases.player.CreateAccount;
 import com.mazebert.usecases.player.GetPlayer;
@@ -195,7 +194,7 @@ public class AbstractPresenterTest {
 
     @Test
     public void responseWithoutStatusAddition() {
-        givenUsecaseRequest(new GetBonusTimes.Request());
+        givenUsecaseRequest(new RequestWithoutStatusFieldInResponse());
         givenUsecaseResponse(a(list()));
         whenRequestIsExecuted();
         thenResponseJsonIs("[]");
@@ -291,6 +290,9 @@ public class AbstractPresenterTest {
     @SignResponse
     @StatusResponse
     private static class DummySignedRequest {
+    }
+
+    private static class RequestWithoutStatusFieldInResponse {
     }
 
     private static class DummySignedResponse {
