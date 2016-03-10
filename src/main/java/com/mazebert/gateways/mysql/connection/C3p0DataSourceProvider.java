@@ -6,11 +6,19 @@ import com.mazebert.gateways.transaction.TransactionManager;
 import com.mazebert.gateways.transaction.datasource.DataSourceProxy;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.log.MLog;
+import com.mchange.v2.log.MLogger;
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import org.flywaydb.core.Flyway;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Set;
 
 @Singleton
 public class C3p0DataSourceProvider implements DataSourceProvider, Provider<DataSource> {
@@ -18,6 +26,8 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
     private final DataSourceTransactionManager transactionManager;
     private ComboPooledDataSource dataSource;
     private DataSourceProxy dataSourceProxy;
+
+    private final static MLogger logger = MLog.getLogger(C3p0DataSourceProvider.class);
 
     @Inject
     public C3p0DataSourceProvider(Credentials credentials, DataSourceTransactionManager transactionManager) {
@@ -39,6 +49,59 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
     @Override
     public void dispose() {
         dataSource.close();
+        waitForC3p0ToBeClosed();
+        dataSource = null;
+
+        unregisterDatabaseDrivers();
+        shutDownJdbcCleanUpThread();
+
+        logger.info("Data source disposal is complete.");
+    }
+
+    private void waitForC3p0ToBeClosed() {
+        try {
+            Thread thread = getC3p0DestroyThread();
+            if (thread != null) {
+                thread.join();
+            } else {
+                logger.info("Could not find C3P0 Resource Destroyer thread. Either the thread was already stopped, or it was renamed by a newer version of C3P0.");
+            }
+        } catch (Throwable throwable) {
+            logger.warning("Waiting for C3P0 shutdown was interrupted (" + throwable.getMessage() + ").");
+        }
+    }
+
+    private Thread getC3p0DestroyThread() {
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threadSet) {
+            if (thread.isDaemon() && thread.getName().equals("Resource Destroyer in BasicResourcePool.close()")) {
+                return thread;
+            }
+        }
+        return null;
+    }
+
+    private void unregisterDatabaseDrivers() {
+        final Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            final Driver driver = drivers.nextElement();
+            if (this.getClass().getClassLoader().equals(getClass().getClassLoader())) {
+                try {
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException e) {
+                    logger.warning("Failed to unregister JDBC driver with name '" + driver.toString() + "'.");
+                }
+            }
+        }
+    }
+
+    private void shutDownJdbcCleanUpThread() {
+        try {
+            AbandonedConnectionCleanupThread.shutdown();
+        }
+        catch (InterruptedException e) {
+            logger.warning("Failed to shutdown AbandonedConnectionCleanupThread: " + e.getMessage());
+        }
     }
 
     private void createDataSource() {
