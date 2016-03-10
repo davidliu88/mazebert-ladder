@@ -2,7 +2,6 @@ package com.mazebert.gateways.mysql.connection;
 
 import com.google.inject.Provider;
 import com.mazebert.error.InternalServerError;
-import com.mazebert.gateways.transaction.TransactionManager;
 import com.mazebert.gateways.transaction.datasource.DataSourceProxy;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -26,6 +25,7 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
     private final DataSourceTransactionManager transactionManager;
     private ComboPooledDataSource dataSource;
     private DataSourceProxy dataSourceProxy;
+    private boolean unregisterDriverOnDisposal = true;
 
     private final static MLogger logger = MLog.getLogger(C3p0DataSourceProvider.class);
 
@@ -52,7 +52,9 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         waitForC3p0ToBeClosed();
         dataSource = null;
 
-        unregisterDatabaseDrivers();
+        if (isUnregisterDriverOnDisposal()) {
+            unregisterDatabaseDrivers();
+        }
         shutDownJdbcCleanUpThread();
 
         logger.info("Data source disposal is complete.");
@@ -128,7 +130,11 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         flyway.migrate();
     }
 
-    public TransactionManager getTransactionManager() {
-        return transactionManager;
+    public boolean isUnregisterDriverOnDisposal() {
+        return unregisterDriverOnDisposal;
+    }
+
+    public void setUnregisterDriverOnDisposal(boolean unregisterDriverOnDisposal) {
+        this.unregisterDriverOnDisposal = unregisterDriverOnDisposal;
     }
 }

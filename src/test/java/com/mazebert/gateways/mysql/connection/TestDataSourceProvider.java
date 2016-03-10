@@ -1,20 +1,45 @@
 package com.mazebert.gateways.mysql.connection;
 
+import com.mazebert.gateways.transaction.TransactionManager;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import org.apache.commons.dbutils.QueryRunner;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.inputStream;
 
-public class TestDataSourceProvider extends C3p0DataSourceProvider {
+public class TestDataSourceProvider implements DataSourceProvider {
     public static final TestDataSourceProvider instance = new TestDataSourceProvider();
+    private DataSourceProvider realProvider;
+    private DataSourceTransactionManager transactionManager;
 
     private TestDataSourceProvider() {
-        super(new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert"), new DataSourceTransactionManager());
-        prepare();
+    }
+
+    @Override
+    public void prepare() {
+        Credentials testCredentials = new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert");
+        transactionManager = new DataSourceTransactionManager();
+        C3p0DataSourceProvider c3p0DataSourceProvider = new C3p0DataSourceProvider(testCredentials, transactionManager);
+        c3p0DataSourceProvider.setUnregisterDriverOnDisposal(false);
+
+        realProvider = c3p0DataSourceProvider;
+        realProvider.prepare();
+    }
+
+    @Override
+    public DataSource get() {
+        return realProvider.get();
+    }
+
+    @Override
+    public void dispose() {
+        realProvider.dispose();
+        realProvider = null;
+        transactionManager = null;
     }
 
     private static String resolveHost() {
@@ -30,9 +55,13 @@ public class TestDataSourceProvider extends C3p0DataSourceProvider {
 
     public void clearTable(String table) {
         try {
-            new QueryRunner(super.get()).update("TRUNCATE TABLE " + table + ";");
+            new QueryRunner(get()).update("TRUNCATE TABLE " + table + ";");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to clear table '" + table + "'", e);
         }
+    }
+
+    public TransactionManager getTransactionManager() {
+        return transactionManager;
     }
 }

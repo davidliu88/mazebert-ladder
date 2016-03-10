@@ -9,5 +9,5 @@ import org.junit.runner.RunWith;
 @RunWith(ParallelSuite.class)
 @SuiteClasses("**/*Test.class")
 @IncludeCategories({ParallelIntegrationTest.class})
-public class ParallelIntegrationTestSuite {
+public class ParallelIntegrationTestSuite extends DatabaseIntegrationTestSuite {
 }

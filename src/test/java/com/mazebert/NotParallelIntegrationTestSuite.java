@@ -9,5 +9,5 @@ import org.junit.runner.RunWith;
 @RunWith(WildcardPatternSuite.class)
 @SuiteClasses("**/*Test.class")
 @IncludeCategories({IntegrationTest.class})
-public class NotParallelIntegrationTestSuite {
+public class NotParallelIntegrationTestSuite extends DatabaseIntegrationTestSuite {
 }
