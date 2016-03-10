@@ -32,6 +32,9 @@ public class TestDataSourceProvider implements DataSourceProvider {
 
     @Override
     public DataSource get() {
+        if (realProvider == null) {
+            prepare();
+        }
         return realProvider.get();
     }
 
@@ -62,6 +65,9 @@ public class TestDataSourceProvider implements DataSourceProvider {
     }
 
     public TransactionManager getTransactionManager() {
+        if (transactionManager == null) {
+            prepare();
+        }
         return transactionManager;
     }
 }
