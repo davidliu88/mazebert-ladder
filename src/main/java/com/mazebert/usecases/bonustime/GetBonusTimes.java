@@ -35,7 +35,7 @@ public class GetBonusTimes implements Usecase<GetBonusTimes.Request, List<Player
         if (request.limit < 0) throw new BadRequest("Limit must not be negative.");
     }
 
-    @StatusResponse
+    @StatusResponse(field = "players")
     public static class Request {
         public int mapId;
         public String difficultyType;
