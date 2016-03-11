@@ -99,6 +99,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
                         .withData("{\"OrderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.MazebertTD\",\"productId\":\"com.mazebert.cookie\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
                 )
         )))));
+        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 
@@ -106,11 +107,12 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void googlePlayTransactionSignature_canBeVerified() {
+    public void googlePlayTransactionSignatureCanBeVerified() {
         playerGateway.givenPlayerExists(a(player().casid()));
         givenRequest(a(request().withTransactions(a(list(
                 a(transaction().cookieWithValidSignature())
         )))));
+        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 
@@ -127,7 +129,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
                         .withData("{\"orderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.NotMazebertTD\",\"productId\":\"com.mazebert.cookie\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
                 )
         )))));
-        googlePlayPurchaseVerifier.givenSignatureVerificationSucceeds();
+        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 
@@ -142,7 +144,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
                         .withData("{\"orderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.MazebertTD\",\"productId\":\"com.mazebert.notcookie\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
                 )
         )))));
-        googlePlayPurchaseVerifier.givenSignatureVerificationSucceeds();
+        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 
@@ -157,7 +159,6 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
                         .withProductId(null)
                 )
         )))));
-        googlePlayPurchaseVerifier.givenSignatureVerificationSucceeds();
 
         whenRequestIsExecuted();
 
@@ -170,7 +171,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
         givenRequest(a(request().withTransactions(a(list(
                 a(transaction().cookieWithValidSignature())
         )))));
-        googlePlayPurchaseVerifier.givenSignatureVerificationSucceeds();
+        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 

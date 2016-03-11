@@ -3,7 +3,7 @@ package com.mazebert.plugins.security.mocks;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 
 public class GooglePlayPurchaseVerifierMock extends GooglePlayPurchaseVerifier {
-    private boolean fakeVerification;
+    private boolean fakeVerification = true;
 
     @Override
     public boolean isSignatureValid(String data, String signature) {
@@ -13,7 +13,7 @@ public class GooglePlayPurchaseVerifierMock extends GooglePlayPurchaseVerifier {
         return super.isSignatureValid(data, signature);
     }
 
-    public void givenSignatureVerificationSucceeds() {
-        fakeVerification = true;
+    public void givenRealVerificationIsDone() {
+        fakeVerification = false;
     }
 }
