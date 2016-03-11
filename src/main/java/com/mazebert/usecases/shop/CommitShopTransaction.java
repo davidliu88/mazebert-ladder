@@ -1,9 +1,12 @@
 package com.mazebert.usecases.shop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mazebert.entities.CardType;
+import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
+import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 import com.mazebert.plugins.validation.VersionValidator;
@@ -18,10 +21,12 @@ import java.util.Map;
 public class CommitShopTransaction implements Usecase<CommitShopTransaction.Request, CommitShopTransaction.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;
+    private final FoilCardGateway foilCardGateway;
     private final GooglePlayPurchaseVerifier googlePlayPurchaseVerifier;
 
-    public CommitShopTransaction(PlayerGateway playerGateway, GooglePlayPurchaseVerifier googlePlayPurchaseVerifier) {
+    public CommitShopTransaction(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, GooglePlayPurchaseVerifier googlePlayPurchaseVerifier) {
         this.playerGateway = playerGateway;
+        this.foilCardGateway = foilCardGateway;
         this.googlePlayPurchaseVerifier = googlePlayPurchaseVerifier;
     }
 
@@ -34,28 +39,63 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
         }
 
         if ("GooglePlay".equals(request.store)) {
-            return createGooglePlayResponse(request);
+            return createGooglePlayResponse(request, player);
         }
 
         throw new NotFound("Store does not exist.");
     }
 
-    private Response createGooglePlayResponse(Request request) {
+    private Response createGooglePlayResponse(Request request, Player player) {
         Response response = new Response();
-        response.verifiedProductIds = commitGooglePlayTransactions(request);
+        response.verifiedProductIds = commitGooglePlayTransactions(request, player);
         return response;
     }
 
-    private List<String> commitGooglePlayTransactions(Request request) {
+    private List<String> commitGooglePlayTransactions(Request request, Player player) {
         List<String> verifiedProductIds = new ArrayList<>();
 
         for (Transaction transaction : request.transactions) {
             if (isGooglePlayTransactionValid(transaction)) {
+                unlockPurchaseReward(player, transaction);
                 verifiedProductIds.add(transaction.productId);
             }
         }
 
         return verifiedProductIds;
+    }
+
+    private void unlockPurchaseReward(Player player, Transaction transaction) {
+        if ("com.mazebert.cookie".equals(transaction.productId)) {
+            foilCardGateway.addFoilCardToPlayer(player.getId(), getCookieReward());
+        } else if ("com.mazebert.beer".equals(transaction.productId)) {
+            foilCardGateway.addFoilCardToPlayer(player.getId(), getBeerReward());
+        } else if ("com.mazebert.whisky".equals(transaction.productId)) {
+            foilCardGateway.addFoilCardToPlayer(player.getId(), getWhiskyReward());
+        }
+    }
+
+    private FoilCard getCookieReward() {
+        FoilCard cookieMonster = new FoilCard();
+        cookieMonster.setCardId(5);
+        cookieMonster.setCardType(CardType.HERO);
+        cookieMonster.setAmount(1);
+        return cookieMonster;
+    }
+
+    private FoilCard getBeerReward() {
+        FoilCard innKeeper = new FoilCard();
+        innKeeper.setCardId(6);
+        innKeeper.setCardType(CardType.HERO);
+        innKeeper.setAmount(1);
+        return innKeeper;
+    }
+
+    private FoilCard getWhiskyReward() {
+        FoilCard innKeeper = new FoilCard();
+        innKeeper.setCardId(19);
+        innKeeper.setCardType(CardType.POTION);
+        innKeeper.setAmount(1);
+        return innKeeper;
     }
 
     private boolean isGooglePlayTransactionValid(Transaction transaction) {

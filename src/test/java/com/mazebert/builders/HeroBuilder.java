@@ -17,4 +17,22 @@ public class HeroBuilder extends CardBuilder<HeroBuilder, Hero> {
                 .withRarity(CardRarity.COMMON)
                 .withSinceVersion("1.0");
     }
+
+    public HeroBuilder cookieMonster() {
+        return this
+                .supporterCard()
+                .withId(5)
+                .withName("Cookiemonster")
+                .withRarity(CardRarity.LEGENDARY)
+                .withSinceVersion("1.0");
+    }
+
+    public HeroBuilder innKeeper() {
+        return this
+                .supporterCard()
+                .withId(6)
+                .withName("Innkeeper")
+                .withRarity(CardRarity.LEGENDARY)
+                .withSinceVersion("1.0");
+    }
 }

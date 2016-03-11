@@ -1,7 +1,9 @@
 package com.mazebert.usecases.shop;
 
+import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
+import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.plugins.security.mocks.GooglePlayPurchaseVerifierMock;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request;
@@ -15,17 +17,22 @@ import org.jusecase.builders.Builder;
 
 import java.util.List;
 
+import static com.mazebert.builders.BuilderFactory.hero;
 import static com.mazebert.builders.BuilderFactory.player;
+import static com.mazebert.builders.BuilderFactory.potion;
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.list;
 
 public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
+    private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
     private GooglePlayPurchaseVerifierMock googlePlayPurchaseVerifier = new GooglePlayPurchaseVerifierMock();
+
+    private Player player = a(player().casid());
 
     @Before
     public void setUp() {
-        usecase = new CommitShopTransaction(playerGateway, googlePlayPurchaseVerifier);
+        usecase = new CommitShopTransaction(playerGateway, foilCardGateway, googlePlayPurchaseVerifier);
     }
 
     @Test
@@ -129,7 +136,6 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
                         .withData("{\"orderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.NotMazebertTD\",\"productId\":\"com.mazebert.cookie\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
                 )
         )))));
-        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 
@@ -144,7 +150,6 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
                         .withData("{\"orderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.MazebertTD\",\"productId\":\"com.mazebert.notcookie\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
                 )
         )))));
-        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 
@@ -166,16 +171,43 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void productNotYetPurchased() {
-        playerGateway.givenPlayerExists(a(player().casid()));
+    public void cookieReward() {
+        playerGateway.givenPlayerExists(player);
         givenRequest(a(request().withTransactions(a(list(
                 a(transaction().cookieWithValidSignature())
         )))));
-        googlePlayPurchaseVerifier.givenRealVerificationIsDone();
 
         whenRequestIsExecuted();
 
-        // TODO reward is added
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(hero().cookieMonster()));
+    }
+
+    @Test
+    public void beerReward() {
+        playerGateway.givenPlayerExists(player);
+        givenRequest(a(request().withTransactions(a(list(
+                a(transaction().beer())
+        )))));
+
+        whenRequestIsExecuted();
+
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(hero().innKeeper()));
+    }
+
+    @Test
+    public void whiskyReward() {
+        playerGateway.givenPlayerExists(player);
+        givenRequest(a(request().withTransactions(a(list(
+                a(transaction().whisky())
+        )))));
+
+        whenRequestIsExecuted();
+
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(potion().angelicElixir()));
+    }
+
+    @Test
+    public void purchaseIsPersisted() {
         // TODO purchase is added to gateway
     }
 
@@ -186,6 +218,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
     private void thenNoProductsAreVerified() {
         thenVerifiedProductIdsAre(a(list()));
+        foilCardGateway.thenNoFoilCardsWereAddedToPlayer(player);
     }
 
     private void thenVerifiedProductIdsAre(List<String> expected) {
@@ -243,6 +276,20 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
                     .withProductId("com.mazebert.cookie")
                     .withData("{\"orderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.MazebertTD\",\"productId\":\"com.mazebert.cookie\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
                     .withSignature("sp4Qwws1hJ3PuZZPopibvAIjITBdyof69DxQUE6am7wl2YtWFEM19Lpmq+sD2qLHrg7OBjklQ8iQmRGa8b8qPtjhWQ30cVoHJFQMI2NR1nLiOU9/hXP8eYz0nq46L4wvd0UYYpYUVXo0/oM22fC/JSuHWURJhfE4+ptJokedEH9hTpwC+86zl1zLMZ4NoE5krmlV9GDDLN8xBcR/7gsXUh7hM9X0zc/BNsLimsJZVEClQcxsqZykCVLglaFtqS4CyCCKv5jiCHOYxXvQ7zQlPe0tUaRUYijIK2HVKQolh3Y5dTV0lsCAdDy/5099FgUXvAs9ARaTFVvMPislrVnfYA==");
+        }
+
+        public TransactionBuilder beer() {
+            return this
+                    .withProductId("com.mazebert.beer")
+                    .withData("{\"orderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.MazebertTD\",\"productId\":\"com.mazebert.beer\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
+                    .withSignature("-");
+        }
+
+        public TransactionBuilder whisky() {
+            return this
+                    .withProductId("com.mazebert.whisky")
+                    .withData("{\"orderId\":\"12999763169054705758.1315551969063111\",\"packageName\":\"air.com.mazebert.MazebertTD\",\"productId\":\"com.mazebert.whisky\",\"purchaseTime\":1417163551553,\"purchaseState\":0,\"developerPayload\":\"TODO\",\"purchaseToken\":\"afeomijmllhbmfhpdliiapoi.AO-J1OxO6NXH_mNlTNhQG0nx0Aqd8sma7orKaY7FBaqOpYCqiRmBjc__C2WnbPYeHluIhO8-xMCaf0odRPRSb8IW3a1TI88p17xOMLSRiF0371Rwfct6y6OMWtDefsT4W_Ef7Hnmv5lIy_Ra-wcTlfvnHV0vuikiVg\"}")
+                    .withSignature("-");
         }
 
         public TransactionBuilder withProductId(String value) {
