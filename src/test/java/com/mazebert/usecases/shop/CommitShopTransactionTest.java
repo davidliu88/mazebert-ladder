@@ -221,6 +221,31 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
         thenPurchasesAreAddedForTransactions(transactions);
     }
 
+    @Test
+    public void productAlreadyPurchased() {
+        playerGateway.givenPlayerExists(player);
+        purchaseGateway.addPurchase(a(purchase().googlePlayWhisky().withPlayerId(player.getId())));
+        givenRequest(a(request().withTransactions(a(list(
+                a(transaction().beer()),
+                a(transaction().whisky())
+        )))));
+
+        whenRequestIsExecuted();
+
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(hero().innKeeper()));
+        assertEquals(a(list("com.mazebert.beer")), response.verifiedProductIds);
+    }
+
+    private void thenNoProductsAreAdded() {
+        thenProductsAreAdded(a(list()));
+        foilCardGateway.thenNoFoilCardsWereAddedToPlayer(player);
+    }
+
+    private void thenProductsAreAdded(List<String> expected) {
+        assertEquals(expected, response.verifiedProductIds);
+        assertEquals(expected.size(), purchaseGateway.getPurchasesForPlayer(player).size());
+    }
+
     private void thenPurchasesAreAddedForTransactions(List<Transaction> transactions) {
         List<Purchase> addedPurchases = purchaseGateway.getPurchasesForPlayer(player);
         assertEquals(transactions.size(), addedPurchases.size());
@@ -235,21 +260,6 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
             assertEquals(transaction.data, purchase.getData());
             assertEquals(transaction.signature, purchase.getSignature());
         }
-    }
-
-    @Test
-    public void productAlreadyPurchased() {
-        // TODO no reward is added
-    }
-
-    private void thenNoProductsAreAdded() {
-        thenProductsAreAdded(a(list()));
-        foilCardGateway.thenNoFoilCardsWereAddedToPlayer(player);
-    }
-
-    private void thenProductsAreAdded(List<String> expected) {
-        assertEquals(expected, response.verifiedProductIds);
-        assertEquals(expected.size(), purchaseGateway.getPurchasesForPlayer(player).size());
     }
 
     private RequestBuilder request() {

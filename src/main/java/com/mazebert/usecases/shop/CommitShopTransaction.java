@@ -10,6 +10,7 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.PurchaseGateway;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
@@ -60,22 +61,28 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
 
         for (Transaction transaction : request.transactions) {
             if (isGooglePlayTransactionValid(transaction)) {
-                unlockPurchaseReward(player, transaction);
-
-                Purchase purchase = new Purchase();
-                purchase.setPlayerId(player.getId());
-                purchase.setProductId(transaction.productId);
-                purchase.setStore(request.store);
-                purchase.setData(transaction.data);
-                purchase.setSignature(transaction.signature);
-                purchase.setPlayerId(player.getId());
-                purchaseGateway.addPurchase(purchase);
-
-                verifiedProductIds.add(transaction.productId);
+                try {
+                    storePurchase(request, player, transaction);
+                    unlockPurchaseReward(player, transaction);
+                    verifiedProductIds.add(transaction.productId);
+                } catch (KeyAlreadyExists error) {
+                    // It is not possible to purchase a product twice.
+                }
             }
         }
 
         return verifiedProductIds;
+    }
+
+    private void storePurchase(Request request, Player player, Transaction transaction) {
+        Purchase purchase = new Purchase();
+        purchase.setPlayerId(player.getId());
+        purchase.setProductId(transaction.productId);
+        purchase.setStore(request.store);
+        purchase.setData(transaction.data);
+        purchase.setSignature(transaction.signature);
+        purchase.setPlayerId(player.getId());
+        purchaseGateway.addPurchase(purchase);
     }
 
     private void unlockPurchaseReward(Player player, Transaction transaction) {

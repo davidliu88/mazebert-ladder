@@ -3,6 +3,7 @@ package com.mazebert.gateways.mocks;
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Purchase;
 import com.mazebert.gateways.PurchaseGateway;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,13 @@ public class PurchaseGatewayMock implements PurchaseGateway {
         if (purchases == null) {
             purchases = new ArrayList<>();
             purchasedProductsForPlayer.put(purchase.getPlayerId(), purchases);
+        }
+
+        for (Purchase existing : purchases) {
+            if (existing.getPlayerId() == purchase.getPlayerId() &&
+                existing.getProductId().equals(purchase.getProductId())) {
+                throw new KeyAlreadyExists();
+            }
         }
 
         purchases.add(purchase);
