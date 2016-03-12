@@ -11,6 +11,7 @@ import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.plugins.security.ServerContentSigner;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.mocks.EnvironmentPluginStub;
+import com.mazebert.plugins.system.mocks.LoggerMock;
 import com.mazebert.usecases.shop.CommitShopTransaction;
 import com.mazebert.usecases.system.GetStatus;
 import com.mazebert.usecases.system.GetVersion;
@@ -41,7 +42,10 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
 
     public static BusinessLogic getTestBusinessLogic() {
         if (testBusinessLogic == null) {
-            testBusinessLogic = new BusinessLogic(StubDataSourceProvider.class, EnvironmentPluginStub.class);
+            testBusinessLogic = new BusinessLogic(
+                    StubDataSourceProvider.class,
+                    EnvironmentPluginStub.class,
+                    new LoggerMock().getLogger());
         }
         return testBusinessLogic;
     }

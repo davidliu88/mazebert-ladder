@@ -39,11 +39,17 @@ import com.mazebert.usecases.supporters.GetSupporters;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
 
 import javax.sql.DataSource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BusinessLogic extends GuiceUsecaseExecutor {
     private static class LogicHolder {
-        public static BusinessLogic instance = new BusinessLogic(C3p0DataSourceProvider.class, SystemEnvironmentPlugin.class);
+        public static BusinessLogic instance = new BusinessLogic(
+                C3p0DataSourceProvider.class,
+                SystemEnvironmentPlugin.class,
+                Logger.getLogger(BusinessLogic.class.getName()));
     }
+    private final Logger logger;
     private final Class<? extends DataSourceProvider> dataSourceProvider;
 
     public static BusinessLogic getInstance() {
@@ -107,13 +113,17 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
         }
     }
 
-    public <T extends Provider<DataSource> & DataSourceProvider> BusinessLogic(Class<T> dataSourceProvider, Class<? extends EnvironmentPlugin> environmentPlugin) {
+    public <T extends Provider<DataSource> & DataSourceProvider> BusinessLogic(
+            Class<T> dataSourceProvider,
+            Class<? extends EnvironmentPlugin> environmentPlugin,
+            Logger logger) {
         super(Guice.createInjector(
                 new GatewayModule(dataSourceProvider),
                 new PluginModule(environmentPlugin)
         ));
 
         this.dataSourceProvider = dataSourceProvider;
+        this.logger = logger;
 
         addSystemUsecases();
         addSecurityUsecases();
@@ -180,6 +190,7 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
         try {
             return super.execute(request);
         } catch (GatewayError gatewayError) {
+            logger.log(Level.SEVERE, "Received unexpected gateway error.", gatewayError);
             throw new InternalServerError(gatewayError.getMessage() + " (" + gatewayError.getCause().getMessage() + ")", gatewayError.getCause());
         }
     }
