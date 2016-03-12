@@ -11,15 +11,21 @@ import org.bouncycastle.crypto.params.RSAKeyParameters;
 import org.bouncycastle.crypto.util.PublicKeyFactory;
 import org.bouncycastle.openssl.PEMParser;
 
+import javax.inject.Inject;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.inputStream;
 
 public class GooglePlayPurchaseVerifier {
     private final AsymmetricBlockCipher cipher;
+    private final Logger logger;
 
-    public GooglePlayPurchaseVerifier() {
+    @Inject
+    public GooglePlayPurchaseVerifier(Logger logger) {
+        this.logger = logger;
         cipher = createCipher("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvv8DXa2BDiES39Fiq+b/S/nENjCu+XYZVqVGpfqXAlPjLWn9pVIuKzqz3i3f3UhpyZb5CAhJsGZV48jhDcfgI8ljLGJGyI4JXw0RXL77M/7c/cmZHo6puSSQeQMSCDXYEKcz3RV2plIXMRmuc+n7pGzaiwQLsNAf5xZLvGp0PNDjxNcSCMCOfQoo0brSqo0oxuYZsMzh8TMsGarrs0nZkBddLfGdvEJFPDM6oDiRX9JniacKo8dOeEM6ZABnjZtMorOJXLuqAptH+6qhKhcmy+kWSh2zke1YFxdAhpB3y5D09LDFrK4y16vwNIQkFT/7su+WeA2tkxuFCdIfWaCcBwIDAQAB");
     }
 
@@ -66,7 +72,9 @@ public class GooglePlayPurchaseVerifier {
             }
             return true;
         } catch (Throwable e) {
-            // TODO log exception!
+            logger.log(Level.SEVERE, "Unexpected exception when verifying GooglePlay signature. (Exception Message: " + e.getMessage() + ")");
+            logger.log(Level.SEVERE, "Data: " + data);
+            logger.log(Level.SEVERE, "Signature: " + signature);
             return false;
         }
     }
