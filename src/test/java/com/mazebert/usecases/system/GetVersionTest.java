@@ -18,10 +18,10 @@ public class GetVersionTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void todo() {
+    public void versionIsTakenFromPropertiesFile() {
         givenRequest(a(request()));
         whenRequestIsExecuted();
-        assertEquals("todo", response.version);
+        assertEquals("${project.version}", response.version);
     }
 
     private RequestBuilder request() {
