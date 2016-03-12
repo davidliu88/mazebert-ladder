@@ -1,5 +1,6 @@
 package com.mazebert.usecases.system;
 
+import com.mazebert.entities.Version;
 import com.mazebert.usecases.system.GetVersion.Request;
 import com.mazebert.usecases.system.GetVersion.Response;
 import org.junit.Before;
@@ -7,7 +8,7 @@ import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.jusecase.Builders.a;
 
 public class GetVersionTest extends UsecaseTest<Request, Response> {
@@ -21,7 +22,9 @@ public class GetVersionTest extends UsecaseTest<Request, Response> {
     public void versionIsTakenFromPropertiesFile() {
         givenRequest(a(request()));
         whenRequestIsExecuted();
-        assertEquals("${project.version}", response.version);
+
+        Version version = new Version(response.version);
+        assertTrue(version.getMajor() > 0);
     }
 
     private RequestBuilder request() {
