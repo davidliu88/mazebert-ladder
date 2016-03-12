@@ -1,15 +1,16 @@
 package com.mazebert.usecases.shop;
 
 import com.mazebert.entities.Player;
+import com.mazebert.entities.Purchase;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
+import com.mazebert.gateways.mocks.PurchaseGatewayMock;
 import com.mazebert.plugins.security.mocks.GooglePlayPurchaseVerifierMock;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
 import com.mazebert.usecases.shop.CommitShopTransaction.Response;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -17,22 +18,22 @@ import org.jusecase.builders.Builder;
 
 import java.util.List;
 
-import static com.mazebert.builders.BuilderFactory.hero;
-import static com.mazebert.builders.BuilderFactory.player;
-import static com.mazebert.builders.BuilderFactory.potion;
+import static com.mazebert.builders.BuilderFactory.*;
+import static org.junit.Assert.assertEquals;
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.list;
 
 public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
+    private PurchaseGatewayMock purchaseGateway = new PurchaseGatewayMock();
     private GooglePlayPurchaseVerifierMock googlePlayPurchaseVerifier = new GooglePlayPurchaseVerifierMock();
 
     private Player player = a(player().casid());
 
     @Before
     public void setUp() {
-        usecase = new CommitShopTransaction(playerGateway, foilCardGateway, googlePlayPurchaseVerifier);
+        usecase = new CommitShopTransaction(playerGateway, foilCardGateway, purchaseGateway, googlePlayPurchaseVerifier);
     }
 
     @Test
@@ -94,7 +95,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        thenNoProductsAreVerified();
+        thenNoProductsAreAdded();
     }
 
     @Test
@@ -110,7 +111,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        thenNoProductsAreVerified();
+        thenNoProductsAreAdded();
     }
 
     @Test
@@ -123,7 +124,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        thenVerifiedProductIdsAre(a(list(
+        thenProductsAreAdded(a(list(
                 "com.mazebert.cookie"
         )));
     }
@@ -139,7 +140,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        thenNoProductsAreVerified();
+        thenNoProductsAreAdded();
     }
 
     @Test
@@ -153,7 +154,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        thenNoProductsAreVerified();
+        thenNoProductsAreAdded();
     }
 
     @Test
@@ -167,7 +168,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        thenNoProductsAreVerified();
+        thenNoProductsAreAdded();
     }
 
     @Test
@@ -207,8 +208,33 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void purchaseIsPersisted() {
-        // TODO purchase is added to gateway
+    public void purchasesArePersisted() {
+        List<Transaction> transactions = a(list(
+                a(transaction().beer()),
+                a(transaction().whisky())
+        ));
+        playerGateway.givenPlayerExists(player);
+        givenRequest(a(request().withTransactions(transactions)));
+
+        whenRequestIsExecuted();
+
+        thenPurchasesAreAddedForTransactions(transactions);
+    }
+
+    private void thenPurchasesAreAddedForTransactions(List<Transaction> transactions) {
+        List<Purchase> addedPurchases = purchaseGateway.getPurchasesForPlayer(player);
+        assertEquals(transactions.size(), addedPurchases.size());
+
+        for (int i = 0; i < transactions.size(); ++i) {
+            Transaction transaction = transactions.get(i);
+            Purchase purchase = addedPurchases.get(i);
+
+            assertEquals(player.getId(), purchase.getPlayerId());
+            assertEquals(request.store, purchase.getStore());
+            assertEquals(transaction.productId, purchase.getProductId());
+            assertEquals(transaction.data, purchase.getData());
+            assertEquals(transaction.signature, purchase.getSignature());
+        }
     }
 
     @Test
@@ -216,13 +242,14 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
         // TODO no reward is added
     }
 
-    private void thenNoProductsAreVerified() {
-        thenVerifiedProductIdsAre(a(list()));
+    private void thenNoProductsAreAdded() {
+        thenProductsAreAdded(a(list()));
         foilCardGateway.thenNoFoilCardsWereAddedToPlayer(player);
     }
 
-    private void thenVerifiedProductIdsAre(List<String> expected) {
-        Assert.assertEquals(expected, response.verifiedProductIds);
+    private void thenProductsAreAdded(List<String> expected) {
+        assertEquals(expected, response.verifiedProductIds);
+        assertEquals(expected.size(), purchaseGateway.getPurchasesForPlayer(player).size());
     }
 
     private RequestBuilder request() {

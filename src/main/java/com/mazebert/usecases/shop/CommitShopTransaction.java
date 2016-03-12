@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mazebert.entities.CardType;
 import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
+import com.mazebert.entities.Purchase;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
+import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
@@ -22,11 +24,13 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;
     private final FoilCardGateway foilCardGateway;
+    private final PurchaseGateway purchaseGateway;
     private final GooglePlayPurchaseVerifier googlePlayPurchaseVerifier;
 
-    public CommitShopTransaction(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, GooglePlayPurchaseVerifier googlePlayPurchaseVerifier) {
+    public CommitShopTransaction(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway, GooglePlayPurchaseVerifier googlePlayPurchaseVerifier) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
+        this.purchaseGateway = purchaseGateway;
         this.googlePlayPurchaseVerifier = googlePlayPurchaseVerifier;
     }
 
@@ -57,6 +61,16 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
         for (Transaction transaction : request.transactions) {
             if (isGooglePlayTransactionValid(transaction)) {
                 unlockPurchaseReward(player, transaction);
+
+                Purchase purchase = new Purchase();
+                purchase.setPlayerId(player.getId());
+                purchase.setProductId(transaction.productId);
+                purchase.setStore(request.store);
+                purchase.setData(transaction.data);
+                purchase.setSignature(transaction.signature);
+                purchase.setPlayerId(player.getId());
+                purchaseGateway.addPurchase(purchase);
+
                 verifiedProductIds.add(transaction.productId);
             }
         }
