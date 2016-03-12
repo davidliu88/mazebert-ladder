@@ -11,6 +11,7 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
+import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
@@ -27,12 +28,15 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
     private final FoilCardGateway foilCardGateway;
     private final PurchaseGateway purchaseGateway;
     private final GooglePlayPurchaseVerifier googlePlayPurchaseVerifier;
+    private final TransactionRunner transactionRunner;
 
-    public CommitShopTransaction(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway, GooglePlayPurchaseVerifier googlePlayPurchaseVerifier) {
+    public CommitShopTransaction(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway,
+                                 GooglePlayPurchaseVerifier googlePlayPurchaseVerifier, TransactionRunner transactionRunner) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.purchaseGateway = purchaseGateway;
         this.googlePlayPurchaseVerifier = googlePlayPurchaseVerifier;
+        this.transactionRunner = transactionRunner;
     }
 
     @Override
@@ -62,9 +66,11 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
         for (Transaction transaction : request.transactions) {
             if (isGooglePlayTransactionValid(transaction)) {
                 try {
-                    storePurchase(request, player, transaction);
-                    unlockPurchaseReward(player, transaction);
-                    verifiedProductIds.add(transaction.productId);
+                    transactionRunner.runAsTransaction(() -> {
+                        storePurchase(request, player, transaction);
+                        unlockPurchaseReward(player, transaction);
+                        verifiedProductIds.add(transaction.productId);
+                    });
                 } catch (KeyAlreadyExists error) {
                     // It is not possible to purchase a product twice.
                 }

@@ -7,6 +7,8 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.gateways.mocks.PurchaseGatewayMock;
+import com.mazebert.gateways.transaction.TransactionRunner;
+import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.plugins.security.mocks.GooglePlayPurchaseVerifierMock;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
@@ -28,12 +30,14 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
     private PurchaseGatewayMock purchaseGateway = new PurchaseGatewayMock();
     private GooglePlayPurchaseVerifierMock googlePlayPurchaseVerifier = new GooglePlayPurchaseVerifierMock();
+    private TransactionRunner transactionRunner = new TransactionRunnerMock();
 
     private Player player = a(player().casid());
 
     @Before
     public void setUp() {
-        usecase = new CommitShopTransaction(playerGateway, foilCardGateway, purchaseGateway, googlePlayPurchaseVerifier);
+        usecase = new CommitShopTransaction(playerGateway, foilCardGateway, purchaseGateway,
+                googlePlayPurchaseVerifier, transactionRunner);
     }
 
     @Test
