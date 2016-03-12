@@ -3,6 +3,7 @@ package com.mazebert.gateways.mysql;
 import com.mazebert.entities.Purchase;
 import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.gateways.error.GatewayError;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
@@ -39,7 +40,11 @@ public class MySqlPurchaseGateway extends MySqlGateway implements PurchaseGatewa
                     purchase.getData(),
                     purchase.getSignature());
         } catch (SQLException e) {
-            throw new GatewayError("Failed to create purchase entity.", e);
+            if (e.getErrorCode() == MySqlErrorCode.DUPLICATE_ENTRY) {
+                throw new KeyAlreadyExists();
+            } else {
+                throw new GatewayError("Failed to create purchase entity.", e);
+            }
         }
     }
 }
