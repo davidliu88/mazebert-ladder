@@ -6,7 +6,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t ladder-db:latest technical-details/docker/db/.
+  - docker build -t mbl-db:latest technical-details/docker/db/.
   - cd technical-details/docker/db-test && docker-compose up -d && cd ../../..
 
 after_success:

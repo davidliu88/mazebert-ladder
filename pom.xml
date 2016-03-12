@@ -141,6 +141,8 @@
     </dependencies>
 
     <build>
+        <finalName>mbl</finalName>
+
         <plugins>
             <!-- Test -->
             <plugin>

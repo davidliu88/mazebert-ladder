@@ -1,11 +1,11 @@
-mazebert-ladder-db-dev:
-  container_name: mazebert-ladder-db-dev
-  image: ladder-db:latest
+mbl-db-debug:
+  container_name: mbl-db-debug
+  image: mbl-db:latest
   environment:
     - MYSQL_ROOT_PASSWORD=development
 
-mazebert-ladder-dev:
-  container_name: mazebert-ladder-dev
+mbl-debug:
+  container_name: mbl-debug
   image: tomcat:8.0.30-jre8
   environment:
     - JPDA_ADDRESS=8000
@@ -13,7 +13,7 @@ mazebert-ladder-dev:
     - MAZEBERT_SETTINGS_FILE=/opt/mazebert/settings.json
   command: catalina.sh jpda run
   links:
-    - mazebert-ladder-db-dev:database
+    - mbl-db-debug:database
   ports:
     - "8080:8080"
     - "8000:8000"

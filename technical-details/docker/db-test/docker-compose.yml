@@ -1,6 +1,6 @@
-mazebert-ladder-test-db:
-  container_name: mazebert-ladder-test-db
-  image: ladder-db:latest
+mbl-db-test:
+  container_name: mbl-db-test
+  image: mbl-db:latest
   environment:
     - MYSQL_ROOT_PASSWORD=integrationtest
   ports:
