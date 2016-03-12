@@ -14,6 +14,9 @@ import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 import com.mazebert.plugins.validation.VersionValidator;
+import com.mazebert.presenters.jaxrs.response.StatusResponse;
+import com.mazebert.usecases.security.SignResponse;
+import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
 import org.jusecase.Usecase;
 
@@ -172,6 +175,9 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
         }
     }
 
+    @VerifyRequest
+    @StatusResponse
+    @SignResponse
     public static class Request {
         public String appVersion;
         public String key;

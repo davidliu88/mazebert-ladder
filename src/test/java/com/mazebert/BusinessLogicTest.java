@@ -131,6 +131,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenRequestIsVerified(BuyBlackMarketOffer.class);
         thenRequestIsVerified(ForgeCard.class);
         thenRequestIsVerified(PrepareShopTransaction.class);
+        thenRequestIsVerified(CommitShopTransaction.class);
     }
 
     @Test
@@ -141,6 +142,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenResponseIsSigned(BuyBlackMarketOffer.class);
         thenResponseIsSigned(ForgeCard.class);
         thenResponseIsSigned(PrepareShopTransaction.class);
+        thenResponseIsSigned(CommitShopTransaction.class);
     }
 
     @Test
