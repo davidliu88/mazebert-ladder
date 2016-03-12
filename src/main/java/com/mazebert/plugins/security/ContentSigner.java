@@ -8,10 +8,8 @@ import org.bouncycastle.crypto.encodings.PKCS1Encoding;
 import org.bouncycastle.crypto.engines.RSAEngine;
 import org.bouncycastle.crypto.params.RSAKeyParameters;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
-import org.bouncycastle.openssl.PEMEncryptedKeyPair;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.bc.BcPEMDecryptorProvider;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,21 +20,20 @@ import static org.jusecase.Builders.inputStream;
 public class ContentSigner {
     private final AsymmetricBlockCipher cipher;
 
-    public ContentSigner(String key, String passphrase) {
-        this.cipher = createCipher(key, passphrase);
+    public ContentSigner(String key) {
+        this.cipher = createCipher(key);
     }
 
-    private AsymmetricBlockCipher createCipher(String key, String passphrase) {
+    private AsymmetricBlockCipher createCipher(String key) {
         PKCS1Encoding cipher = new PKCS1Encoding(new RSAEngine());
-        cipher.init(true, parseKey(key, passphrase));
+        cipher.init(true, parseKey(key));
         return cipher;
     }
 
-    private RSAKeyParameters parseKey(String key, String passphrase) {
+    private RSAKeyParameters parseKey(String key) {
         try (InputStreamReader reader = new InputStreamReader(a(inputStream().withString(key)))) {
             PEMParser parser = new PEMParser(reader);
-            PEMEncryptedKeyPair encryptedKeyPair = (PEMEncryptedKeyPair)parser.readObject();
-            PEMKeyPair keyPair = encryptedKeyPair.decryptKeyPair(new BcPEMDecryptorProvider(passphrase.toCharArray()));
+            PEMKeyPair keyPair = (PEMKeyPair)parser.readObject();
             return (RSAKeyParameters) PrivateKeyFactory.createKey(keyPair.getPrivateKeyInfo());
         } catch (Throwable e) {
             throw new InternalServerError("Failed to parse private key for content signing.", e);

@@ -8,8 +8,7 @@ public class ServerContentSigner extends ContentSigner {
     @Inject
     public ServerContentSigner(SettingsPlugin settings) {
         super(
-                settings.getRequiredProperty(SettingsPlugin.PRIVATE_KEY),
-                settings.getRequiredProperty(SettingsPlugin.PRIVATE_KEY_PASSPHRASE)
+                settings.getRequiredProperty(SettingsPlugin.PRIVATE_KEY)
         );
     }
 }
