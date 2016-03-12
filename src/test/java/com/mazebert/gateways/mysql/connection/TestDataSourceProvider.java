@@ -2,6 +2,7 @@ package com.mazebert.gateways.mysql.connection;
 
 import com.mazebert.gateways.transaction.TransactionManager;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
+import com.mazebert.plugins.system.mocks.LoggerMock;
 import org.apache.commons.dbutils.QueryRunner;
 
 import javax.sql.DataSource;
@@ -15,6 +16,7 @@ public class TestDataSourceProvider implements DataSourceProvider {
     public static final TestDataSourceProvider instance = new TestDataSourceProvider();
     private DataSourceProvider realProvider;
     private DataSourceTransactionManager transactionManager;
+    private LoggerMock logger = new LoggerMock();
 
     private TestDataSourceProvider() {
     }
@@ -23,7 +25,7 @@ public class TestDataSourceProvider implements DataSourceProvider {
     public void prepare() {
         Credentials testCredentials = new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert");
         transactionManager = new DataSourceTransactionManager();
-        C3p0DataSourceProvider c3p0DataSourceProvider = new C3p0DataSourceProvider(testCredentials, transactionManager);
+        C3p0DataSourceProvider c3p0DataSourceProvider = new C3p0DataSourceProvider(testCredentials, transactionManager, logger.getLogger());
         c3p0DataSourceProvider.setUnregisterDriverOnDisposal(false);
 
         realProvider = c3p0DataSourceProvider;

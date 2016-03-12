@@ -23,6 +23,7 @@ import com.mazebert.plugins.system.EnvironmentPlugin;
 import com.mazebert.plugins.system.JsonSettingsPlugin;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.SystemEnvironmentPlugin;
+import com.mazebert.usecases.shop.CommitShopTransaction;
 import com.mazebert.usecases.system.GetStatus;
 import com.mazebert.usecases.system.GetVersion;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
@@ -171,6 +172,7 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
 
     private void addShopUsecases() {
         addUsecase(PrepareShopTransaction.class);
+        addUsecase(CommitShopTransaction.class);
     }
 
     @Override

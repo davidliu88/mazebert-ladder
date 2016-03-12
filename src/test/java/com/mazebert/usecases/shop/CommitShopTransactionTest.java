@@ -10,6 +10,7 @@ import com.mazebert.gateways.mocks.PurchaseGatewayMock;
 import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.plugins.security.mocks.GooglePlayPurchaseVerifierMock;
+import com.mazebert.plugins.system.mocks.LoggerMock;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
 import com.mazebert.usecases.shop.CommitShopTransaction.Response;
@@ -19,6 +20,7 @@ import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
@@ -31,13 +33,14 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
     private PurchaseGatewayMock purchaseGateway = new PurchaseGatewayMock();
     private GooglePlayPurchaseVerifierMock googlePlayPurchaseVerifier = new GooglePlayPurchaseVerifierMock();
     private TransactionRunner transactionRunner = new TransactionRunnerMock();
+    private LoggerMock logger = new LoggerMock();
 
     private Player player = a(player().casid());
 
     @Before
     public void setUp() {
         usecase = new CommitShopTransaction(playerGateway, foilCardGateway, purchaseGateway,
-                googlePlayPurchaseVerifier, transactionRunner);
+                googlePlayPurchaseVerifier, transactionRunner, logger.getLogger());
     }
 
     @Test
@@ -131,6 +134,19 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
         thenProductsAreAdded(a(list(
                 "com.mazebert.cookie"
         )));
+    }
+
+    @Test
+    public void invalidTransactionData() {
+        playerGateway.givenPlayerExists(a(player().casid()));
+        givenRequest(a(request().withTransactions(a(list(
+                a(transaction().beer().withData("I am not a valid json!"))
+        )))));
+
+        whenRequestIsExecuted();
+
+        thenNoProductsAreAdded();
+        logger.thenMessageIsLogged(Level.SEVERE, "Failed to parse Google Play transaction payload.");
     }
 
     @Test

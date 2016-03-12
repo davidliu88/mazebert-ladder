@@ -5,8 +5,6 @@ import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.transaction.datasource.DataSourceProxy;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.mchange.v2.log.MLog;
-import com.mchange.v2.log.MLogger;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import org.flywaydb.core.Flyway;
 
@@ -18,21 +16,23 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Singleton
 public class C3p0DataSourceProvider implements DataSourceProvider, Provider<DataSource> {
     private final Credentials credentials;
     private final DataSourceTransactionManager transactionManager;
+    private final Logger logger;
+
     private ComboPooledDataSource dataSource;
     private DataSourceProxy dataSourceProxy;
     private boolean unregisterDriverOnDisposal = true;
 
-    private final static MLogger logger = MLog.getLogger(C3p0DataSourceProvider.class);
-
     @Inject
-    public C3p0DataSourceProvider(Credentials credentials, DataSourceTransactionManager transactionManager) {
+    public C3p0DataSourceProvider(Credentials credentials, DataSourceTransactionManager transactionManager, Logger logger) {
         this.credentials = credentials;
         this.transactionManager = transactionManager;
+        this.logger = logger;
     }
 
     @Override
@@ -42,12 +42,18 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
 
     @Override
     public void prepare() {
+        logger.info("Prepare data source.");
+
         createDataSource();
         prepareDatabase();
+
+        logger.info("Prepare data source complete.");
     }
 
     @Override
     public void dispose() {
+        logger.info("Dispose data source.");
+
         dataSource.close();
         waitForC3p0ToBeClosed();
         dataSource = null;
@@ -57,7 +63,7 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         }
         shutDownJdbcCleanUpThread();
 
-        logger.info("Data source disposal is complete.");
+        logger.info("Dispose data source complete.");
     }
 
     private void waitForC3p0ToBeClosed() {

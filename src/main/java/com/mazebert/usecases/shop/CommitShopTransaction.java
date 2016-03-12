@@ -17,11 +17,16 @@ import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
 import org.jusecase.Usecase;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+@Singleton
 public class CommitShopTransaction implements Usecase<CommitShopTransaction.Request, CommitShopTransaction.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;
@@ -29,14 +34,18 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
     private final PurchaseGateway purchaseGateway;
     private final GooglePlayPurchaseVerifier googlePlayPurchaseVerifier;
     private final TransactionRunner transactionRunner;
+    private final Logger logger;
 
+    @Inject
     public CommitShopTransaction(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway,
-                                 GooglePlayPurchaseVerifier googlePlayPurchaseVerifier, TransactionRunner transactionRunner) {
+                                 GooglePlayPurchaseVerifier googlePlayPurchaseVerifier, TransactionRunner transactionRunner,
+                                 Logger logger) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.purchaseGateway = purchaseGateway;
         this.googlePlayPurchaseVerifier = googlePlayPurchaseVerifier;
         this.transactionRunner = transactionRunner;
+        this.logger = logger;
     }
 
     @Override
@@ -144,7 +153,8 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
             return "air.com.mazebert.MazebertTD".equals(payload.get("packageName")) &&
                     transaction.productId.equals(payload.get("productId"));
         } catch (Throwable e) {
-            // TODO log
+            logger.log(Level.SEVERE, "Failed to parse Google Play transaction payload.");
+            logger.log(Level.SEVERE, "Exception message was: " + e.getMessage());
             return false;
         }
     }

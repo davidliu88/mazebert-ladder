@@ -11,6 +11,7 @@ import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.plugins.security.ServerContentSigner;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.mocks.EnvironmentPluginStub;
+import com.mazebert.usecases.shop.CommitShopTransaction;
 import com.mazebert.usecases.system.GetStatus;
 import com.mazebert.usecases.system.GetVersion;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
@@ -106,6 +107,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
 
     private void thenShopUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(PrepareShopTransaction.class);
+        thenUsecaseCanBeExecuted(CommitShopTransaction.class);
     }
 
     @Override
