@@ -57,6 +57,13 @@ public class RegisterEmailTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
+    public void nullAppVersion() {
+        givenRequest(a(request().withAppVersion(null)));
+        whenRequestIsExecuted();
+        thenErrorIs(new BadRequest("App version must not be null."));
+    }
+
+    @Test
     public void playerNotFound() {
         playerGateway.givenPlayerExists(a(goldenPlayer().withKey("abc")));
         givenRequest(a(request().withKey("123")));
@@ -139,6 +146,11 @@ public class RegisterEmailTest extends UsecaseTest<Request, Response> {
 
         public RequestBuilder withKey(String key) {
             request.key = key;
+            return this;
+        }
+
+        public RequestBuilder withAppVersion(String appVersion) {
+            request.appVersion = appVersion;
             return this;
         }
     }

@@ -71,7 +71,9 @@ public class RegisterEmail implements Usecase<RegisterEmail.Request, RegisterEma
         if (!emailValidator.isValid(request.email)) {
             throw new BadRequest("Please enter a valid email address.");
         }
-
+        if (request.appVersion == null) {
+            throw new BadRequest("App version must not be null.");
+        }
         if (request.key == null) {
             throw new BadRequest("Key must not be null.");
         }
@@ -94,6 +96,7 @@ public class RegisterEmail implements Usecase<RegisterEmail.Request, RegisterEma
     public static class Request {
         public String email;
         public String key;
+        public String appVersion;
     }
 
     public static class Response {
