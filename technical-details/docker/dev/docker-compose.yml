@@ -1,0 +1,7 @@
+mbl-dev:
+  container_name: mbl-dev
+  image: mbl-dev:latest
+  restart: always
+  net: "host"
+  environment:
+    - MAZEBERT_SETTINGS_FILE=/opt/mazebert/settings.json
