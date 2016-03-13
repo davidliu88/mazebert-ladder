@@ -71,7 +71,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
     }
 
     @VerifyRequest
-    @StatusResponse(field = "quest")
+    @StatusResponse
     @SignResponse
     public static class Request {
         public String appVersion;
