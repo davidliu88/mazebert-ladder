@@ -54,6 +54,13 @@ public class UpdateProgress implements Usecase<UpdateProgress.Request, UpdatePro
          */
         @Deprecated
         public String name;
+
+        /**
+         * This property is still sent by old game clients but ignored on server side.
+         * Will be removed in a future version.
+         */
+        @Deprecated
+        public String appVersion;
     }
 
     public static class Response {
