@@ -44,6 +44,7 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getExperience(), actual.getExperience());
         assertEquals(expected.getLevel(), actual.getLevel());
+        assertEquals(expected.getKey(), actual.getKey());
     }
 
     @Test

@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
-    private static final String FIND_PLAYER = "SELECT id, name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player";
+    private static final String FIND_PLAYER = "SELECT id, savekey AS 'key', name, level, experience, lastUpdate, email, supporterLevel, relics, lastQuestCreation FROM Player";
 
     @Inject
     public MySqlPlayerGateway(DataSource dataSource) {
