@@ -1,6 +1,6 @@
 package com.mazebert.usecases.system;
 
-import com.mazebert.entities.PlayerRow;
+import com.mazebert.entities.PlayerRowSimple;
 import com.mazebert.gateways.PlayerRowGateway;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
@@ -43,6 +43,6 @@ public class GetStatus implements Usecase<GetStatus.Request, GetStatus.Response>
     public static class Response {
         public int totalPlayers;
         public int nowPlaying;
-        public List<PlayerRow> nowPlayingPlayers;
+        public List<PlayerRowSimple> nowPlayingPlayers;
     }
 }

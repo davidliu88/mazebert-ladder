@@ -1,6 +1,7 @@
 package com.mazebert.gateways.mysql;
 
 import com.mazebert.entities.PlayerRow;
+import com.mazebert.entities.PlayerRowSimple;
 import com.mazebert.gateways.PlayerRowGateway;
 import com.mazebert.gateways.error.GatewayError;
 import org.apache.commons.dbutils.QueryRunner;
@@ -36,10 +37,10 @@ public class MySqlPlayerRowGateway extends MySqlGateway implements PlayerRowGate
     }
 
     @Override
-    public List<PlayerRow> findPlayersUpdatedSince(Date updatedSince) {
+    public List<PlayerRowSimple> findPlayersUpdatedSince(Date updatedSince) {
         try {
             return getQueryRunner().query("SELECT id, name FROM Player WHERE lastUpdate >= ? ORDER BY LOWER(name) ASC;",
-                    new BeanListHandler<>(PlayerRow.class),
+                    new BeanListHandler<>(PlayerRowSimple.class),
                     updatedSince);
         } catch (SQLException e) {
             throw new GatewayError("Failed to select players updated since from database", e);

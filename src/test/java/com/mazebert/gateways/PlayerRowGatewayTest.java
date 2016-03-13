@@ -2,6 +2,7 @@ package com.mazebert.gateways;
 
 import com.mazebert.entities.Player;
 import com.mazebert.entities.PlayerRow;
+import com.mazebert.entities.PlayerRowSimple;
 import org.junit.Test;
 
 import java.util.Date;
@@ -21,6 +22,7 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
     private Date updatedSince;
 
     private List<PlayerRow> playerRows;
+    private List<PlayerRowSimple> playerRowsSimple;
 
     @Test
     public void findPlayers_gatewayError() {
@@ -108,7 +110,7 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
     @Test
     public void findPlayersUpdatedSince_noPlayers() {
         whenFindPlayersUpdatedSince();
-        assertEquals(0, playerRows.size());
+        assertEquals(0, playerRowsSimple.size());
     }
 
     @Test
@@ -124,11 +126,11 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
 
         whenFindPlayersUpdatedSince();
 
-        assertEquals(4, playerRows.size());
-        assertEquals("casid", playerRows.get(0).getName());
-        assertEquals("Homer", playerRows.get(1).getName());
-        assertEquals("Maggy", playerRows.get(2).getName());
-        assertEquals("Marge", playerRows.get(3).getName());
+        assertEquals(4, playerRowsSimple.size());
+        assertEquals("casid", playerRowsSimple.get(0).getName());
+        assertEquals("Homer", playerRowsSimple.get(1).getName());
+        assertEquals("Maggy", playerRowsSimple.get(2).getName());
+        assertEquals("Marge", playerRowsSimple.get(3).getName());
     }
 
     @Test
@@ -167,6 +169,6 @@ public abstract class PlayerRowGatewayTest extends GatewayTest<PlayerRowGateway>
     }
 
     private void whenFindPlayersUpdatedSince() {
-        playerRows = gateway.findPlayersUpdatedSince(updatedSince);
+        playerRowsSimple = gateway.findPlayersUpdatedSince(updatedSince);
     }
 }

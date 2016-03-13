@@ -1,6 +1,7 @@
 package com.mazebert.gateways.mocks;
 
 import com.mazebert.entities.PlayerRow;
+import com.mazebert.entities.PlayerRowSimple;
 import com.mazebert.gateways.PlayerRowGateway;
 
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 public class PlayerRowGatewayMock implements PlayerRowGateway {
     private Map<String, List<PlayerRow>> playersInRange = new HashMap<>();
-    private Map<String, List<PlayerRow>> playersNowPlaying = new HashMap<>();
+    private Map<String, List<PlayerRowSimple>> playersNowPlaying = new HashMap<>();
     private int totalPlayerCount;
 
     @Override
@@ -19,7 +20,7 @@ public class PlayerRowGatewayMock implements PlayerRowGateway {
     }
 
     @Override
-    public List<PlayerRow> findPlayersUpdatedSince(Date date) {
+    public List<PlayerRowSimple> findPlayersUpdatedSince(Date date) {
         return playersNowPlaying.get("" + date);
     }
 
@@ -36,7 +37,7 @@ public class PlayerRowGatewayMock implements PlayerRowGateway {
         totalPlayerCount = count;
     }
 
-    public void givenPlayerUpdatedSince(Date date, List<PlayerRow> players) {
+    public void givenPlayerUpdatedSince(Date date, List<PlayerRowSimple> players) {
         playersNowPlaying.put("" + date,  players);
     }
 }
