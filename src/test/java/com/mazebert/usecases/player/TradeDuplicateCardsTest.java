@@ -208,7 +208,7 @@ public class TradeDuplicateCardsTest extends UsecaseTest<Request, Response> {
         }
 
         public RequestBuilder offer() {
-            request.isOffer = true;
+            request.offer = true;
             return this;
         }
     }

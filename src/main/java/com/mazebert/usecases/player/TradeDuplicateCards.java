@@ -46,7 +46,7 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
             throw new NotFound("Player does not exist.");
         }
 
-        if (request.isOffer) {
+        if (request.offer) {
             return createOfferResponse(player);
         } else {
             return createTradeResponse(player);
@@ -114,7 +114,7 @@ public class TradeDuplicateCards implements Usecase<TradeDuplicateCards.Request,
     public static class Request {
         public String appVersion;
         public String key;
-        public boolean isOffer;
+        public boolean offer;
     }
 
     public static class Response extends FoilCardsResponse {
