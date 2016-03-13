@@ -121,7 +121,7 @@ public class ReplaceQuestTest extends UsecaseTest<Request, Response> {
                 .withAppVersion("1.2.0")
                 .withKey("abcdef")
                 .withQuestId(1L)
-                .withTimeZoneOffset(0);
+                .withTimezoneOffset(0);
     }
 
     private static class RequestBuilder implements Builder<Request> {
@@ -142,8 +142,8 @@ public class ReplaceQuestTest extends UsecaseTest<Request, Response> {
             return this;
         }
 
-        public RequestBuilder withTimeZoneOffset(int value) {
-            request.timeZoneOffset = value;
+        public RequestBuilder withTimezoneOffset(int value) {
+            request.timezoneOffset = value;
             return this;
         }
 

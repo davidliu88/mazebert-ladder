@@ -58,7 +58,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
         Response response = new Response();
         response.quest = questGenerator.tryToReplaceDailyQuest(player,
                 new Version(request.appVersion),
-                timeZoneParser.parseAppOffset(request.timeZoneOffset),
+                timeZoneParser.parseAppOffset(request.timezoneOffset),
                 dailyQuestIds, request.questId);
         return response;
     }
@@ -77,7 +77,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
         public String appVersion;
         public String key;
         public long questId;
-        public int timeZoneOffset;
+        public int timezoneOffset;
     }
 
     public static class Response {
