@@ -8,6 +8,15 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         <listener-class>com.mazebert.presenters.jaxrs.lifecycle.WebApplicationLifecycle</listener-class>
     </listener>
 
+    <filter>
+        <filter-name>CachedServletRequestFilter</filter-name>
+        <filter-class>com.mazebert.presenters.jaxrs.filter.CachedServletRequestFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CachedServletRequestFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>javax.ws.rs.core.Application</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
