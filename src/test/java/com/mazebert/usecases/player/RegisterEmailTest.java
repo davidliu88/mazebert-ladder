@@ -129,7 +129,8 @@ public class RegisterEmailTest extends UsecaseTest<Request, Response> {
     private RequestBuilder request() {
         return new RequestBuilder()
                 .withEmail("player@mazebert.com")
-                .withKey(a(goldenPlayer()).getKey());
+                .withKey(a(goldenPlayer()).getKey())
+                .withAppVersion("1.0.0");
     }
 
     private static class RequestBuilder implements Builder<Request> {
