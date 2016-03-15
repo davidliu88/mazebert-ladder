@@ -24,7 +24,7 @@ public class GetSupporters implements Usecase<GetSupporters.Request, GetSupporte
         return response;
     }
 
-    @StatusResponse(field = "players")
+    @StatusResponse
     public static class Request {
     }
 
