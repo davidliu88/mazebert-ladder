@@ -173,6 +173,7 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
                 .withExperience(100000000)
                 .withLastUpdate(a(date().with("2016-02-02 23:00:11")))
                 .withEmail("anonymous@mazebert.com")
+                .withSupporterLevel(100)
         ));
 
         Player updated = gateway.findPlayerByKey(existing.getKey());
@@ -180,6 +181,7 @@ public abstract class PlayerGatewayTest extends GatewayTest<PlayerGateway> {
         assertEquals(100000000, updated.getExperience());
         assertEquals(a(date().with("2016-02-02 23:00:11")), updated.getLastUpdate());
         assertEquals("anonymous@mazebert.com", updated.getEmail());
+        assertEquals(100, updated.getSupporterLevel());
     }
 
     @Test

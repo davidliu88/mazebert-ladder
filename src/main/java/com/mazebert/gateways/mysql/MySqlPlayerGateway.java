@@ -96,11 +96,12 @@ public class MySqlPlayerGateway extends MySqlGateway implements PlayerGateway {
 
     public void updatePlayer(Player player) {
         try {
-            getQueryRunner().update("UPDATE Player SET level=?, experience=?, lastUpdate=?, email=? WHERE id=?;",
+            getQueryRunner().update("UPDATE Player SET level=?, experience=?, lastUpdate=?, email=?, supporterLevel=? WHERE id=?;",
                     player.getLevel(),
                     player.getExperience(),
                     player.getLastUpdate(),
                     player.getEmail(),
+                    player.getSupporterLevel(),
                     player.getId()
             );
         } catch (SQLException e) {
