@@ -26,6 +26,20 @@ public class ForgotSavecodeTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
+    public void nullAppVersion() {
+        givenRequest(a(request().withAppVersion(null)));
+        whenRequestIsExecuted();
+        thenErrorIs(new BadRequest("App version must not be null."));
+    }
+
+    @Test
+    public void tooLowAppVersion() {
+        givenRequest(a(request().withAppVersion("0.9.1")));
+        whenRequestIsExecuted();
+        thenErrorIs(new BadRequest("At least app version 1.0.0 is required for this request."));
+    }
+
+    @Test
     public void nullEmail() {
         givenRequest(a(request().withEmail(null)));
         whenRequestIsExecuted();
@@ -74,7 +88,9 @@ public class ForgotSavecodeTest extends UsecaseTest<Request, Response> {
     }
 
     private RequestBuilder request() {
-        return new RequestBuilder().golden();
+        return new RequestBuilder()
+                .withAppVersion("1.0.0")
+                .withEmail("someone@mazebert.com");
     }
 
     private static class RequestBuilder implements Builder<Request> {
@@ -85,7 +101,8 @@ public class ForgotSavecodeTest extends UsecaseTest<Request, Response> {
             return request;
         }
 
-        public RequestBuilder golden() {
+        public RequestBuilder withAppVersion(String value) {
+            request.appVersion = value;
             return this;
         }
 

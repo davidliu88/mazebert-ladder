@@ -5,6 +5,7 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
+import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
@@ -14,6 +15,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ForgotSavecode implements Usecase<ForgotSavecode.Request, ForgotSavecode.Response> {
+    private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;
     private final EmailMessagePlugin emailMessagePlugin;
 
@@ -52,11 +54,14 @@ public class ForgotSavecode implements Usecase<ForgotSavecode.Request, ForgotSav
         if (request.email.isEmpty()) {
             throw new BadRequest("Email must not be empty");
         }
+
+        versionValidator.validate(request.appVersion);
     }
 
     @VerifyRequest
     @StatusResponse
     public static class Request {
+        public String appVersion;
         public String email;
     }
 
