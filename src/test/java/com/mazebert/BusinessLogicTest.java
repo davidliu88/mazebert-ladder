@@ -1,5 +1,6 @@
 package com.mazebert;
 
+import com.mazebert.error.BadRequest;
 import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.error.GatewayError;
@@ -200,6 +201,22 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
     }
 
     @Test
+    public void expectedErrorInUsecase() {
+        givenTestLogic();
+        BadRequest expected = new BadRequest("This was expected.");
+
+        try {
+            businessLogic().execute(new ThrowingUsecase.Request(expected));
+        } catch (Error e) {
+            error = e;
+        }
+
+        assertNotNull(error);
+        assertSame(expected, error);
+        logger.thenNoMessageIsLogged();
+    }
+
+    @Test
     public void noErrorInUsecase() {
         givenTestLogic();
         businessLogic().addUsecase(GoodUsecase.class);
@@ -209,6 +226,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
 
     private void givenTestLogic() {
         givenExecutor(getTestBusinessLogic());
+        logger.reset();
     }
 
     private BusinessLogic businessLogic() {

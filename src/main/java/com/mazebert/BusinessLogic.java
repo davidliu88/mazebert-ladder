@@ -3,6 +3,7 @@ package com.mazebert;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provider;
+import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
@@ -193,8 +194,12 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
             logger.log(Level.SEVERE, "An unexpected gateway error occured during usecase execution.", gatewayError);
             throw new InternalServerError(gatewayError.getMessage() + " (" + gatewayError.getCause().getMessage() + ")", gatewayError.getCause());
         } catch (Throwable throwable) {
-            logger.log(Level.SEVERE, "An unexpected exception occured during usecase execution.", throwable);
-            throw new InternalServerError("An unexpected exception occured during usecase execution. (" + throwable.getMessage() + ")", throwable);
+            if (!(throwable instanceof Error)) {
+                logger.log(Level.SEVERE, "An unexpected exception occured during usecase execution.", throwable);
+                throw new InternalServerError("An unexpected exception occured during usecase execution. (" + throwable.getMessage() + ")", throwable);
+            } else {
+                throw  throwable;
+            }
         }
     }
 
