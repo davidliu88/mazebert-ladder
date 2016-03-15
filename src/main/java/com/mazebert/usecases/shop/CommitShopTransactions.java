@@ -106,11 +106,19 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
     private void unlockPurchaseReward(Player player, Transaction transaction) {
         if ("com.mazebert.cookie".equals(transaction.productId)) {
             foilCardGateway.addFoilCardToPlayer(player.getId(), getCookieReward());
+            addSupporterLevel(player, 1);
         } else if ("com.mazebert.beer".equals(transaction.productId)) {
             foilCardGateway.addFoilCardToPlayer(player.getId(), getBeerReward());
+            addSupporterLevel(player, 2);
         } else if ("com.mazebert.whisky".equals(transaction.productId)) {
             foilCardGateway.addFoilCardToPlayer(player.getId(), getWhiskyReward());
+            addSupporterLevel(player, 4);
         }
+    }
+
+    private void addSupporterLevel(Player player, int supporterLevel) {
+        player.setSupporterLevel(player.getSupporterLevel() + supporterLevel);
+        playerGateway.updatePlayer(player);
     }
 
     private FoilCard getCookieReward() {

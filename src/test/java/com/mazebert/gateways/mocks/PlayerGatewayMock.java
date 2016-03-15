@@ -5,6 +5,8 @@ import com.mazebert.gateways.PlayerGateway;
 
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
+
 public class PlayerGatewayMock implements PlayerGateway {
     private int nextPlayerId;
     private Player addedPlayer;
@@ -92,5 +94,9 @@ public class PlayerGatewayMock implements PlayerGateway {
 
     public void givenPlayerRank(int rank, Player player) {
         playerRankById.put(player.getId(), rank);
+    }
+
+    public void thenSupporterLevelIs(Player player, int supporterLevel) {
+        assertEquals(supporterLevel, playerById.get(player.getId()).getSupporterLevel());
     }
 }

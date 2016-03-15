@@ -35,7 +35,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
     private TransactionRunner transactionRunner = new TransactionRunnerMock();
     private LoggerMock logger = new LoggerMock();
 
-    private Player player = a(player().casid());
+    private Player player = a(player().casid().withSupporterLevel(0));
 
     @Before
     public void setUp() {
@@ -201,6 +201,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(hero().cookieMonster()));
+        playerGateway.thenSupporterLevelIs(player, 1);
     }
 
     @Test
@@ -213,6 +214,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(hero().innKeeper()));
+        playerGateway.thenSupporterLevelIs(player, 2);
     }
 
     @Test
@@ -225,6 +227,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(potion().angelicElixir()));
+        playerGateway.thenSupporterLevelIs(player, 4);
     }
 
     @Test
@@ -243,6 +246,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void productAlreadyPurchased() {
+        player = a(player().casid().withSupporterLevel(4));
         playerGateway.givenPlayerExists(player);
         purchaseGateway.addPurchase(a(purchase().googlePlayWhisky().withPlayerId(player.getId())));
         givenRequest(a(request().withTransactions(a(list(
@@ -254,6 +258,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
 
         foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(hero().innKeeper()));
         assertEquals(a(list("com.mazebert.beer")), response.verifiedProductIds);
+        playerGateway.thenSupporterLevelIs(player, 6);
     }
 
     private void thenNoProductsAreAdded() {
