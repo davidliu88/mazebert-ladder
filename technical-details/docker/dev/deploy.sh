@@ -7,6 +7,7 @@ cd $SCRIPT_DIR
 HOST=root@mazebert.com
 PORT=53480
 DEPLOY_DIR=/opt/mbl-dev
+URL=https://ladderdev.mazebert.com
 
 echo "Packaging maven project."
 cd ../../..
@@ -27,11 +28,21 @@ scp -P $PORT ../../../target/mbl.war $HOST:$DEPLOY_DIR
 echo "Deploying files to container."
 ssh -p $PORT $HOST "$DEPLOY_DIR/run.sh"
 
-echo "Wait for service to be alive."
-until $(curl --output /dev/null --silent --head --fail https://ladderdev.mazebert.com/rest/status); do
-    printf '.'
+printf "Wait for service to be alive."
+until $(curl --output /dev/null --silent --head --fail $URL/rest/version); do
+    printf "."
     sleep 3
 done
+echo ""
 echo "Service can be reached."
+echo ""
+
+echo "Fetching ladder version..."
+echo $(curl --silent $URL/rest/version)
+echo ""
+
+echo "Fetching ladder status..."
+echo $(curl --silent $URL/rest/status)
+echo ""
 
 echo "Have a nice day and happy building :-)"
