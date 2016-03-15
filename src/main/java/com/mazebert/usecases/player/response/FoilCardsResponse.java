@@ -34,10 +34,18 @@ public class FoilCardsResponse {
         Card card = createCard(foilCard);
 
         switch (foilCard.getCardType()) {
-            case CardType.TOWER: foilTowers.add(card);
-            case CardType.ITEM: foilItems.add(card);
-            case CardType.POTION: foilPotions.add(card);
-            case CardType.HERO: foilHeroes.add(card);
+            case CardType.TOWER:
+                foilTowers.add(card);
+                break;
+            case CardType.ITEM:
+                foilItems.add(card);
+                break;
+            case CardType.POTION:
+                foilPotions.add(card);
+                break;
+            case CardType.HERO:
+                foilHeroes.add(card);
+                break;
         }
     }
 
