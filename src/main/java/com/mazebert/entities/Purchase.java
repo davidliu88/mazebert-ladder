@@ -1,5 +1,7 @@
 package com.mazebert.entities;
 
+import java.util.Date;
+
 public class Purchase {
 
     private String productId;
@@ -7,6 +9,8 @@ public class Purchase {
     private String store;
     private String data;
     private String signature;
+    private String appVersion;
+    private Date purchaseDate;
 
     public void setProductId(String productId) {
         this.productId = productId;
@@ -46,5 +50,21 @@ public class Purchase {
 
     public String getSignature() {
         return signature;
+    }
+
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 }
