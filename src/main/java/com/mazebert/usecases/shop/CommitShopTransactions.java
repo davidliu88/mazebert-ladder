@@ -100,6 +100,7 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
         purchase.setData(transaction.data);
         purchase.setSignature(transaction.signature);
         purchase.setPlayerId(player.getId());
+        purchase.setAppVersion(request.appVersion);
         purchaseGateway.addPurchase(purchase);
     }
 

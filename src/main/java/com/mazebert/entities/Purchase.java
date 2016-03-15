@@ -7,6 +7,7 @@ public class Purchase {
     private String store;
     private String data;
     private String signature;
+    private String appVersion;
 
     public void setProductId(String productId) {
         this.productId = productId;
@@ -46,5 +47,13 @@ public class Purchase {
 
     public String getSignature() {
         return signature;
+    }
+
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
     }
 }

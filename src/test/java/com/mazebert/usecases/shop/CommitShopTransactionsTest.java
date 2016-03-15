@@ -284,6 +284,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
             assertEquals(transaction.productId, purchase.getProductId());
             assertEquals(transaction.data, purchase.getData());
             assertEquals(transaction.signature, purchase.getSignature());
+            assertEquals(request.appVersion, purchase.getAppVersion());
         }
     }
 
