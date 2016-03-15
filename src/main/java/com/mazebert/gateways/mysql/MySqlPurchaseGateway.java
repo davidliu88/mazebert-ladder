@@ -32,13 +32,14 @@ public class MySqlPurchaseGateway extends MySqlGateway implements PurchaseGatewa
     @Override
     public void addPurchase(Purchase purchase) {
         try {
-            getQueryRunner().insert("INSERT INTO PlayerPurchasedProduct (playerId, productId, store, data, signature) VALUES(?, ?, ?, ?, ?);",
+            getQueryRunner().insert("INSERT INTO PlayerPurchasedProduct (playerId, productId, store, data, signature, appVersion) VALUES(?, ?, ?, ?, ?, ?);",
                     new ScalarHandler<>(),
                     purchase.getPlayerId(),
                     purchase.getProductId(),
                     purchase.getStore(),
                     purchase.getData(),
-                    purchase.getSignature());
+                    purchase.getSignature(),
+                    purchase.getAppVersion());
         } catch (SQLException e) {
             if (e.getErrorCode() == MySqlErrorCode.DUPLICATE_ENTRY) {
                 throw new KeyAlreadyExists();
