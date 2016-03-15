@@ -27,4 +27,11 @@ scp -P $PORT ../../../target/mbl.war $HOST:$DEPLOY_DIR
 echo "Deploying files to container."
 ssh -p $PORT $HOST "$DEPLOY_DIR/run.sh"
 
+echo "Wait for service to be alive."
+until $(curl --output /dev/null --silent --head --fail https://ladderdev.mazebert.com/rest/status); do
+    printf '.'
+    sleep 3
+done
+echo "Service can be reached."
+
 echo "Have a nice day and happy building :-)"
