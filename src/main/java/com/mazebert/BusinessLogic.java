@@ -190,8 +190,11 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
         try {
             return super.execute(request);
         } catch (GatewayError gatewayError) {
-            logger.log(Level.SEVERE, "Received unexpected gateway error.", gatewayError);
+            logger.log(Level.SEVERE, "An unexpected gateway error occured during usecase execution.", gatewayError);
             throw new InternalServerError(gatewayError.getMessage() + " (" + gatewayError.getCause().getMessage() + ")", gatewayError.getCause());
+        } catch (Throwable throwable) {
+            logger.log(Level.SEVERE, "An unexpected exception occured during usecase execution.", throwable);
+            throw new InternalServerError("An unexpected exception occured during usecase execution. (" + throwable.getMessage() + ")", throwable);
         }
     }
 

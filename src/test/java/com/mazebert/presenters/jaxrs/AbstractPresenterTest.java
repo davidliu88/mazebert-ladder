@@ -224,14 +224,6 @@ public class AbstractPresenterTest {
         thenResponseJsonIs("{\"status\":\"error\",\"error\":\"Test error\"}");
     }
 
-    @Test
-    public void unexpectedError() {
-        givenUsecaseRequest(new DummyRequest());
-        givenUsecaseError(new RuntimeException("Test error"));
-        whenRequestIsExecuted();
-        thenResponseJsonIs("{\"status\":\"error\",\"error\":\"Unexpected error: Test error\"}");
-    }
-
     private void givenUsecaseRequest(Object usecaseRequest) {
         this.usecaseRequest = usecaseRequest;
     }

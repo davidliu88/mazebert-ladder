@@ -57,8 +57,6 @@ public abstract class AbstractPresenter {
             return createResponse(request, usecaseExecutor.execute(request));
         } catch (Error error) {
             return createErrorResponse(request, error);
-        } catch (Throwable throwable) {
-            return createErrorResponse(request, new InternalServerError("Unexpected error: " + throwable.getMessage(), throwable));
         }
     }
 

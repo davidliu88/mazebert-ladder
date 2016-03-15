@@ -32,6 +32,7 @@ import org.jusecase.Usecase;
 import org.jusecase.UsecaseExecutorTest;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import static org.junit.Assert.*;
 
@@ -39,13 +40,16 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
     private Error error;
 
     private static BusinessLogic testBusinessLogic;
+    private static LoggerMock logger = new LoggerMock();
 
     public static BusinessLogic getTestBusinessLogic() {
         if (testBusinessLogic == null) {
             testBusinessLogic = new BusinessLogic(
                     StubDataSourceProvider.class,
                     EnvironmentPluginStub.class,
-                    new LoggerMock().getLogger());
+                    logger.getLogger());
+
+            testBusinessLogic.addUsecase(ThrowingUsecase.class);
         }
         return testBusinessLogic;
     }
@@ -162,10 +166,10 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
     @Test
     public void gatewayErrorInUsecase() {
         givenTestLogic();
-        businessLogic().addUsecase(ThrowingUsecase.class);
+        GatewayError expected = new GatewayError("Something went wrong down here in the gateway.", new SQLException("SQL error details."));
 
         try {
-            businessLogic().execute(new ThrowingUsecase.Request());
+            businessLogic().execute(new ThrowingUsecase.Request(expected));
         } catch (Error e) {
             error = e;
         }
@@ -174,6 +178,25 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         assertEquals(InternalServerError.class, error.getClass());
         assertEquals("Something went wrong down here in the gateway. (SQL error details.)", error.getMessage());
         assertEquals(SQLException.class, error.getCause().getClass());
+        logger.thenMessageIsLogged(Level.SEVERE, "An unexpected gateway error occured during usecase execution.", expected);
+    }
+
+    @Test
+    public void unexpectedErrorInUsecase() {
+        givenTestLogic();
+        NullPointerException expected = new NullPointerException("This must not be null.");
+
+        try {
+            businessLogic().execute(new ThrowingUsecase.Request(expected));
+        } catch (Error e) {
+            error = e;
+        }
+
+        assertNotNull(error);
+        assertEquals(InternalServerError.class, error.getClass());
+        assertEquals("An unexpected exception occured during usecase execution. (This must not be null.)", error.getMessage());
+        assertEquals(NullPointerException.class, error.getCause().getClass());
+        logger.thenMessageIsLogged(Level.SEVERE, "An unexpected exception occured during usecase execution.", expected);
     }
 
     @Test
@@ -213,11 +236,17 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
     }
 
     private static class ThrowingUsecase implements Usecase<ThrowingUsecase.Request, Void> {
-        public static class Request {}
+        public static class Request {
+            public RuntimeException error;
+
+            public Request(RuntimeException error) {
+                this.error = error;
+            }
+        }
 
         @Override
         public Void execute(Request request) {
-            throw new GatewayError("Something went wrong down here in the gateway.", new SQLException("SQL error details."));
+            throw request.error;
         }
     }
 

@@ -16,4 +16,8 @@ public class LoggerMock {
     public void thenMessageIsLogged(Level level, String message) {
         verify(logger).log(level, message);
     }
+
+    public void thenMessageIsLogged(Level level, String message, Throwable throwable) {
+        verify(logger).log(level, message, throwable);
+    }
 }
