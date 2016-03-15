@@ -11,9 +11,9 @@ import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.plugins.security.mocks.GooglePlayPurchaseVerifierMock;
 import com.mazebert.plugins.system.mocks.LoggerMock;
-import com.mazebert.usecases.shop.CommitShopTransaction.Request;
-import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
-import com.mazebert.usecases.shop.CommitShopTransaction.Response;
+import com.mazebert.usecases.shop.CommitShopTransactions.Request;
+import com.mazebert.usecases.shop.CommitShopTransactions.Request.Transaction;
+import com.mazebert.usecases.shop.CommitShopTransactions.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.list;
 
-public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
+public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
     private PurchaseGatewayMock purchaseGateway = new PurchaseGatewayMock();
@@ -39,7 +39,7 @@ public class CommitShopTransactionTest extends UsecaseTest<Request, Response> {
 
     @Before
     public void setUp() {
-        usecase = new CommitShopTransaction(playerGateway, foilCardGateway, purchaseGateway,
+        usecase = new CommitShopTransactions(playerGateway, foilCardGateway, purchaseGateway,
                 googlePlayPurchaseVerifier, transactionRunner, logger.getLogger());
     }
 

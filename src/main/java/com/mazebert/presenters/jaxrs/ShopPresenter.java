@@ -1,5 +1,6 @@
 package com.mazebert.presenters.jaxrs;
 
+import com.mazebert.usecases.shop.CommitShopTransactions;
 import com.mazebert.usecases.shop.PrepareShopTransaction;
 
 import javax.ws.rs.Consumes;
@@ -16,6 +17,14 @@ public class ShopPresenter extends AbstractPresenter {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response prepareTransaction(PrepareShopTransaction.Request request) {
+        return execute(request);
+    }
+
+    @POST
+    @Path("/commit-transactions")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response prepareTransaction(CommitShopTransactions.Request request) {
         return execute(request);
     }
 }

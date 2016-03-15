@@ -17,7 +17,7 @@ import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.VerifyRequest;
-import com.mazebert.usecases.shop.CommitShopTransaction.Request.Transaction;
+import com.mazebert.usecases.shop.CommitShopTransactions.Request.Transaction;
 import org.jusecase.Usecase;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Singleton
-public class CommitShopTransaction implements Usecase<CommitShopTransaction.Request, CommitShopTransaction.Response> {
+public class CommitShopTransactions implements Usecase<CommitShopTransactions.Request, CommitShopTransactions.Response> {
     private final VersionValidator versionValidator = new VersionValidator("1.0.0");
     private final PlayerGateway playerGateway;
     private final FoilCardGateway foilCardGateway;
@@ -40,9 +40,9 @@ public class CommitShopTransaction implements Usecase<CommitShopTransaction.Requ
     private final Logger logger;
 
     @Inject
-    public CommitShopTransaction(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway,
-                                 GooglePlayPurchaseVerifier googlePlayPurchaseVerifier, TransactionRunner transactionRunner,
-                                 Logger logger) {
+    public CommitShopTransactions(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway,
+                                  GooglePlayPurchaseVerifier googlePlayPurchaseVerifier, TransactionRunner transactionRunner,
+                                  Logger logger) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.purchaseGateway = purchaseGateway;

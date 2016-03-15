@@ -12,7 +12,7 @@ import com.mazebert.plugins.security.ServerContentSigner;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.mocks.EnvironmentPluginStub;
 import com.mazebert.plugins.system.mocks.LoggerMock;
-import com.mazebert.usecases.shop.CommitShopTransaction;
+import com.mazebert.usecases.shop.CommitShopTransactions;
 import com.mazebert.usecases.system.GetStatus;
 import com.mazebert.usecases.system.GetVersion;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
@@ -115,7 +115,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
 
     private void thenShopUsecasesCanBeExecuted() {
         thenUsecaseCanBeExecuted(PrepareShopTransaction.class);
-        thenUsecaseCanBeExecuted(CommitShopTransaction.class);
+        thenUsecaseCanBeExecuted(CommitShopTransactions.class);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenRequestIsVerified(BuyBlackMarketOffer.class);
         thenRequestIsVerified(ForgeCard.class);
         thenRequestIsVerified(PrepareShopTransaction.class);
-        thenRequestIsVerified(CommitShopTransaction.class);
+        thenRequestIsVerified(CommitShopTransactions.class);
     }
 
     @Test
@@ -150,7 +150,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenResponseIsSigned(BuyBlackMarketOffer.class);
         thenResponseIsSigned(ForgeCard.class);
         thenResponseIsSigned(PrepareShopTransaction.class);
-        thenResponseIsSigned(CommitShopTransaction.class);
+        thenResponseIsSigned(CommitShopTransactions.class);
     }
 
     @Test
