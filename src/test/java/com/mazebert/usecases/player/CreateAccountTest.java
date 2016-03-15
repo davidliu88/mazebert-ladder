@@ -25,6 +25,20 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
+    public void nullAppVersion() {
+        givenRequest(a(request().withAppVersion(null)));
+        whenRequestIsExecuted();
+        thenErrorIs(new BadRequest("App version must not be null."));
+    }
+
+    @Test
+    public void tooLowAppVersion() {
+        givenRequest(a(request().withAppVersion("0.0.1")));
+        whenRequestIsExecuted();
+        thenErrorIs(new BadRequest("At least app version 0.4.0 is required for this request."));
+    }
+
+    @Test
     public void nullName() {
         givenRequest(a(request().withName(null)));
         whenRequestIsExecuted();
@@ -126,6 +140,7 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
 
         public RequestBuilder golden() {
             return this
+                    .withAppVersion("1.0.0")
                     .withName("Ontrose")
                     .withLevel(4)
                     .withExperience(1000);
@@ -143,6 +158,11 @@ public class CreateAccountTest extends UsecaseTest<Request, Response> {
 
         public RequestBuilder withExperience(long value) {
             request.experience = value;
+            return this;
+        }
+
+        public RequestBuilder withAppVersion(String value) {
+            request.appVersion = value;
             return this;
         }
 

@@ -5,6 +5,7 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.plugins.random.PlayerKeyGenerator;
+import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
@@ -14,6 +15,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccount.Response> {
+    private final VersionValidator versionValidator = new VersionValidator("0.4.0");
     private final PlayerGateway playerGateway;
     private final PlayerKeyGenerator keyGenerator;
 
@@ -72,11 +74,14 @@ public class CreateAccount implements Usecase<CreateAccount.Request, CreateAccou
         if (request.experience <= 0) {
             throw new BadRequest("Player experience must be greater than 0");
         }
+
+        versionValidator.validate(request.appVersion);
     }
 
     @VerifyRequest
     @StatusResponse
     public static class Request {
+        public String appVersion;
         public String name;
         public int level;
         public long experience;
