@@ -87,6 +87,13 @@ public class DailyQuestGeneratorTest {
     }
 
     @Test
+    public void completelyNewPlayer() {
+        player = a(player().casid().withLastQuestCreation(null));
+        whenTryToGenerateDailyQuest();
+        thenQuestIsGenerated();
+    }
+
+    @Test
     public void playerAlreadyCreatedOneQuestToday() {
         player = a(player().casid().withLastQuestCreation(a(date().with("2016-02-02 15:00:00"))));
         currentDatePlugin.givenCurrentDate(a(date().with("2016-02-02 19:00:00")));
@@ -164,6 +171,10 @@ public class DailyQuestGeneratorTest {
     }
 
     private void thenOneQuestIsGenerated() {
+        assertNotNull(quest);
+    }
+
+    private void thenQuestIsGenerated() {
         assertNotNull(quest);
     }
 

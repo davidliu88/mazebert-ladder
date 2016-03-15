@@ -65,7 +65,7 @@ public class DailyQuestGenerator {
     private boolean isQuestGenerationPossible(Player player, TimeZone timeZone) {
         Date now = currentDatePlugin.getCurrentDate();
         Date lastQuestCreation = player.getLastQuestCreation();
-        if (now.getTime() - lastQuestCreation.getTime() < ONE_DAY_MILLIS) {
+        if (lastQuestCreation != null && now.getTime() - lastQuestCreation.getTime() < ONE_DAY_MILLIS) {
             return !isQuestAlreadyGeneratedToday(now, lastQuestCreation, timeZone);
         }
 
