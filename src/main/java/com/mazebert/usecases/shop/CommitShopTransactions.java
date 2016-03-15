@@ -13,6 +13,7 @@ import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
+import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SignResponse;
@@ -37,17 +38,19 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
     private final PurchaseGateway purchaseGateway;
     private final GooglePlayPurchaseVerifier googlePlayPurchaseVerifier;
     private final TransactionRunner transactionRunner;
+    private final CurrentDatePlugin currentDatePlugin;
     private final Logger logger;
 
     @Inject
     public CommitShopTransactions(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway,
                                   GooglePlayPurchaseVerifier googlePlayPurchaseVerifier, TransactionRunner transactionRunner,
-                                  Logger logger) {
+                                  CurrentDatePlugin currentDatePlugin, Logger logger) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.purchaseGateway = purchaseGateway;
         this.googlePlayPurchaseVerifier = googlePlayPurchaseVerifier;
         this.transactionRunner = transactionRunner;
+        this.currentDatePlugin = currentDatePlugin;
         this.logger = logger;
     }
 
@@ -101,6 +104,7 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
         purchase.setSignature(transaction.signature);
         purchase.setPlayerId(player.getId());
         purchase.setAppVersion(request.appVersion);
+        purchase.setPurchaseDate(currentDatePlugin.getCurrentDate());
         purchaseGateway.addPurchase(purchase);
     }
 

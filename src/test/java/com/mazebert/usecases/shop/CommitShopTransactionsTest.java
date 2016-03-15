@@ -11,6 +11,7 @@ import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
 import com.mazebert.plugins.security.mocks.GooglePlayPurchaseVerifierMock;
 import com.mazebert.plugins.system.mocks.LoggerMock;
+import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.shop.CommitShopTransactions.Request;
 import com.mazebert.usecases.shop.CommitShopTransactions.Request.Transaction;
 import com.mazebert.usecases.shop.CommitShopTransactions.Response;
@@ -19,12 +20,14 @@ import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.date;
 import static org.jusecase.Builders.list;
 
 public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
@@ -33,14 +36,18 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
     private PurchaseGatewayMock purchaseGateway = new PurchaseGatewayMock();
     private GooglePlayPurchaseVerifierMock googlePlayPurchaseVerifier = new GooglePlayPurchaseVerifierMock();
     private TransactionRunner transactionRunner = new TransactionRunnerMock();
+    private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
     private LoggerMock logger = new LoggerMock();
 
     private Player player = a(player().casid().withSupporterLevel(0));
+    private Date now = a(date());
 
     @Before
     public void setUp() {
         usecase = new CommitShopTransactions(playerGateway, foilCardGateway, purchaseGateway,
-                googlePlayPurchaseVerifier, transactionRunner, logger.getLogger());
+                googlePlayPurchaseVerifier, transactionRunner, currentDatePlugin, logger.getLogger());
+
+        currentDatePlugin.givenCurrentDate(now);
     }
 
     @Test
@@ -285,6 +292,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
             assertEquals(transaction.data, purchase.getData());
             assertEquals(transaction.signature, purchase.getSignature());
             assertEquals(request.appVersion, purchase.getAppVersion());
+            assertEquals(now, purchase.getPurchaseDate());
         }
     }
 
