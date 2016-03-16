@@ -80,6 +80,16 @@ public class MergeStatusWithResponse extends AbstractResponseStream {
             }
         }
 
+        @Override
+        public void flush() throws IOException {
+            os.flush();
+        }
+
+        @Override
+        public void close() throws IOException {
+            os.close();
+        }
+
         public void setInterceptNextCharacter(boolean interceptNextCharacter) {
             this.interceptNextCharacter = interceptNextCharacter;
         }
