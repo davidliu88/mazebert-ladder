@@ -8,7 +8,7 @@ CONTAINER=mbl-dev
 
 echo "Building image."
 cd image
-docker build -t mbl-dev:latest .
+docker build -t $CONTAINER:latest .
 cd ..
 
 echo "Starting system via docker compose."
