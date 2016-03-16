@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class GetSupporters implements Usecase<GetSupporters.Request, GetSupporters.Response> {
+public class GetSupporters implements Usecase<GetSupporters.Request, List<Supporter>> {
     private final SupporterGateway supporterGateway;
 
     @Inject
@@ -18,17 +18,11 @@ public class GetSupporters implements Usecase<GetSupporters.Request, GetSupporte
         this.supporterGateway = supporterGateway;
     }
 
-    public Response execute(Request request) {
-        Response response = new Response();
-        response.players = supporterGateway.findAllSupporters();
-        return response;
+    public List<Supporter> execute(Request request) {
+        return supporterGateway.findAllSupporters();
     }
 
-    @StatusResponse
+    @StatusResponse(field = "players")
     public static class Request {
-    }
-
-    public static class Response {
-        public List<Supporter> players;
     }
 }

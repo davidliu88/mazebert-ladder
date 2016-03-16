@@ -3,7 +3,6 @@ package com.mazebert.usecases.supporters;
 import com.mazebert.entities.Supporter;
 import com.mazebert.gateways.mocks.SupporterGatewayMock;
 import com.mazebert.usecases.supporters.GetSupporters.Request;
-import com.mazebert.usecases.supporters.GetSupporters.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.Builders.a;
 import static org.jusecase.Builders.list;
 
-public class GetSupportersTest extends UsecaseTest<Request, Response> {
+public class GetSupportersTest extends UsecaseTest<Request, List<Supporter>> {
     private SupporterGatewayMock supporterGateway = new SupporterGatewayMock();
 
     @Before
@@ -31,7 +30,7 @@ public class GetSupportersTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        assertEquals(expected, response.players);
+        assertEquals(expected, response);
     }
 
     private RequestBuilder request() {

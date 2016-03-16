@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mazebert.BusinessLogic;
 import com.mazebert.error.Error;
-import com.mazebert.error.InternalServerError;
 import com.mazebert.presenters.jaxrs.response.ErrorExceptionMapper;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.presenters.jaxrs.response.stream.MergeStatusWithResponse;
@@ -13,8 +12,8 @@ import com.mazebert.presenters.jaxrs.response.stream.PlainResponse;
 import com.mazebert.presenters.jaxrs.response.stream.SignedResponseStream;
 import com.mazebert.presenters.jaxrs.response.stream.WrapStatusAndResponse;
 import com.mazebert.usecases.security.SignResponse;
-import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.security.VerifyGameRequest;
+import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.UsecaseExecutor;
 
 import javax.servlet.http.HttpServletRequest;
