@@ -111,7 +111,7 @@ public class DailyQuestGenerator {
         }
 
         if (potentialQuests.size() > 0) {
-            return potentialQuests.get(randomNumberGenerator.randomInteger(0, potentialQuests.size()));
+            return potentialQuests.get(randomNumberGenerator.randomInteger(0, potentialQuests.size() - 1));
         }
 
         return null;

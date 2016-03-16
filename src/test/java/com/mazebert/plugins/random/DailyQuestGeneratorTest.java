@@ -141,6 +141,19 @@ public class DailyQuestGeneratorTest {
     }
 
     @Test
+    public void randomQuestRangeIsCorrect() {
+        questGateway.givenQuests(a(list(
+                a(goldenQuest().withId(200)),
+                a(goldenQuest().withId(201)),
+                a(goldenQuest().withId(203))
+        )));
+
+        whenTryToGenerateDailyQuest();
+
+        randomNumberGenerator.thenRandomIntegerCallsAre("min: 0, max: 2");
+    }
+
+    @Test
     public void playerHasNoBowlingBall() {
         questGateway.givenQuests(a(list(
                 a(quest().rollStrikesWithBowlingBall()))
