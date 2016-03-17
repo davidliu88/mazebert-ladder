@@ -172,6 +172,13 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
     }
 
     @Test
+    public void findQuestsByIds_noQuestIds() {
+        List<Quest> quests = gateway.findQuestsByIds(a(list()));
+
+        assertEquals(0, quests.size());
+    }
+
+    @Test
     public void findQuestsByIds_propertiesAreMappedCorrectly() {
         List<Quest> quests = gateway.findQuestsByIds(a(list(1L, 2L, 3L)));
 

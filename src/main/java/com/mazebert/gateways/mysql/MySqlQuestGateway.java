@@ -13,6 +13,7 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +70,10 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
 
     @Override
     public List<Quest> findQuestsByIds(List<Long> questIds) {
+        if (questIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         try {
             String sequence = Longs.join(",", Longs.toArray(questIds));
             return getQueryRunner().query("SELECT id, reward, isHidden, sinceVersion, requiredAmount FROM Quest WHERE id IN(" + sequence + ");",
