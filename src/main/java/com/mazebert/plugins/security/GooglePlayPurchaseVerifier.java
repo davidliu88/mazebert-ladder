@@ -72,9 +72,9 @@ public class GooglePlayPurchaseVerifier {
             }
             return true;
         } catch (Throwable e) {
-            logger.log(Level.SEVERE, "Unexpected exception when verifying GooglePlay signature. (Exception Message: " + e.getMessage() + ")");
-            logger.log(Level.SEVERE, "Data: " + data);
-            logger.log(Level.SEVERE, "Signature: " + signature);
+            logger.log(Level.INFO, "Unexpected exception when verifying GooglePlay signature. (Exception Message: " + e.getMessage() + ")");
+            logger.log(Level.INFO, "Data: " + data);
+            logger.log(Level.INFO, "Signature: " + signature);
             return false;
         }
     }

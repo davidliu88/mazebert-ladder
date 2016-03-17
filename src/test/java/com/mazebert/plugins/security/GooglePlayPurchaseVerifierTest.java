@@ -13,8 +13,8 @@ public class GooglePlayPurchaseVerifierTest {
     public void unexpectedException() {
         purchaseVerifier.isSignatureValid(null, "1234");
 
-        logger.thenMessageIsLogged(Level.SEVERE, "Unexpected exception when verifying GooglePlay signature. (Exception Message: null)");
-        logger.thenMessageIsLogged(Level.SEVERE, "Data: null");
-        logger.thenMessageIsLogged(Level.SEVERE, "Signature: 1234");
+        logger.thenMessageIsLogged(Level.INFO, "Unexpected exception when verifying GooglePlay signature. (Exception Message: null)");
+        logger.thenMessageIsLogged(Level.INFO, "Data: null");
+        logger.thenMessageIsLogged(Level.INFO, "Signature: 1234");
     }
 }
