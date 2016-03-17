@@ -18,6 +18,9 @@ import java.util.Date;
 import java.util.List;
 
 public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
+
+    private static final String SELECT_QUEST = "SELECT id, reward, isHidden AS hidden, sinceVersion, requiredAmount FROM Quest";
+
     @Inject
     public MySqlQuestGateway(DataSource dataSource) {
         super(dataSource);
@@ -38,7 +41,7 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
     @Override
     public List<Quest> findDailyQuests(long playerId) {
         try {
-            return getQueryRunner().query("SELECT questId AS id, reward, isHidden, sinceVersion, requiredAmount FROM PlayerDailyQuest, Quest WHERE playerId=? AND Quest.id=PlayerDailyQuest.questId ORDER BY creationDate ASC;",
+            return getQueryRunner().query("SELECT questId AS id, reward, sinceVersion, requiredAmount FROM PlayerDailyQuest, Quest WHERE playerId=? AND Quest.id=PlayerDailyQuest.questId ORDER BY creationDate ASC;",
                     new BeanListHandler<>(Quest.class),
                     playerId);
         } catch (SQLException e) {
@@ -61,7 +64,7 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
     @Override
     public List<Quest> findAllQuests() {
         try {
-            return getQueryRunner().query("SELECT id, reward, isHidden, sinceVersion, requiredAmount FROM Quest;",
+            return getQueryRunner().query(SELECT_QUEST + ";",
                     new BeanListHandler<>(Quest.class));
         } catch (SQLException e) {
             throw new GatewayError("Failed to determine all available quests.", e);
@@ -76,7 +79,7 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
 
         try {
             String sequence = Longs.join(",", Longs.toArray(questIds));
-            return getQueryRunner().query("SELECT id, reward, isHidden, sinceVersion, requiredAmount FROM Quest WHERE id IN(" + sequence + ");",
+            return getQueryRunner().query(SELECT_QUEST + " WHERE id IN(" + sequence + ");",
                     new BeanListHandler<>(Quest.class));
         } catch (SQLException e) {
             throw new GatewayError("Failed to find quests by ids in database.", e);

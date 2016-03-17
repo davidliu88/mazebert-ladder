@@ -167,7 +167,7 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
 
     @Test
     public void findQuestsByIds_gatewayError() {
-        whenGatewayErrorIsForced(() -> errorGateway.findQuestsByIds(a(list())));
+        whenGatewayErrorIsForced(() -> errorGateway.findQuestsByIds(a(list(1L))));
         thenGatewayErrorIs("Failed to find quests by ids in database.");
     }
 
@@ -180,18 +180,24 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
 
     @Test
     public void findQuestsByIds_propertiesAreMappedCorrectly() {
-        List<Quest> quests = gateway.findQuestsByIds(a(list(1L, 2L, 3L)));
+        List<Quest> quests = gateway.findQuestsByIds(a(list(1L, 2L, 19L)));
 
         assertEquals(3, quests.size());
         assertEquals(1L, quests.get(0).getId());
         assertEquals(2L, quests.get(1).getId());
-        assertEquals(3L, quests.get(2).getId());
+        assertEquals(19L, quests.get(2).getId());
 
         Quest quest = quests.get(0);
         assertEquals(7, quest.getRequiredAmount());
         assertEquals(40, quest.getReward());
         assertEquals(false, quest.isHidden());
         assertEquals("1.0.0", quest.getSinceVersion());
+
+        quest = quests.get(2);
+        assertEquals(1, quest.getRequiredAmount());
+        assertEquals(250, quest.getReward());
+        assertEquals(true, quest.isHidden());
+        assertEquals("1.2.0", quest.getSinceVersion());
     }
 
     @Test
