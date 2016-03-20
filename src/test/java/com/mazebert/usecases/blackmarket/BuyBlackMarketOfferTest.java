@@ -139,6 +139,18 @@ public class BuyBlackMarketOfferTest extends UsecaseTest<Request, Response> {
         assertEquals(11, response.amount);
     }
 
+    @Test
+    public void kiwiEggSpecial() {
+        BlackMarketOffer currentOffer = a(blackMarketOffer().withCard(tower().kiwiEgg()));
+        blackMarketOfferGateway.givenLatestOffer(currentOffer);
+        givenRequest(a(request().withAppVersion("1.3.0")));
+
+        whenRequestIsExecuted();
+
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(tower().kiwiEgg()));
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(tower().kiwi()));
+    }
+
     private void thenPlayerRelicsAre(int relics) {
         assertEquals(relics, playerGateway.getRelics(player.getId()));
         assertEquals(relics, response.relics);

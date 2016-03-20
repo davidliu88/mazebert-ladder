@@ -39,8 +39,11 @@ public class FoilCardGatewayMock implements FoilCardGateway {
     public void addFoilCardToPlayer(long playerId, FoilCard foilCard) {
         FoilCard card = findFoilCard(playerId, foilCard.getCardId(), foilCard.getCardType());
         if (card == null) {
-            List<FoilCard> cards = new ArrayList<>();
-            foilCardsForPlayer.put(playerId, cards);
+            List<FoilCard> cards = foilCardsForPlayer.get(playerId);
+            if (cards == null) {
+                cards = new ArrayList<>();
+                foilCardsForPlayer.put(playerId, cards);
+            }
             cards.add(foilCard);
         } else {
             card.setAmount(card.getAmount() + foilCard.getAmount());
