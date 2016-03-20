@@ -116,12 +116,14 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         try {
             dataSource = new ComboPooledDataSource();
             dataSource.setDriverClass("com.mysql.jdbc.Driver");
-            dataSource.setJdbcUrl("jdbc:mysql://" + credentials.getUrl());
+            dataSource.setJdbcUrl("jdbc:mysql://" + credentials.getUrl() + "?autoReconnect=true");
             dataSource.setUser(credentials.getUser());
             dataSource.setPassword(credentials.getPassword());
             dataSource.setMinPoolSize(3);
             dataSource.setMaxPoolSize(30);
             dataSource.setAcquireIncrement(1);
+            dataSource.setTestConnectionOnCheckin(false);
+            dataSource.setTestConnectionOnCheckout(true);
 
             transactionManager.setDataSource(dataSource);
             dataSourceProxy = new DataSourceProxy(dataSource, transactionManager);
