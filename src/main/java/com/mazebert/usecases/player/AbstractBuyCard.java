@@ -1,5 +1,6 @@
 package com.mazebert.usecases.player;
 
+import com.mazebert.entities.CardType;
 import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
@@ -38,7 +39,25 @@ public abstract class AbstractBuyCard<RequestType extends AbstractBuyCard.Reques
 
     protected void buyCard(Player player, FoilCard foilCard, int relics) {
         foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
+        addBonusCards(player, foilCard);
         playerGateway.addRelics(player.getId(), -relics);
+    }
+
+    protected void addBonusCards(Player player, FoilCard foilCard) {
+        addKiwiIfRequired(player, foilCard);
+        addBloodDemonIfRequired(player, foilCard);
+    }
+
+    private void addKiwiIfRequired(Player player, FoilCard foilCard) {
+        if (foilCard.getCardId() == 39 && foilCard.getCardType() == CardType.TOWER) {
+            foilCardGateway.addFoilCardToPlayer(player.getId(), new FoilCard(40, CardType.TOWER));
+        }
+    }
+
+    private void addBloodDemonIfRequired(Player player, FoilCard foilCard) {
+        if (foilCard.getCardId() == 35 && foilCard.getCardType() == CardType.TOWER) {
+            foilCardGateway.addFoilCardToPlayer(player.getId(), new FoilCard(52, CardType.ITEM));
+        }
     }
 
     private Player getPlayer(Request request) {

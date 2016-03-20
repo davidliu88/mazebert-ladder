@@ -26,4 +26,32 @@ public class TowerBuilder extends CardBuilder<TowerBuilder, Tower> {
                 .withRarity(CardRarity.UNCOMMON)
                 .withSinceVersion("0.1");
     }
+
+    public TowerBuilder kiwiEgg() {
+        return this
+                .normalCard()
+                .withId(39)
+                .withName("Kiwi Egg")
+                .withRarity(CardRarity.LEGENDARY)
+                .withSinceVersion("1.3");
+    }
+
+    public TowerBuilder kiwi() {
+        return this
+                .normalCard()
+                .withIsForgeable(false)
+                .withId(40)
+                .withName("Kiwi")
+                .withRarity(CardRarity.LEGENDARY)
+                .withSinceVersion("1.3");
+    }
+
+    public TowerBuilder bloodDemon() {
+        return this
+                .normalCard()
+                .withId(35)
+                .withName("Blood Demon")
+                .withRarity(CardRarity.LEGENDARY)
+                .withSinceVersion("1.0");
+    }
 }

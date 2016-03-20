@@ -5,6 +5,19 @@ public class FoilCard {
     private int cardType;
     private int amount;
 
+    public FoilCard() {
+    }
+
+    public FoilCard(long cardId, int cardType) {
+        this(cardId, cardType, 1);
+    }
+
+    public FoilCard(long cardId, int cardType, int amount) {
+        this.cardId = cardId;
+        this.cardType = cardType;
+        this.amount = amount;
+    }
+
     public long getCardId() {
         return cardId;
     }

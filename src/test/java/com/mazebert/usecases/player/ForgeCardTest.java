@@ -241,6 +241,35 @@ public class ForgeCardTest extends UsecaseTest<Request, Response> {
         randomNumberGenerator.thenRandomIntegerCallsAre("min: 0, max: 1");
     }
 
+    @Test
+    public void forgeKiwiEgg() {
+        cardGateway.givenCardsExist(a(list(
+                a(tower().kiwiEgg()),
+                a(tower().kiwi())
+        )));
+        givenDiceRolls(LEGENDARY_DICE_ROLL);
+        givenRequest(a(request().withAppVersion("1.3.0")));
+
+        whenRequestIsExecuted();
+
+        thenCardIsReturned(a(tower().kiwiEgg()));
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(tower().kiwi()));
+    }
+
+    @Test
+    public void forgeBloodDemon() {
+        cardGateway.givenCardsExist(a(list(
+                a(tower().bloodDemon()),
+                a(item().bloodDemonBlade())
+        )));
+        givenDiceRolls(LEGENDARY_DICE_ROLL);
+
+        whenRequestIsExecuted();
+
+        thenCardIsReturned(a(tower().bloodDemon()));
+        foilCardGateway.thenFoilCardWasAddedToPlayer(player, a(item().bloodDemonBlade()));
+    }
+
     private void givenDiceRolls(Double ... rolls) {
         randomNumberGenerator.givenRandomDoubles(rolls);
         givenRequest(a(request()));

@@ -53,4 +53,14 @@ public class ItemBuilder extends CardBuilder<ItemBuilder, Item> {
                 .withRarity(CardRarity.UNIQUE)
                 .withSinceVersion("0.8");
     }
+
+    public ItemBuilder bloodDemonBlade() {
+        return this
+                .normalCard()
+                .withIsForgeable(false)
+                .withId(52)
+                .withName("Blood Demon''s Blade")
+                .withRarity(CardRarity.LEGENDARY)
+                .withSinceVersion("1.0");
+    }
 }
