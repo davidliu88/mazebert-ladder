@@ -6,7 +6,7 @@
 
     <groupId>com.mazebert</groupId>
     <artifactId>mazebert-ladder</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>war</packaging>
 
     <properties>
