@@ -36,6 +36,11 @@ public abstract class AbstractBuyCard<RequestType extends AbstractBuyCard.Reques
         }
     }
 
+    protected void buyCard(Player player, FoilCard foilCard, int relics) {
+        foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
+        playerGateway.addRelics(player.getId(), -relics);
+    }
+
     private Player getPlayer(Request request) {
         Player player = playerGateway.findPlayerByKey(request.key);
         if (player == null) {

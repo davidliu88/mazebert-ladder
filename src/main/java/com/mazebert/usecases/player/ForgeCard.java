@@ -46,8 +46,7 @@ public class ForgeCard extends AbstractBuyCard<ForgeCard.Request, AbstractBuyCar
 
         FoilCard foilCard = rollRandomCard(request);
         transactionRunner.runAsTransaction(() -> {
-            foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
-            playerGateway.addRelics(player.getId(), -requiredRelics);
+            buyCard(player, foilCard, requiredRelics);
         });
 
         return createResponse(foilCard, player);

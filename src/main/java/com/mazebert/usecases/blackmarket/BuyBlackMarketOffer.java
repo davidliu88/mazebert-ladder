@@ -52,8 +52,7 @@ public class BuyBlackMarketOffer extends AbstractBuyCard<BuyBlackMarketOffer.Req
         FoilCard foilCard = offer.createFoilCard();
 
         transactionRunner.runAsTransaction(() -> {
-            foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
-            playerGateway.addRelics(player.getId(), -price);
+            buyCard(player, foilCard, price);
             blackMarketOfferGateway.markOfferAsPurchased(offer, player);
         });
 
