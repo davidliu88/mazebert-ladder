@@ -18,6 +18,9 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.TimeZone;
 
+import static org.jusecase.Builders.a;
+import static org.jusecase.Builders.list;
+
 @Singleton
 public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, SynchronizePlayer.Response> {
     private final PlayerGateway playerGateway;
@@ -28,6 +31,13 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
     private final DailyQuestGenerator dailyQuestGenerator;
     private final TimeZoneParser timeZoneParser;
     private final BlackMarket blackMarket;
+    private final List<Integer> foilCardPrices = a(list(
+            CardRarity.getPrice(CardRarity.COMMON),
+            CardRarity.getPrice(CardRarity.UNCOMMON),
+            CardRarity.getPrice(CardRarity.RARE),
+            CardRarity.getPrice(CardRarity.UNIQUE),
+            CardRarity.getPrice(CardRarity.LEGENDARY)
+    ));
 
     @Inject
     public SynchronizePlayer(PlayerGateway playerGateway,
@@ -77,6 +87,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         Response response = new Response();
         addPlayerToResponse(player, response);
         addFoilCardsToResponse(player, response);
+        addFoilCardPricesToResponse(response);
         addQuestsToResponse(player, appVersion, timeZone, response);
         addProductsToResponse(player, response);
         addBlackMarketToResponse(player, appVersion, timeZone, response);
@@ -119,6 +130,10 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         response.addFoilCards(player, foilCardGateway);
     }
 
+    private void addFoilCardPricesToResponse(Response response) {
+        response.foilCardPrices = foilCardPrices;
+    }
+
     private void addPlayerToResponse(Player player, Response response) {
         response.id = player.getId();
         response.name = player.getName();
@@ -150,5 +165,6 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         public int blackMarketPrice;
         public BlackMarketOffer blackMarketPurchase;
         public VersionInfo appUpdate;
+        public List<Integer> foilCardPrices;
     }
 }

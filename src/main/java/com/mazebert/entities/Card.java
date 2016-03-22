@@ -84,18 +84,6 @@ public abstract class Card {
     }
 
     public int getPrice() {
-        switch (rarity) {
-            case CardRarity.COMMON:
-                return 50;
-            case CardRarity.UNCOMMON:
-                return 100;
-            case CardRarity.RARE:
-                return 150;
-            case CardRarity.UNIQUE:
-                return 200;
-            case CardRarity.LEGENDARY:
-                return 400;
-        }
-        return 0;
+        return CardRarity.getPrice(getRarity());
     }
 }
