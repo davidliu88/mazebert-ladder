@@ -63,4 +63,12 @@ public class PlayerPresenter extends AbstractPresenter {
     public Response forgeCard(ForgeCard.Request request) {
         return execute(request);
     }
+
+    @POST
+    @Path("/buy-card")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response buyCard(BuyCard.Request request) {
+        return execute(request);
+    }
 }
