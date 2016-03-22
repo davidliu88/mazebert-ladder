@@ -104,7 +104,7 @@ public class BuyBlackMarketOfferTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        thenErrorIs(new ServiceUnavailable("Come back when you got my 200 relics!"));
+        thenErrorIs(new ServiceUnavailable("Come back later when you have enough relics."));
     }
 
     @Test

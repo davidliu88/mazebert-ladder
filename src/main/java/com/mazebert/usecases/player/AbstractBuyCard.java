@@ -5,6 +5,7 @@ import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
+import com.mazebert.error.ServiceUnavailable;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.plugins.validation.VersionValidator;
@@ -38,6 +39,10 @@ public abstract class AbstractBuyCard<RequestType extends AbstractBuyCard.Reques
     }
 
     protected void buyCard(Player player, FoilCard foilCard, int relics) {
+        if (player.getRelics() < relics) {
+            throw new ServiceUnavailable("Come back later when you have enough relics.");
+        }
+
         foilCardGateway.addFoilCardToPlayer(player.getId(), foilCard);
         addBonusCards(player, foilCard);
         playerGateway.addRelics(player.getId(), -relics);

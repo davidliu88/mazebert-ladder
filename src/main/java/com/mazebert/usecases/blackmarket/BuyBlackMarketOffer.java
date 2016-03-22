@@ -45,12 +45,7 @@ public class BuyBlackMarketOffer extends AbstractBuyCard<BuyBlackMarketOffer.Req
         BlackMarketOffer offer = getCurrentOffer(player);
 
         int price = blackMarket.getPrice();
-        if (player.getRelics() < price) {
-            throw new ServiceUnavailable("Come back when you got my " + price + " relics!");
-        }
-
         FoilCard foilCard = offer.createFoilCard();
-
         transactionRunner.runAsTransaction(() -> {
             buyCard(player, foilCard, price);
             blackMarketOfferGateway.markOfferAsPurchased(offer, player);

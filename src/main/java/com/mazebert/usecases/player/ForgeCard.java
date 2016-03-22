@@ -40,14 +40,8 @@ public class ForgeCard extends AbstractBuyCard<ForgeCard.Request, AbstractBuyCar
 
     @Override
     protected Response doTransaction(Player player, Request request) {
-        if (player.getRelics() < requiredRelics) {
-            throw new ServiceUnavailable("Come back later when you have enough relics.");
-        }
-
         FoilCard foilCard = rollRandomCard(request);
-        transactionRunner.runAsTransaction(() -> {
-            buyCard(player, foilCard, requiredRelics);
-        });
+        transactionRunner.runAsTransaction(() -> buyCard(player, foilCard, requiredRelics));
 
         return createResponse(foilCard, player);
     }
