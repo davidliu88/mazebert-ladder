@@ -17,8 +17,7 @@ import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
 
-import static com.mazebert.builders.BuilderFactory.player;
-import static com.mazebert.builders.BuilderFactory.tower;
+import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
 import static org.jusecase.Builders.a;
 
@@ -74,6 +73,34 @@ public class BuyCardTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         thenErrorIs(new ServiceUnavailable("Come back later when you have enough relics."));
+    }
+
+    @Test
+    public void supporterCard() {
+        cardGateway.givenCardExists(a(potion().angelicElixir()));
+        playerGateway.givenPlayerExists(a(player().casid()));
+        givenRequest(a(request()
+                .withCardId(19)
+                .withCardType(CardType.POTION)
+        ));
+
+        whenRequestIsExecuted();
+
+        thenErrorIs(new BadRequest("This card cannot be forged."));
+    }
+
+    @Test
+    public void blackMarketCard() {
+        cardGateway.givenCardExists(a(item().mjoelnir()));
+        playerGateway.givenPlayerExists(a(player().casid()));
+        givenRequest(a(request()
+                .withCardId(63)
+                .withCardType(CardType.ITEM)
+        ));
+
+        whenRequestIsExecuted();
+
+        thenErrorIs(new BadRequest("This card cannot be forged."));
     }
 
     @Test

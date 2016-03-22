@@ -3,6 +3,7 @@ package com.mazebert.usecases.player;
 import com.mazebert.entities.Card;
 import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
+import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.gateways.CardGateway;
 import com.mazebert.gateways.FoilCardGateway;
@@ -40,6 +41,9 @@ public class BuyCard extends AbstractBuyCard<BuyCard.Request, AbstractBuyCard.Re
         Card card = cardGateway.findCard(request.cardId, request.cardType);
         if (card == null) {
             throw new NotFound("The requested card does not exist.");
+        }
+        if (!card.isForgeable()) {
+            throw new BadRequest("This card cannot be forged.");
         }
 
         FoilCard foilCard = card.createFoilCard();
