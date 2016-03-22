@@ -125,6 +125,14 @@ public class BlackMarketTest {
     }
 
     @Test
+    public void createOfferOnMonday() {
+        cardGateway.givenCardExists(a(item().mjoelnir()));
+        currentDatePlugin.givenCurrentDate(a(date().with("2016-03-21 12:00:14")));
+        whenOfferIsCreated();
+        offerGateway.thenOfferWasCreatedWithExpirationDate(a(date().with("2016-03-28 00:00:00")));
+    }
+
+    @Test
     public void createOffer_cardIsPickedRandomly() {
         randomNumberGenerator.givenRandomIntegers(1);
         cardGateway.givenCardsExist(a(list(

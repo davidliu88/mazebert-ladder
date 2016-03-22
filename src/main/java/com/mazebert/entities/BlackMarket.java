@@ -106,9 +106,9 @@ public class BlackMarket {
     private Date determineExpirationDate() {
         Calendar calendar = Calendar.getInstance(new SimpleTimeZone(0, "utc"));
         calendar.setTime(currentDatePlugin.getCurrentDate());
-        while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+        do {
             calendar.add(Calendar.DAY_OF_WEEK, 1);
-        }
+        } while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
