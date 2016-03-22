@@ -13,11 +13,16 @@ import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.VerifyRequest;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class BuyCard extends AbstractBuyCard<BuyCard.Request, AbstractBuyCard.Response> {
     private final CardTypeValidator cardTypeValidator = new CardTypeValidator();
     private final CardGateway cardGateway;
     private final TransactionRunner transactionRunner;
 
+    @Inject
     protected BuyCard(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, CardGateway cardGateway, TransactionRunner transactionRunner) {
         super(playerGateway, foilCardGateway);
         this.cardGateway = cardGateway;

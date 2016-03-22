@@ -157,6 +157,7 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
         addUsecase(RegisterEmail.class);
         addUsecase(GetPlayerProfile.class);
         addUsecase(ForgeCard.class);
+        addUsecase(BuyCard.class);
     }
 
     private void addTradeUsecases() {
