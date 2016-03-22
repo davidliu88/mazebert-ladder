@@ -90,6 +90,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenUsecaseCanBeExecuted(RegisterEmail.class);
         thenUsecaseCanBeExecuted(GetPlayerProfile.class);
         thenUsecaseCanBeExecuted(ForgeCard.class);
+        thenUsecaseCanBeExecuted(BuyCard.class);
     }
 
     private void thenTradeUsecasesCanBeExecuted() {
@@ -139,6 +140,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenRequestIsVerified(TradeDuplicateCards.class);
         thenRequestIsVerified(BuyBlackMarketOffer.class);
         thenRequestIsVerified(ForgeCard.class);
+        thenRequestIsVerified(BuyCard.class);
         thenRequestIsVerified(PrepareShopTransaction.class);
         thenRequestIsVerified(CommitShopTransactions.class);
     }
@@ -150,6 +152,7 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenResponseIsSigned(TradeDuplicateCards.class);
         thenResponseIsSigned(BuyBlackMarketOffer.class);
         thenResponseIsSigned(ForgeCard.class);
+        thenResponseIsSigned(BuyCard.class);
         thenResponseIsSigned(PrepareShopTransaction.class);
         thenResponseIsSigned(CommitShopTransactions.class);
     }

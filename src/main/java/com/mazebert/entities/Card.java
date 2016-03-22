@@ -82,4 +82,8 @@ public abstract class Card {
         foilCard.setAmount(1);
         return foilCard;
     }
+
+    public int getPrice() {
+        return CardRarity.getPrice(getRarity());
+    }
 }

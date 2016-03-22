@@ -74,6 +74,7 @@ public class ForgeCardTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void notEnoughRelics() {
+        cardGateway.givenCardExists(a(hero().littlefinger()));
         playerGateway.givenPlayerExists(a(player().casid().withRelics(19)));
         givenRequest(a(request()));
 

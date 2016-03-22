@@ -135,6 +135,12 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
+    public void foilCardPricesAreAdded() {
+        whenRequestIsExecuted();
+        assertEquals(a(list(50, 100, 150, 200, 400)), response.foilCardPrices);
+    }
+
+    @Test
     public void completedHiddenQuestIdsAreAdded() {
         List<Long> expected = a(list(10L, 11L, 12L));
         questGateway.givenCompletedHiddenQuestIdsForPlayer(a(player().casid()), expected);
