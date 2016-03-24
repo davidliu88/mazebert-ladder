@@ -1,4 +1,4 @@
-package com.mazebert.gateways.transaction.datasource;
+package com.mazebert.gateways.transaction;
 
 import com.mazebert.categories.IntegrationTest;
 import com.mazebert.entities.Player;
@@ -8,12 +8,13 @@ import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.mysql.MySqlFoilCardGateway;
 import com.mazebert.gateways.mysql.MySqlPlayerGateway;
 import com.mazebert.gateways.mysql.connection.TestDataSourceProvider;
-import com.mazebert.gateways.transaction.TransactionError;
+import org.jusecase.transaction.TransactionError;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.jusecase.transaction.simple.SimpleTransactionRunner;
 
 import static com.mazebert.builders.BuilderFactory.foilCard;
 import static com.mazebert.builders.BuilderFactory.player;
@@ -21,8 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.jusecase.Builders.a;
 
 @Category(IntegrationTest.class)
-public class DataSourceTransactionManagerIntegrationTest {
-    private DataSourceTransactionManager transactionManager;
+public class SimpleTransactionRunnerTest {
+    private SimpleTransactionRunner transactionManager;
     private PlayerGateway playerGateway;
     private FoilCardGateway foilCardGateway;
 
@@ -35,7 +36,7 @@ public class DataSourceTransactionManagerIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        transactionManager = (DataSourceTransactionManager) TestDataSourceProvider.instance.getTransactionManager();
+        transactionManager = (SimpleTransactionRunner) TestDataSourceProvider.instance.getTransactionRunner();
         playerGateway = new MySqlPlayerGateway(TestDataSourceProvider.instance.get());
         foilCardGateway = new MySqlFoilCardGateway(TestDataSourceProvider.instance.get());
 
@@ -75,26 +76,6 @@ public class DataSourceTransactionManagerIntegrationTest {
         assertEquals(0, foilCardGateway.getFoilCardsForPlayerId(player.getId()).size());
     }
 
-    @Test
-    public void transactionTaskIsCommitted() {
-        int relics = transactionManager.runAsTransaction(this::addRelicsAndFoilCardAndReturnRelics);
-
-        assertEquals(4600, relics);
-        assertEquals(1, foilCardGateway.getFoilCardsForPlayerId(player.getId()).size());
-    }
-
-    @Test
-    public void transactionTaskIsRolledBack() {
-        try {
-            transactionManager.runAsTransaction(this::addRelicsAndFoilCardAndReturnRelicsAndThrowException);
-        } catch (InternalServerError error) {
-            assertEquals("Something bad happened!", error.getMessage());
-        }
-
-        assertEquals(1000, playerGateway.getRelics(player.getId()));
-        assertEquals(0, foilCardGateway.getFoilCardsForPlayerId(player.getId()).size());
-    }
-
     @Test(expected = TransactionError.class)
     public void nestedTransactionsAreNotSupported() {
         transactionManager.runAsTransaction(() -> transactionManager.runAsTransaction(this::addRelicsAndFoilCard));
@@ -117,18 +98,5 @@ public class DataSourceTransactionManagerIntegrationTest {
         playerGateway.addRelics(player.getId(), 100);
 
         foilCardGateway.addFoilCardToPlayer(player.getId(), a(foilCard().bowlingBall()));
-    }
-
-    private int addRelicsAndFoilCardAndReturnRelics() {
-        addRelicsAndFoilCard();
-        return playerGateway.getRelics(player.getId());
-    }
-
-    private int addRelicsAndFoilCardAndReturnRelicsAndThrowException() {
-        return addRelicsAndFoilCardAndReturnRelics() + throwException();
-    }
-
-    private int throwException() {
-        throw new InternalServerError("Something bad happened!");
     }
 }

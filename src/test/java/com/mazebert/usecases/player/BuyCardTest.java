@@ -9,7 +9,7 @@ import com.mazebert.error.ServiceUnavailable;
 import com.mazebert.gateways.mocks.CardGatewayMock;
 import com.mazebert.gateways.mocks.FoilCardGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
-import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
+import org.jusecase.transaction.simple.mocks.TransactionRunnerMock;
 import com.mazebert.usecases.player.BuyCard.Request;
 import com.mazebert.usecases.player.AbstractBuyCard.Response;
 import org.junit.Before;

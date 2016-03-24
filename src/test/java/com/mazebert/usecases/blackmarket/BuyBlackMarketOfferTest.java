@@ -7,7 +7,7 @@ import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
 import com.mazebert.error.ServiceUnavailable;
 import com.mazebert.gateways.mocks.*;
-import com.mazebert.gateways.transaction.mocks.TransactionRunnerMock;
+import org.jusecase.transaction.simple.mocks.TransactionRunnerMock;
 import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer.Request;

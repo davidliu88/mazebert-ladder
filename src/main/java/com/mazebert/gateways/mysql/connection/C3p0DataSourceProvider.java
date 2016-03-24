@@ -2,11 +2,12 @@ package com.mazebert.gateways.mysql.connection;
 
 import com.google.inject.Provider;
 import com.mazebert.error.InternalServerError;
-import com.mazebert.gateways.transaction.datasource.DataSourceProxy;
-import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import org.flywaydb.core.Flyway;
+import org.jusecase.transaction.simple.SimpleTransactionRunner;
+import org.jusecase.transaction.simple.jdbc.DataSourceProxy;
+import org.jusecase.transaction.simple.jdbc.DataSourceTransactionFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
 @Singleton
 public class C3p0DataSourceProvider implements DataSourceProvider, Provider<DataSource> {
     private final Credentials credentials;
-    private final DataSourceTransactionManager transactionManager;
+    private final SimpleTransactionRunner transactionRunner;
     private final Logger logger;
 
     private ComboPooledDataSource dataSource;
@@ -29,9 +30,9 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
     private boolean unregisterDriverOnDisposal = true;
 
     @Inject
-    public C3p0DataSourceProvider(Credentials credentials, DataSourceTransactionManager transactionManager, Logger logger) {
+    public C3p0DataSourceProvider(Credentials credentials, SimpleTransactionRunner transactionRunner, Logger logger) {
         this.credentials = credentials;
-        this.transactionManager = transactionManager;
+        this.transactionRunner = transactionRunner;
         this.logger = logger;
     }
 
@@ -125,8 +126,9 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
             dataSource.setTestConnectionOnCheckin(false);
             dataSource.setTestConnectionOnCheckout(true);
 
-            transactionManager.setDataSource(dataSource);
-            dataSourceProxy = new DataSourceProxy(dataSource, transactionManager);
+            DataSourceTransactionFactory transactionFactory = new DataSourceTransactionFactory(dataSource, transactionRunner.getTransactionManager());
+            transactionRunner.setTransactionFactory(transactionFactory);
+            dataSourceProxy = transactionFactory.createProxy();
         } catch (Throwable e) {
             throw new InternalServerError("Database connection pool could not be initialized", e);
         }

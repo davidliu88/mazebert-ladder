@@ -12,8 +12,7 @@ import com.mazebert.gateways.mysql.connection.C3p0DataSourceProvider;
 import com.mazebert.gateways.mysql.connection.Credentials;
 import com.mazebert.gateways.mysql.connection.CredentialsProvider;
 import com.mazebert.gateways.mysql.connection.DataSourceProvider;
-import com.mazebert.gateways.transaction.TransactionRunner;
-import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
+import org.jusecase.transaction.TransactionRunner;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.message.MazebertMailMessagePluginProvider;
 import com.mazebert.plugins.random.RandomNumberGenerator;
@@ -38,6 +37,9 @@ import com.mazebert.usecases.security.VerifyGameRequest;
 import com.mazebert.usecases.shop.PrepareShopTransaction;
 import com.mazebert.usecases.supporters.GetSupporters;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
+import org.jusecase.transaction.simple.SimpleTransactionRunner;
+import org.jusecase.transaction.simple.ThreadLocalTransactionManager;
+import org.jusecase.transaction.simple.TransactionManager;
 
 import javax.sql.DataSource;
 import java.util.logging.Level;
@@ -79,7 +81,8 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
         @Override
         protected void configure() {
             bind(DataSource.class).toProvider(dataSourceProvider);
-            bind(TransactionRunner.class).to(DataSourceTransactionManager.class);
+            bind(TransactionRunner.class).to(SimpleTransactionRunner.class);
+            bind(TransactionManager.class).to(ThreadLocalTransactionManager.class);
             bind(Credentials.class).toProvider(CredentialsProvider.class);
 
             bind(PlayerGateway.class).to(MySqlPlayerGateway.class);

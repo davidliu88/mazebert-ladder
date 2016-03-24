@@ -6,13 +6,13 @@ import com.mazebert.entities.FoilCard;
 import com.mazebert.entities.Player;
 import com.mazebert.error.ServiceUnavailable;
 import com.mazebert.gateways.*;
-import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.player.AbstractBuyCard;
 import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.VerifyRequest;
+import org.jusecase.transaction.TransactionRunner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
