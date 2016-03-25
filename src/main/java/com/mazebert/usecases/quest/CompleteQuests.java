@@ -9,6 +9,7 @@ import com.mazebert.error.NotFound;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
@@ -56,13 +57,12 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
 
     private void doQuestTransactions(Request request, Player player) {
         List<Quest> quests = questGateway.findQuestsByIds(request.questTransactionIds);
-        List<Long> hiddenQuestIds = questGateway.findCompletedHiddenQuestIds(player.getId());
         List<Long> dailyQuestIds = questGateway.findDailyQuestIds(player.getId());
 
         transactionRunner.runAsTransaction(() -> {
             int reward = 0;
             for (Quest quest : quests) {
-                reward += completeQuest(player, hiddenQuestIds, dailyQuestIds, quest);
+                reward += completeQuest(player, dailyQuestIds, quest);
             }
 
             playerGateway.addRelics(player.getId(), reward);
@@ -75,21 +75,22 @@ public class CompleteQuests implements Usecase<CompleteQuests.Request, CompleteQ
         return response;
     }
 
-    private int completeQuest(Player player, List<Long> hiddenQuestIds, List<Long> dailyQuestIds, Quest quest) {
+    private int completeQuest(Player player, List<Long> dailyQuestIds, Quest quest) {
         if (quest.isHidden()) {
-            return completeHiddenQuest(player, quest, hiddenQuestIds);
+            return completeHiddenQuest(player, quest);
         } else {
             return completeDailyQuest(player, quest, dailyQuestIds);
         }
     }
 
-    private int completeHiddenQuest(Player player, Quest quest, List<Long> hiddenQuestIds) {
-        if (!hiddenQuestIds.contains(quest.getId())) {
+    private int completeHiddenQuest(Player player, Quest quest) {
+        try {
             questGateway.addCompletedHiddenQuestId(player.getId(), quest.getId());
             unlockSpecialHiddenQuestRewards(player, quest);
             return quest.getReward();
+        } catch (KeyAlreadyExists keyAlreadyExists) {
+            return 0;
         }
-        return 0;
     }
 
     private int completeDailyQuest(Player player, Quest quest, List<Long> dailyQuestIds) {

@@ -3,6 +3,7 @@ package com.mazebert.gateways.mocks;
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.gateways.QuestGateway;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -86,7 +87,12 @@ public class QuestGatewayMock implements QuestGateway {
             ids = new ArrayList<>();
             completedHiddenQuestIds.put(playerId, ids);
         }
-        ids.add(questId);
+
+        if (ids.contains(questId)) {
+            throw new KeyAlreadyExists();
+        } else {
+            ids.add(questId);
+        }
     }
 
     public void givenCompletedHiddenQuestIdsForPlayer(Player player, List<Long> questIds) {

@@ -120,7 +120,7 @@ public class CompleteQuestsTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void threeCompletedDailyQuest_ownedByPlayer() {
+    public void threeCompletedDailyQuests_ownedByPlayer() {
         Player player = a(player().casid().withRelics(0));
         playerGateway.givenPlayerExists(player);
         questGateway.givenQuests(a(list(
