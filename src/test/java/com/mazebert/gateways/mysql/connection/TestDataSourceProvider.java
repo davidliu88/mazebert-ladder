@@ -25,10 +25,10 @@ public class TestDataSourceProvider implements DataSourceProvider {
     public void prepare() {
         Credentials testCredentials = new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert");
         transactionManager = new DataSourceTransactionManager();
-        C3p0DataSourceProvider c3p0DataSourceProvider = new C3p0DataSourceProvider(testCredentials, transactionManager, logger.getLogger());
-        c3p0DataSourceProvider.setUnregisterDriverOnDisposal(false);
+        HikariDataSourceProvider hikariDataSourceProvider = new HikariDataSourceProvider(testCredentials, transactionManager, logger.getLogger());
+        hikariDataSourceProvider.setUnregisterDriverOnDisposal(false);
 
-        realProvider = c3p0DataSourceProvider;
+        realProvider = hikariDataSourceProvider;
         realProvider.prepare();
     }
 

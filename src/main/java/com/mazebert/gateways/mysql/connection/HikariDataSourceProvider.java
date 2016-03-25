@@ -4,8 +4,8 @@ import com.google.inject.Provider;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.transaction.datasource.DataSourceProxy;
 import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
 
 import javax.inject.Inject;
@@ -15,21 +15,20 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.Set;
 import java.util.logging.Logger;
 
 @Singleton
-public class C3p0DataSourceProvider implements DataSourceProvider, Provider<DataSource> {
+public class HikariDataSourceProvider implements DataSourceProvider, Provider<DataSource> {
     private final Credentials credentials;
     private final DataSourceTransactionManager transactionManager;
     private final Logger logger;
 
-    private ComboPooledDataSource dataSource;
+    private HikariDataSource dataSource;
     private DataSourceProxy dataSourceProxy;
     private boolean unregisterDriverOnDisposal = true;
 
     @Inject
-    public C3p0DataSourceProvider(Credentials credentials, DataSourceTransactionManager transactionManager, Logger logger) {
+    public HikariDataSourceProvider(Credentials credentials, DataSourceTransactionManager transactionManager, Logger logger) {
         this.credentials = credentials;
         this.transactionManager = transactionManager;
         this.logger = logger;
@@ -55,7 +54,6 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         logger.info("Dispose data source.");
 
         dataSource.close();
-        waitForC3p0ToBeClosed();
         dataSource = null;
 
         if (isUnregisterDriverOnDisposal()) {
@@ -64,29 +62,6 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
         shutDownJdbcCleanUpThread();
 
         logger.info("Dispose data source complete.");
-    }
-
-    private void waitForC3p0ToBeClosed() {
-        try {
-            Thread thread = getC3p0DestroyThread();
-            if (thread != null) {
-                thread.join();
-            } else {
-                logger.info("Could not find C3P0 Resource Destroyer thread. Either the thread was already stopped, or it was renamed by a newer version of C3P0.");
-            }
-        } catch (Throwable throwable) {
-            logger.warning("Waiting for C3P0 shutdown was interrupted (" + throwable.getMessage() + ").");
-        }
-    }
-
-    private Thread getC3p0DestroyThread() {
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for (Thread thread : threadSet) {
-            if (thread.isDaemon() && thread.getName().equals("Resource Destroyer in BasicResourcePool.close()")) {
-                return thread;
-            }
-        }
-        return null;
     }
 
     private void unregisterDatabaseDrivers() {
@@ -114,16 +89,11 @@ public class C3p0DataSourceProvider implements DataSourceProvider, Provider<Data
 
     private void createDataSource() {
         try {
-            dataSource = new ComboPooledDataSource();
-            dataSource.setDriverClass("com.mysql.jdbc.Driver");
+            dataSource = new HikariDataSource();
+            dataSource.setDriverClassName("com.mysql.jdbc.Driver");
             dataSource.setJdbcUrl("jdbc:mysql://" + credentials.getUrl() + "?autoReconnect=true");
-            dataSource.setUser(credentials.getUser());
+            dataSource.setUsername(credentials.getUser());
             dataSource.setPassword(credentials.getPassword());
-            dataSource.setMinPoolSize(3);
-            dataSource.setMaxPoolSize(30);
-            dataSource.setAcquireIncrement(1);
-            dataSource.setTestConnectionOnCheckin(false);
-            dataSource.setTestConnectionOnCheckout(true);
 
             transactionManager.setDataSource(dataSource);
             dataSourceProxy = new DataSourceProxy(dataSource, transactionManager);

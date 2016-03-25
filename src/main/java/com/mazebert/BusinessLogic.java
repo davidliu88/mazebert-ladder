@@ -8,7 +8,7 @@ import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.*;
-import com.mazebert.gateways.mysql.connection.C3p0DataSourceProvider;
+import com.mazebert.gateways.mysql.connection.HikariDataSourceProvider;
 import com.mazebert.gateways.mysql.connection.Credentials;
 import com.mazebert.gateways.mysql.connection.CredentialsProvider;
 import com.mazebert.gateways.mysql.connection.DataSourceProvider;
@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 public class BusinessLogic extends GuiceUsecaseExecutor {
     private static class LogicHolder {
         public static BusinessLogic instance = new BusinessLogic(
-                C3p0DataSourceProvider.class,
+                HikariDataSourceProvider.class,
                 SystemEnvironmentPlugin.class,
                 Logger.getLogger(BusinessLogic.class.getName()));
     }
