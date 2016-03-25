@@ -2,6 +2,7 @@ package com.mazebert.gateways;
 
 import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import org.junit.Test;
 
 import java.util.Date;
@@ -11,9 +12,7 @@ import static com.mazebert.builders.BuilderFactory.player;
 import static com.mazebert.builders.BuilderFactory.quest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.jusecase.Builders.a;
-import static org.jusecase.Builders.date;
-import static org.jusecase.Builders.list;
+import static org.jusecase.Builders.*;
 
 public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
     protected PlayerGateway playerGateway;
@@ -163,6 +162,19 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
     public void addCompletedHiddenQuestId_gatewayError() {
         whenGatewayErrorIsForced(() -> errorGateway.addCompletedHiddenQuestId(player.getId(), 10));
         thenGatewayErrorIs("Failed to add a completed hidden quest to player.");
+    }
+
+    @Test
+    public void addCompletedHiddenQuestId_alreadyExists() {
+        gateway.addCompletedHiddenQuestId(player.getId(), 1);
+
+        try {
+            gateway.addCompletedHiddenQuestId(player.getId(), 1);
+        } catch (KeyAlreadyExists error) {
+            this.error = error;
+        }
+
+        assertNotNull(error);
     }
 
     @Test

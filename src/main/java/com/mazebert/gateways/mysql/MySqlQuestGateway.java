@@ -6,6 +6,7 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.gateways.QuestGateway;
 import com.mazebert.gateways.error.GatewayError;
+import com.mazebert.gateways.error.KeyAlreadyExists;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
@@ -137,7 +138,11 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
                     playerId,
                     questId);
         } catch (SQLException e) {
-            throw new GatewayError("Failed to add a completed hidden quest to player.", e);
+            if (e.getErrorCode() == MySqlErrorCode.DUPLICATE_ENTRY) {
+                throw new KeyAlreadyExists();
+            } else {
+                throw new GatewayError("Failed to add a completed hidden quest to player.", e);
+            }
         }
     }
 }
