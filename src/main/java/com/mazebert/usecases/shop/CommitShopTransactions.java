@@ -11,7 +11,7 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
-import com.mazebert.gateways.transaction.TransactionRunner;
+import org.jusecase.transaction.TransactionRunner;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.validation.VersionValidator;

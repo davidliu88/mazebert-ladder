@@ -10,11 +10,11 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
-import com.mazebert.gateways.transaction.TransactionRunner;
 import com.mazebert.plugins.validation.VersionValidator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.VerifyRequest;
 import org.jusecase.Usecase;
+import org.jusecase.transaction.TransactionRunner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

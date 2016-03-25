@@ -1,9 +1,10 @@
 package com.mazebert.gateways.mysql.connection;
 
-import com.mazebert.gateways.transaction.TransactionManager;
-import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
 import com.mazebert.plugins.system.mocks.LoggerMock;
 import org.apache.commons.dbutils.QueryRunner;
+import org.jusecase.transaction.TransactionRunner;
+import org.jusecase.transaction.simple.SimpleTransactionRunner;
+import org.jusecase.transaction.simple.ThreadLocalTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ import static org.jusecase.Builders.inputStream;
 public class TestDataSourceProvider implements DataSourceProvider {
     public static final TestDataSourceProvider instance = new TestDataSourceProvider();
     private DataSourceProvider realProvider;
-    private DataSourceTransactionManager transactionManager;
+    private SimpleTransactionRunner transactionRunner;
     private LoggerMock logger = new LoggerMock();
 
     private TestDataSourceProvider() {
@@ -24,8 +25,8 @@ public class TestDataSourceProvider implements DataSourceProvider {
     @Override
     public void prepare() {
         Credentials testCredentials = new Credentials("root", "integrationtest", resolveHost() + "/ladder_mazebert");
-        transactionManager = new DataSourceTransactionManager();
-        HikariDataSourceProvider hikariDataSourceProvider = new HikariDataSourceProvider(testCredentials, transactionManager, logger.getLogger());
+        transactionRunner = new SimpleTransactionRunner(new ThreadLocalTransactionManager());
+        HikariDataSourceProvider hikariDataSourceProvider = new HikariDataSourceProvider(testCredentials, transactionRunner, logger.getLogger());
         hikariDataSourceProvider.setUnregisterDriverOnDisposal(false);
 
         realProvider = hikariDataSourceProvider;
@@ -44,7 +45,7 @@ public class TestDataSourceProvider implements DataSourceProvider {
     public void dispose() {
         realProvider.dispose();
         realProvider = null;
-        transactionManager = null;
+        transactionRunner = null;
     }
 
     private static String resolveHost() {
@@ -66,10 +67,10 @@ public class TestDataSourceProvider implements DataSourceProvider {
         }
     }
 
-    public TransactionManager getTransactionManager() {
-        if (transactionManager == null) {
+    public TransactionRunner getTransactionRunner() {
+        if (transactionRunner == null) {
             prepare();
         }
-        return transactionManager;
+        return transactionRunner;
     }
 }

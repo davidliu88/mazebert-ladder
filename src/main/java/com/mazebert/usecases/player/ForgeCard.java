@@ -5,7 +5,7 @@ import com.mazebert.error.ServiceUnavailable;
 import com.mazebert.gateways.CardGateway;
 import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
-import com.mazebert.gateways.transaction.TransactionRunner;
+import org.jusecase.transaction.TransactionRunner;
 import com.mazebert.plugins.random.RandomNumberGenerator;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
 import com.mazebert.usecases.security.SignResponse;

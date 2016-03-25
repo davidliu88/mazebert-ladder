@@ -5,8 +5,7 @@ import com.mazebert.error.Error;
 import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.connection.StubDataSourceProvider;
-import com.mazebert.gateways.transaction.TransactionRunner;
-import com.mazebert.gateways.transaction.datasource.DataSourceTransactionManager;
+import org.jusecase.transaction.TransactionRunner;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.security.GameContentVerifier;
 import com.mazebert.plugins.security.ServerContentSigner;
@@ -31,6 +30,9 @@ import com.mazebert.usecases.supporters.GetSupporters;
 import org.junit.Test;
 import org.jusecase.Usecase;
 import org.jusecase.UsecaseExecutorTest;
+import org.jusecase.transaction.simple.SimpleTransactionRunner;
+import org.jusecase.transaction.simple.ThreadLocalTransactionManager;
+import org.jusecase.transaction.simple.TransactionManager;
 
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -164,7 +166,8 @@ public class BusinessLogicTest extends UsecaseExecutorTest {
         thenOnlyOneInstanceExists(GameContentVerifier.class);
         thenOnlyOneInstanceExists(ServerContentSigner.class);
         thenOnlyOneInstanceExists(EmailMessagePlugin.class);
-        thenOnlyOneInstanceExists(TransactionRunner.class, DataSourceTransactionManager.class);
+        thenOnlyOneInstanceExists(TransactionRunner.class, SimpleTransactionRunner.class);
+        thenOnlyOneInstanceExists(TransactionManager.class, ThreadLocalTransactionManager.class);
     }
 
     @Test
