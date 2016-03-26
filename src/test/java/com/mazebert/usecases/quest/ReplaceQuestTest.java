@@ -99,21 +99,38 @@ public class ReplaceQuestTest extends UsecaseTest<Request, Response> {
 
     @Test
     public void questReplacementPossible() {
-        Quest expected = a(quest().rollStrikesWithBowlingBall().withId(50L));
+        Quest expected = a(quest().headhunter());
         questGateway.givenQuests(a(list(
                 expected
         )));
         questGateway.givenDailyQuestsForPlayer(player, a(list(
-                a(quest().rollStrikesWithBowlingBall().withId(10L)),
-                a(quest().rollStrikesWithBowlingBall().withId(11L)),
-                a(quest().rollStrikesWithBowlingBall().withId(12L))
+                a(quest().daily().withId(10L)),
+                a(quest().daily().withId(11L)),
+                a(quest().daily().withId(12L))
         )));
         givenRequest(a(request().withQuestId(11L)));
 
         whenRequestIsExecuted();
 
-        assertEquals(a(list(10L, 50L, 12L)), questGateway.findDailyQuestIds(player.getId()));
+        assertEquals(a(list(10L, 1L, 12L)), questGateway.findDailyQuestIds(player.getId()));
         assertEquals(expected, response.quest);
+    }
+
+    @Test
+    public void questIsReplaced_lastQuestCreationIsUpdated() {
+        questGateway.givenQuests(a(list(
+                a(quest().headhunter())
+        )));
+        questGateway.givenDailyQuestsForPlayer(player, a(list(
+                a(quest().daily().withId(10L)),
+                a(quest().daily().withId(11L)),
+                a(quest().daily().withId(12L))
+        )));
+        givenRequest(a(request().withQuestId(11L)));
+
+        whenRequestIsExecuted();
+
+        assertEquals(playerGateway.getUpdatedPlayer().getLastQuestCreation(), currentDatePlugin.getCurrentDate());
     }
 
     private RequestBuilder request() {

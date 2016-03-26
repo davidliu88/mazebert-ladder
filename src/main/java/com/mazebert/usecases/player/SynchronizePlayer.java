@@ -55,7 +55,7 @@ public class SynchronizePlayer implements Usecase<SynchronizePlayer.Request, Syn
         this.questGateway = questGateway;
         this.purchaseGateway = purchaseGateway;
         this.versionInfoGateway = versionInfoGateway;
-        this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
+        this.dailyQuestGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, playerGateway, currentDatePlugin, randomNumberGenerator);
         timeZoneParser = new TimeZoneParser();
         blackMarket = new BlackMarket(currentDatePlugin,
                 blackMarketOfferGateway,

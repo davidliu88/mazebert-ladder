@@ -258,28 +258,6 @@ public abstract class QuestGatewayTest extends GatewayTest<QuestGateway> {
         assertEquals(5L, quests.get(0).getId());
     }
 
-    @Test
-    public void replaceDailyQuest_lastQuestCreationForPlayerIsUpdated() {
-        playerGateway.addPlayer(player);
-        gateway.addDailyQuest(player, a(quest().withId(4)), a(date()));
-
-        gateway.replaceDailyQuest(player.getId(), 4L, 5L, a(date().with("2015-10-10 10:15:22")));
-
-        thenLastQuestCreationForPlayerIs(a(date().with("2015-10-10 10:15:22")));
-    }
-
-    @Test
-    public void addDailyQuest_lastQuestCreationForPlayerIsUpdated() {
-        playerGateway.addPlayer(player);
-        gateway.addDailyQuest(player, a(quest().withId(4)), a(date().with("2015-10-10 10:15:22")));
-        thenLastQuestCreationForPlayerIs(a(date().with("2015-10-10 10:15:22")));
-    }
-
-    private void thenLastQuestCreationForPlayerIs(Date expected) {
-        Player p = playerGateway.findPlayerByKey(player.getKey());
-        assertEquals(expected, p.getLastQuestCreation());
-    }
-
     private Quest findQuestWithId(long id, List<Quest> quests) {
         for (Quest quest : quests) {
             if (quest.getId() == id) {

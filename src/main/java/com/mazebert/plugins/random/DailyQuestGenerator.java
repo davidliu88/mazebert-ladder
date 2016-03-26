@@ -5,6 +5,7 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.entities.Version;
 import com.mazebert.gateways.FoilCardGateway;
+import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.QuestGateway;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 
@@ -13,6 +14,7 @@ import java.util.*;
 public class DailyQuestGenerator {
     private final QuestGateway questGateway;
     private final FoilCardGateway foilCardGateway;
+    private final PlayerGateway playerGateway;
     private final CurrentDatePlugin currentDatePlugin;
     private final RandomNumberGenerator randomNumberGenerator;
 
@@ -21,10 +23,11 @@ public class DailyQuestGenerator {
 
     public DailyQuestGenerator(QuestGateway questGateway,
                                FoilCardGateway foilCardGateway,
-                               CurrentDatePlugin currentDatePlugin,
+                               PlayerGateway playerGateway, CurrentDatePlugin currentDatePlugin,
                                RandomNumberGenerator randomNumberGenerator) {
         this.questGateway = questGateway;
         this.foilCardGateway = foilCardGateway;
+        this.playerGateway = playerGateway;
         this.currentDatePlugin = currentDatePlugin;
         this.randomNumberGenerator = randomNumberGenerator;
     }
@@ -88,6 +91,7 @@ public class DailyQuestGenerator {
         Quest quest = findNewRandomDailyQuest(player, dailyQuestIds, appVersion);
         if (quest != null) {
             questGateway.addDailyQuest(player, quest, currentDatePlugin.getCurrentDate());
+            updateLastQuestCreation(player);
         }
         return quest;
     }
@@ -96,8 +100,14 @@ public class DailyQuestGenerator {
         Quest quest = findNewRandomDailyQuest(player, dailyQuestIds, appVersion);
         if (quest != null) {
             questGateway.replaceDailyQuest(player.getId(), questIdToReplace, quest.getId(), currentDatePlugin.getCurrentDate());
+            updateLastQuestCreation(player);
         }
         return quest;
+    }
+
+    private void updateLastQuestCreation(Player player) {
+        player.setLastQuestCreation(currentDatePlugin.getCurrentDate());
+        playerGateway.updatePlayer(player);
     }
 
     private Quest findNewRandomDailyQuest(Player player, List<Long> dailyQuestIds, Version appVersion) {

@@ -5,6 +5,7 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Quest;
 import com.mazebert.entities.Version;
 import com.mazebert.gateways.mocks.FoilCardGatewayMock;
+import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.gateways.mocks.QuestGatewayMock;
 import com.mazebert.plugins.random.mocks.RandomNumberGeneratorMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
@@ -23,6 +24,7 @@ public class DailyQuestGeneratorTest {
 
     private QuestGatewayMock questGateway = new QuestGatewayMock();
     private FoilCardGatewayMock foilCardGateway = new FoilCardGatewayMock();
+    private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
     private CurrentDatePluginMock currentDatePlugin = new CurrentDatePluginMock();
     private RandomNumberGeneratorMock randomNumberGenerator = new RandomNumberGeneratorMock();
 
@@ -34,7 +36,7 @@ public class DailyQuestGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
+        questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, playerGateway, currentDatePlugin, randomNumberGenerator);
 
         player = a(player().casid());
         version = new Version("2.0.0");

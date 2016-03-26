@@ -38,7 +38,7 @@ public class ReplaceQuest implements Usecase<ReplaceQuest.Request, ReplaceQuest.
                         RandomNumberGenerator randomNumberGenerator) {
         this.playerGateway = playerGateway;
         this.questGateway = questGateway;
-        this.questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, currentDatePlugin, randomNumberGenerator);
+        this.questGenerator = new DailyQuestGenerator(questGateway, foilCardGateway, playerGateway, currentDatePlugin, randomNumberGenerator);
         this.timeZoneParser = new TimeZoneParser();
     }
 

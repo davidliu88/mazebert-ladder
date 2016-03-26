@@ -21,6 +21,13 @@ public class QuestBuilder implements Builder<Quest> {
                 .withSinceVersion("1.2.0");
     }
 
+    public QuestBuilder headhunter() {
+        return this
+                .daily()
+                .withId(1)
+                .withSinceVersion("1.0.0");
+    }
+
     public QuestBuilder completeTwistedPaths() {
         return this
                 .hidden()

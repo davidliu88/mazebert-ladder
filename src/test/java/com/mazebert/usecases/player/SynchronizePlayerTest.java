@@ -189,6 +189,36 @@ public class SynchronizePlayerTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
+    public void dailyQuestIsGenerated_lastQuestCreationIsUpdated() {
+        questGateway.givenQuests(a(list(
+                a(quest().withId(10))
+        )));
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(list(
+                a(quest().withId(1)),
+                a(quest().withId(2))
+        )));
+
+        whenRequestIsExecuted();
+
+        assertEquals(playerGateway.getUpdatedPlayer().getLastQuestCreation(), currentDatePlugin.getCurrentDate());
+    }
+
+    @Test
+    public void dailyQuestIsGenerated_questsCannotBeReplaced() {
+        questGateway.givenQuests(a(list(
+                a(quest().withId(10))
+        )));
+        questGateway.givenDailyQuestsForPlayer(a(player().casid()), a(list(
+                a(quest().withId(1)),
+                a(quest().withId(2))
+        )));
+
+        whenRequestIsExecuted();
+
+        assertFalse(response.canReplaceDailyQuest);
+    }
+
+    @Test
     public void timeZoneIsRespectedForDailyQuestCreation() {
         questGateway.givenQuests(a(list(
                 a(quest().withId(10))

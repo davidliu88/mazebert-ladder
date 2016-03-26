@@ -95,7 +95,6 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
                     player.getId(),
                     quest.getId(),
                     creationDate);
-            updateLastQuestCreation(player.getId(), creationDate);
         } catch (SQLException e) {
             throw new GatewayError("Failed to add daily quest to player.", e);
         }
@@ -120,14 +119,9 @@ public class MySqlQuestGateway extends MySqlGateway implements QuestGateway {
                     creationDate,
                     playerId,
                     oldQuestId);
-            updateLastQuestCreation(playerId, creationDate);
         } catch (SQLException e) {
             throw new GatewayError("Failed to replace daily quest in database.", e);
         }
-    }
-
-    private void updateLastQuestCreation(long playerId, Date creationDate) throws SQLException {
-        getQueryRunner().update("UPDATE Player SET lastQuestCreation=? WHERE id=?;", creationDate, playerId);
     }
 
     @Override
