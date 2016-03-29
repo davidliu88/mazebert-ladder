@@ -9,8 +9,6 @@ import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.gateways.mocks.PurchaseGatewayMock;
 import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.mocks.EmailMessagePluginMock;
-import org.jusecase.transaction.TransactionRunner;
-import org.jusecase.transaction.simple.mocks.TransactionRunnerMock;
 import com.mazebert.plugins.security.mocks.GooglePlayPurchaseVerifierMock;
 import com.mazebert.plugins.system.mocks.LoggerMock;
 import com.mazebert.plugins.time.mocks.CurrentDatePluginMock;
@@ -21,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jusecase.UsecaseTest;
 import org.jusecase.builders.Builder;
+import org.jusecase.transaction.TransactionRunner;
+import org.jusecase.transaction.simple.mocks.TransactionRunnerMock;
 
 import java.util.Date;
 import java.util.List;
@@ -28,9 +28,7 @@ import java.util.logging.Level;
 
 import static com.mazebert.builders.BuilderFactory.*;
 import static org.junit.Assert.assertEquals;
-import static org.jusecase.Builders.a;
-import static org.jusecase.Builders.date;
-import static org.jusecase.Builders.list;
+import static org.jusecase.Builders.*;
 
 public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
     private PlayerGatewayMock playerGateway = new PlayerGatewayMock();
@@ -283,6 +281,20 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         emailMessagePlugin.thenNoMessageIsSent();
+    }
+
+    @Test
+    public void mailIsSentToAndy_deliveryFails_purchaseNotInterrupted() {
+        playerGateway.givenPlayerExists(player);
+        givenRequest(a(request().withTransactions(a(list(
+                a(transaction().beer())
+        )))));
+        emailMessagePlugin.givenDeliveryFails();
+
+        whenRequestIsExecuted();
+
+        thenResponseIsNotNull();
+        logger.thenMessageIsLogged(Level.WARNING, "Failed to send email to andy@mazebert.com");
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.mazebert.plugins.message.mocks;
 
+import com.mazebert.error.InternalServerError;
 import com.mazebert.plugins.message.EmailMessage;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 
@@ -10,10 +11,18 @@ import static org.junit.Assert.assertEquals;
 
 public class EmailMessagePluginMock implements EmailMessagePlugin {
     private List<EmailMessage> sentMessages = new ArrayList<>();
+    private boolean deliveryWillFail;
 
     @Override
     public void sendEmail(EmailMessage emailMessage) {
+        if (deliveryWillFail) {
+            throw new InternalServerError("Failed to send email to " + emailMessage.getReceiver());
+        }
         sentMessages.add(emailMessage);
+    }
+
+    public void givenDeliveryFails() {
+        deliveryWillFail = true;
     }
 
     public EmailMessage getSentMessage(int index) {

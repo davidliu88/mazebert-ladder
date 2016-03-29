@@ -109,7 +109,11 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
         message.setSubject("New donation!");
         message.setMessage(createMailContent(player, verifiedProductIds));
 
-        emailMessagePlugin.sendEmail(message);
+        try {
+            emailMessagePlugin.sendEmail(message);
+        } catch (Throwable e) {
+            logger.log(Level.WARNING, e.getMessage());
+        }
     }
 
     private String createMailContent(Player player, List<String> verifiedProductIds) {
