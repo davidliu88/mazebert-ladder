@@ -6,6 +6,8 @@ import com.mazebert.plugins.message.EmailMessagePlugin;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 public class EmailMessagePluginMock implements EmailMessagePlugin {
     private List<EmailMessage> sentMessages = new ArrayList<>();
 
@@ -14,8 +16,11 @@ public class EmailMessagePluginMock implements EmailMessagePlugin {
         sentMessages.add(emailMessage);
     }
 
-
     public EmailMessage getSentMessage(int index) {
-        return sentMessages.get(0);
+        return sentMessages.get(index);
+    }
+
+    public void thenNoMessageIsSent() {
+        assertEquals(0, sentMessages.size());
     }
 }
