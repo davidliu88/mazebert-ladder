@@ -93,6 +93,28 @@ public class UpdateBonusTimeTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
+    public void zeroMapId() {
+        playerGateway.givenPlayerExists(a(player().casid()));
+        givenRequest(a(request().withMapId(0)));
+
+        whenRequestIsExecuted();
+
+        UpdateBonusTime.Request updateRequest = bonusTimeGateway.getUpdateRequest();
+        assertEquals(1, updateRequest.mapId);
+    }
+
+    @Test
+    public void positiveMapId() {
+        playerGateway.givenPlayerExists(a(player().casid()));
+        givenRequest(a(request().withMapId(3)));
+
+        whenRequestIsExecuted();
+
+        UpdateBonusTime.Request updateRequest = bonusTimeGateway.getUpdateRequest();
+        assertEquals(3, updateRequest.mapId);
+    }
+
+    @Test
     public void bonusTimeIsUpdated() {
         playerGateway.givenPlayerExists(a(player().casid()));
         givenRequest(a(request()));

@@ -36,6 +36,8 @@ public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateB
         }
 
         request.playerId = player.getId();
+        request.mapId = Math.max(1, request.mapId);
+
         bonusTimeGateway.updateBonusTime(request);
 
         return new Response();
