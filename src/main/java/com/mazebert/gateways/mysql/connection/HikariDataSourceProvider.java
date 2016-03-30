@@ -2,8 +2,6 @@ package com.mazebert.gateways.mysql.connection;
 
 import com.google.inject.Provider;
 import com.mazebert.error.InternalServerError;
-import com.mazebert.gateways.mysql.MySqlBonusTimeGateway;
-import com.mazebert.usecases.bonustime.FixBonusTimesWithZeroMapId;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
@@ -110,10 +108,6 @@ public class HikariDataSourceProvider implements DataSourceProvider, Provider<Da
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         flyway.migrate();
-
-        // Temporary preparation step.
-        FixBonusTimesWithZeroMapId fixBonusTimesWithZeroMapId = new FixBonusTimesWithZeroMapId(new MySqlBonusTimeGateway(dataSource), Logger.getLogger("fix-bonus-times"));
-        fixBonusTimesWithZeroMapId.execute(null);
     }
 
     public boolean isUnregisterDriverOnDisposal() {
