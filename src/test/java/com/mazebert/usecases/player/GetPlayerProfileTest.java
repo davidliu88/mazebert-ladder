@@ -202,6 +202,23 @@ public class GetPlayerProfileTest extends UsecaseTest<Request, Response> {
         assertEquals(1, response.foilTowers.size());
     }
 
+    @Test
+    public void foilTowers_noLegacyCards() {
+        cardGateway.givenCardsExist(a(list(
+                a(tower().herbWitch()),
+                a(tower().huliTheMonkey()) // TODO 'isLegacy' must be exported for cards to implement this
+        )));
+        foilCardGateway.givenFoilCardsForPlayer(player, a(list(
+                a(foilCard().withCard(a(tower().herbWitch())))
+        )));
+        givenRequest(a(request()));
+
+        whenRequestIsExecuted();
+
+        assertEquals("1/2", response.foilTowerProgress);
+        assertEquals(1, response.foilTowers.size());
+    }
+
     private RequestBuilder request() {
         return new RequestBuilder().withId(115);
     }
