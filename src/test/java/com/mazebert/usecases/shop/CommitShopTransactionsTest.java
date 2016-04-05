@@ -284,7 +284,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
     }
 
     @Test
-    public void mailIsSentToAndy_deliveryFails_purchaseNotInterrupted() {
+    public void mailIsSentToAndy_asyncExecutionFails_purchaseNotInterrupted() {
         playerGateway.givenPlayerExists(player);
         givenRequest(a(request().withTransactions(a(list(
                 a(transaction().beer())
@@ -294,7 +294,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
         whenRequestIsExecuted();
 
         thenResponseIsNotNull();
-        logger.thenMessageIsLogged(Level.WARNING, "Failed to send email to andy@mazebert.com");
+        logger.thenMessageIsLogged(Level.WARNING, "Scheduling the email task failed for unexpected reasons.");
     }
 
     @Test
@@ -306,7 +306,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        EmailMessage message = emailMessagePlugin.getSentMessage(0);
+        EmailMessage message = emailMessagePlugin.getSentAsyncMessage(0);
         assertEquals("andy@mazebert.com", message.getReceiver());
         assertEquals("New donation!", message.getSubject());
         assertEquals("Yay!\n\nthe player casid donated a beer :-)\n\nCheers!", message.getMessage());
@@ -323,7 +323,7 @@ public class CommitShopTransactionsTest extends UsecaseTest<Request, Response> {
 
         whenRequestIsExecuted();
 
-        EmailMessage message = emailMessagePlugin.getSentMessage(0);
+        EmailMessage message = emailMessagePlugin.getSentAsyncMessage(0);
         assertEquals("Yay!\n\nthe player casid donated a cookie, beer and whisky :-)\n\nCheers!", message.getMessage());
     }
 

@@ -24,6 +24,9 @@ public class EmailMessagePluginMock implements EmailMessagePlugin {
 
     @Override
     public void sendEmailAsync(EmailMessage emailMessage) {
+        if (deliveryWillFail) {
+            throw new RuntimeException("Scheduling the email task failed for unexpected reasons.");
+        }
         sentAsyncMessages.add(emailMessage);
     }
 
@@ -36,7 +39,7 @@ public class EmailMessagePluginMock implements EmailMessagePlugin {
     }
 
     public EmailMessage getSentAsyncMessage(int index) {
-        return sentMessages.get(index);
+        return sentAsyncMessages.get(index);
     }
 
     public void thenNoMessageIsSent() {

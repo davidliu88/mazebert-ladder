@@ -110,7 +110,7 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
         message.setMessage(createMailContent(player, verifiedProductIds));
 
         try {
-            emailMessagePlugin.sendEmail(message);
+            emailMessagePlugin.sendEmailAsync(message);
         } catch (Throwable e) {
             logger.log(Level.WARNING, e.getMessage());
         }
