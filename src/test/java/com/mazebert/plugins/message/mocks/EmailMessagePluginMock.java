@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class EmailMessagePluginMock implements EmailMessagePlugin {
     private List<EmailMessage> sentMessages = new ArrayList<>();
+    private List<EmailMessage> sentAsyncMessages = new ArrayList<>();
     private boolean deliveryWillFail;
 
     @Override
@@ -21,6 +22,11 @@ public class EmailMessagePluginMock implements EmailMessagePlugin {
         sentMessages.add(emailMessage);
     }
 
+    @Override
+    public void sendEmailAsync(EmailMessage emailMessage) {
+        sentAsyncMessages.add(emailMessage);
+    }
+
     public void givenDeliveryFails() {
         deliveryWillFail = true;
     }
@@ -29,7 +35,12 @@ public class EmailMessagePluginMock implements EmailMessagePlugin {
         return sentMessages.get(index);
     }
 
+    public EmailMessage getSentAsyncMessage(int index) {
+        return sentMessages.get(index);
+    }
+
     public void thenNoMessageIsSent() {
         assertEquals(0, sentMessages.size());
+        assertEquals(0, sentAsyncMessages.size());
     }
 }
