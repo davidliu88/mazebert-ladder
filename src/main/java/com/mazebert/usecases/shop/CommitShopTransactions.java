@@ -11,7 +11,8 @@ import com.mazebert.gateways.FoilCardGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.gateways.PurchaseGateway;
 import com.mazebert.gateways.error.KeyAlreadyExists;
-import org.jusecase.transaction.TransactionRunner;
+import com.mazebert.plugins.message.EmailMessage;
+import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.security.GooglePlayPurchaseVerifier;
 import com.mazebert.plugins.time.CurrentDatePlugin;
 import com.mazebert.plugins.validation.VersionValidator;
@@ -20,6 +21,7 @@ import com.mazebert.usecases.security.SignResponse;
 import com.mazebert.usecases.security.VerifyRequest;
 import com.mazebert.usecases.shop.CommitShopTransactions.Request.Transaction;
 import org.jusecase.Usecase;
+import org.jusecase.transaction.TransactionRunner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,18 +41,20 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
     private final GooglePlayPurchaseVerifier googlePlayPurchaseVerifier;
     private final TransactionRunner transactionRunner;
     private final CurrentDatePlugin currentDatePlugin;
+    private final EmailMessagePlugin emailMessagePlugin;
     private final Logger logger;
 
     @Inject
     public CommitShopTransactions(PlayerGateway playerGateway, FoilCardGateway foilCardGateway, PurchaseGateway purchaseGateway,
                                   GooglePlayPurchaseVerifier googlePlayPurchaseVerifier, TransactionRunner transactionRunner,
-                                  CurrentDatePlugin currentDatePlugin, Logger logger) {
+                                  CurrentDatePlugin currentDatePlugin, EmailMessagePlugin emailMessagePlugin, Logger logger) {
         this.playerGateway = playerGateway;
         this.foilCardGateway = foilCardGateway;
         this.purchaseGateway = purchaseGateway;
         this.googlePlayPurchaseVerifier = googlePlayPurchaseVerifier;
         this.transactionRunner = transactionRunner;
         this.currentDatePlugin = currentDatePlugin;
+        this.emailMessagePlugin = emailMessagePlugin;
         this.logger = logger;
     }
 
@@ -92,7 +96,42 @@ public class CommitShopTransactions implements Usecase<CommitShopTransactions.Re
             }
         }
 
+        if (verifiedProductIds.size() > 0) {
+            sendMailToDeveloper(player, verifiedProductIds);
+        }
+
         return verifiedProductIds;
+    }
+
+    private void sendMailToDeveloper(Player player, List<String> verifiedProductIds) {
+        EmailMessage message = new EmailMessage();
+        message.setReceiver("andy@mazebert.com");
+        message.setSubject("New donation!");
+        message.setMessage(createMailContent(player, verifiedProductIds));
+
+        try {
+            emailMessagePlugin.sendEmailAsync(message);
+        } catch (Throwable e) {
+            logger.log(Level.WARNING, e.getMessage());
+        }
+    }
+
+    private String createMailContent(Player player, List<String> verifiedProductIds) {
+        String content = "Yay!\n\nthe player " + player.getName() + " donated a ";
+        for (int i = 0; i < verifiedProductIds.size(); ++i) {
+            String product = verifiedProductIds.get(i);
+            product = product.substring(product.lastIndexOf(".") + 1);
+            if (i > 0) {
+                if (i == verifiedProductIds.size() - 1) {
+                    content += " and ";
+                } else {
+                    content += ", ";
+                }
+            }
+            content += product;
+        }
+        content += " :-)\n\nCheers!";
+        return content;
     }
 
     private void storePurchase(Request request, Player player, Transaction transaction) {

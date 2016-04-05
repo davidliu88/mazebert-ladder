@@ -8,11 +8,10 @@ import com.mazebert.error.InternalServerError;
 import com.mazebert.gateways.*;
 import com.mazebert.gateways.error.GatewayError;
 import com.mazebert.gateways.mysql.*;
-import com.mazebert.gateways.mysql.connection.HikariDataSourceProvider;
 import com.mazebert.gateways.mysql.connection.Credentials;
 import com.mazebert.gateways.mysql.connection.CredentialsProvider;
 import com.mazebert.gateways.mysql.connection.DataSourceProvider;
-import org.jusecase.transaction.TransactionRunner;
+import com.mazebert.gateways.mysql.connection.HikariDataSourceProvider;
 import com.mazebert.plugins.message.EmailMessagePlugin;
 import com.mazebert.plugins.message.MazebertMailMessagePluginProvider;
 import com.mazebert.plugins.random.RandomNumberGenerator;
@@ -23,9 +22,6 @@ import com.mazebert.plugins.system.EnvironmentPlugin;
 import com.mazebert.plugins.system.JsonSettingsPlugin;
 import com.mazebert.plugins.system.SettingsPlugin;
 import com.mazebert.plugins.system.SystemEnvironmentPlugin;
-import com.mazebert.usecases.shop.CommitShopTransactions;
-import com.mazebert.usecases.system.GetStatus;
-import com.mazebert.usecases.system.GetVersion;
 import com.mazebert.usecases.blackmarket.BuyBlackMarketOffer;
 import com.mazebert.usecases.bonustime.GetBonusTimes;
 import com.mazebert.usecases.bonustime.UpdateBonusTime;
@@ -34,14 +30,20 @@ import com.mazebert.usecases.quest.CompleteQuests;
 import com.mazebert.usecases.quest.ReplaceQuest;
 import com.mazebert.usecases.security.SignServerResponse;
 import com.mazebert.usecases.security.VerifyGameRequest;
+import com.mazebert.usecases.shop.CommitShopTransactions;
 import com.mazebert.usecases.shop.PrepareShopTransaction;
 import com.mazebert.usecases.supporters.GetSupporters;
+import com.mazebert.usecases.system.GetStatus;
+import com.mazebert.usecases.system.GetVersion;
 import org.jusecase.executors.guice.GuiceUsecaseExecutor;
+import org.jusecase.transaction.TransactionRunner;
 import org.jusecase.transaction.simple.SimpleTransactionRunner;
 import org.jusecase.transaction.simple.ThreadLocalTransactionManager;
 import org.jusecase.transaction.simple.TransactionManager;
 
 import javax.sql.DataSource;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,6 +110,7 @@ public class BusinessLogic extends GuiceUsecaseExecutor {
 
         @Override
         protected void configure() {
+            bind(ExecutorService.class).toInstance(Executors.newFixedThreadPool(4));
             bind(EnvironmentPlugin.class).to(environmentPlugin).asEagerSingleton();
             bind(SettingsPlugin.class).to(JsonSettingsPlugin.class).asEagerSingleton();
             bind(RandomNumberGenerator.class).to(SecureRandomNumberGenerator.class);

@@ -8,16 +8,23 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 
 public class JavaMailSmtpMessagePluginProvider implements Provider<EmailMessagePlugin> {
     private final Properties properties;
     private final Authenticator authenticator;
     private final InternetAddress from;
+    private final ExecutorService executorService;
+    private final Logger logger;
 
-    public JavaMailSmtpMessagePluginProvider(String host, int port, String userName, String password, String fromAddress, String fromName) {
+    public JavaMailSmtpMessagePluginProvider(String host, int port, String userName, String password, String fromAddress, String fromName,
+                                             ExecutorService executorService, Logger logger) {
         properties = createProperties(host, port);
         authenticator = createAuthenticator(userName, password);
         from = createFromAddress(fromAddress, fromName);
+        this.executorService = executorService;
+        this.logger = logger;
     }
 
     private InternetAddress createFromAddress(String fromAddress, String fromName) {
@@ -51,6 +58,6 @@ public class JavaMailSmtpMessagePluginProvider implements Provider<EmailMessageP
 
     @Override
     public EmailMessagePlugin get() {
-        return new JavaMailMessagePlugin(properties, authenticator, from);
+        return new JavaMailMessagePlugin(properties, authenticator, from, executorService, logger);
     }
 }
