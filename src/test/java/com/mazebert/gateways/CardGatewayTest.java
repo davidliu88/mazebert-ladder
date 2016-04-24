@@ -37,7 +37,7 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
 
     @Test
     public void findCard_blackMarketOfferIsSet() {
-        Card card = gateway.findCard(54, CardType.ITEM);
+        Card card = gateway.findCard(64, CardType.ITEM);
         assertEquals(true, card.isBlackMarketOffer());
     }
 
@@ -75,7 +75,7 @@ public abstract class CardGatewayTest extends GatewayTest<CardGateway> {
     public void findAllBlackMarketCards_blackMarketItemsAreAdded() {
         List<Card> cards = gateway.findAllBlackMarketCards();
 
-        assertEquals(6, cards.size());
+        assertEquals(3, cards.size());
         for (Card card : cards) {
             assertEquals(true, card.isBlackMarketOffer());
         }
