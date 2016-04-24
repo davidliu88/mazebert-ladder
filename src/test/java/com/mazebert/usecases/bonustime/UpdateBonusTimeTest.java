@@ -87,7 +87,7 @@ public class UpdateBonusTimeTest extends UsecaseTest<Request, Response> {
     @Test
     public void incompatibleVersion() {
         playerGateway.givenPlayerExists(a(player().casid()));
-        givenRequest(a(request().withAppVersion("1.2.0")));
+        givenRequest(a(request().withAppVersion("1.3.0")));
         whenRequestIsExecuted();
         thenErrorIs(new Unauthorized("This game version can no longer submit bonus round scores."));
     }
@@ -142,7 +142,7 @@ public class UpdateBonusTimeTest extends UsecaseTest<Request, Response> {
     private RequestBuilder request() {
         return new RequestBuilder()
                 .withKey("abcdef")
-                .withAppVersion("1.3.0")
+                .withAppVersion("1.4.0")
                 .withDifficultyType(0)
                 .withWaveAmountType(0)
                 .withMapId(1)

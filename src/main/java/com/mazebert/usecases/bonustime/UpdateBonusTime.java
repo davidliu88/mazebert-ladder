@@ -19,7 +19,7 @@ public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateB
     private final BonusTimeGateway bonusTimeGateway;
     private final PlayerGateway playerGateway;
 
-    private static final Version minimumVersion = new Version("1.3.0");
+    private static final Version minimumVersion = new Version("1.4.0");
 
     @Inject
     public UpdateBonusTime(BonusTimeGateway bonusTimeGateway, PlayerGateway playerGateway) {
