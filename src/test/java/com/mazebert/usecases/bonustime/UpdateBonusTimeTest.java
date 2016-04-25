@@ -2,7 +2,6 @@ package com.mazebert.usecases.bonustime;
 
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
-import com.mazebert.error.Unauthorized;
 import com.mazebert.gateways.mocks.BonusTimeGatewayMock;
 import com.mazebert.gateways.mocks.PlayerGatewayMock;
 import com.mazebert.usecases.bonustime.UpdateBonusTime.Request;
@@ -14,6 +13,7 @@ import org.jusecase.builders.Builder;
 
 import static com.mazebert.builders.BuilderFactory.player;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.jusecase.Builders.a;
 
 public class UpdateBonusTimeTest extends UsecaseTest<Request, Response> {
@@ -88,8 +88,15 @@ public class UpdateBonusTimeTest extends UsecaseTest<Request, Response> {
     public void incompatibleVersion() {
         playerGateway.givenPlayerExists(a(player().casid()));
         givenRequest(a(request().withAppVersion("1.3.0")));
+
         whenRequestIsExecuted();
-        thenErrorIs(new Unauthorized("This game version can no longer submit bonus round scores."));
+
+        thenBonusTimeIsNotUpdatedAndNoErrorIsThrown();
+    }
+
+    private void thenBonusTimeIsNotUpdatedAndNoErrorIsThrown() {
+        assertNull(bonusTimeGateway.getUpdateRequest());
+        assertNull(error);
     }
 
     @Test

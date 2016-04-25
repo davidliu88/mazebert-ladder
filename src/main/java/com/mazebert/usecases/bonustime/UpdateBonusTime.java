@@ -4,7 +4,6 @@ import com.mazebert.entities.Player;
 import com.mazebert.entities.Version;
 import com.mazebert.error.BadRequest;
 import com.mazebert.error.NotFound;
-import com.mazebert.error.Unauthorized;
 import com.mazebert.gateways.BonusTimeGateway;
 import com.mazebert.gateways.PlayerGateway;
 import com.mazebert.presenters.jaxrs.response.StatusResponse;
@@ -30,15 +29,17 @@ public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateB
     public Response execute(Request request) {
         validateRequest(request);
 
-        Player player = playerGateway.findPlayerByKey(request.key);
-        if (player == null) {
-            throw new NotFound("A player with this key could not be found.");
+        if (minimumVersion.compareTo(new Version(request.appVersion)) <= 0) {
+            Player player = playerGateway.findPlayerByKey(request.key);
+            if (player == null) {
+                throw new NotFound("A player with this key could not be found.");
+            }
+
+            request.playerId = player.getId();
+            request.mapId = Math.max(1, request.mapId);
+
+            bonusTimeGateway.updateBonusTime(request);
         }
-
-        request.playerId = player.getId();
-        request.mapId = Math.max(1, request.mapId);
-
-        bonusTimeGateway.updateBonusTime(request);
 
         return new Response();
     }
@@ -55,9 +56,6 @@ public class UpdateBonusTime implements Usecase<UpdateBonusTime.Request, UpdateB
         }
         if (request.secondsSurvived <= 0) {
             throw new BadRequest("Survival time must be positive");
-        }
-        if (minimumVersion.compareTo(new Version(request.appVersion)) > 0) {
-            throw new Unauthorized("This game version can no longer submit bonus round scores.");
         }
     }
 
